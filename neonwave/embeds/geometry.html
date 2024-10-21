@@ -14,21 +14,28 @@
             background-color: #1c1c1c; /* Set background to blend with the website */
             overflow: hidden; /* Prevent scrolling of the body */
         }
-        iframe {
-            width: 100%;
-            height: calc(100% - 70px); /* Adjusted to leave space for buttons */
-            border: none;
-            border-radius: 15px; /* Rounded corners for the embed */
-            overflow: hidden; /* Prevent scrolling within the iframe */
-        }
         #adContainer {
             position: absolute;
             width: 100%;
             height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         #embedContainer {
             display: none;
-            position: relative; /* Changed to relative for buttons to be positioned correctly */
+            position: absolute; /* Changed to absolute for full width and height */
+            top: 0; /* Start at the top */
+            left: 0; /* Start at the left */
+            width: 100%;
+            height: 100%; /* Take full height */
+        }
+        iframe {
+            width: 100%;
+            height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
+            max-height: calc(100vh - 70px); /* Adjusted to leave space for buttons */
+            border: none;
+            border-radius: 15px; /* Rounded corners for the embed */
+            overflow: hidden; /* Prevent scrolling within the iframe */
         }
         #loadingText {
             position: absolute;
@@ -53,9 +60,12 @@
         #controls {
             display: none; /* Initially hidden */
             justify-content: space-between; /* Align buttons to left and right */
-            margin-top: 10px;
-            position: relative; /* Added to keep it positioned below the embed */
-            padding: 10px 20px; /* Added padding for spacing */
+            position: absolute; /* Changed to absolute to position below the embed */
+            bottom: 10px; /* Positioned at the bottom */
+            left: 0; /* Start at the left */
+            width: calc(100% - 20px); /* Full width minus padding to match spacing */
+            padding: 10px; /* Reduced padding for spacing */
+            box-sizing: border-box; /* Ensure padding doesn't affect overall width */
         }
         .controlButton {
             background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
