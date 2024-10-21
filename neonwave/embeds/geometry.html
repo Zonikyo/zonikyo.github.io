@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad to Embed with Fullscreen Features</title>
+    <title>Game Embed</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
@@ -47,39 +47,23 @@
             font-weight: 700;
             color: white; /* White text */
         }
-        #controls {
-            display: none; /* Initially hidden */
-            justify-content: space-between; /* Align buttons to left and right */
-            margin-top: 10px;
-            position: relative; /* Added to keep it positioned below the embed */
-            padding: 10px 20px; /* Added padding for spacing */
-        }
-        .controlButton {
-            background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
-            padding: 10px 15px; /* Adjust padding for a rectangular shape */
-            border: 2px solid white; /* White outline */
-            border-radius: 8px; /* Rounded corners */
-            cursor: pointer;
-            display: flex; /* Flex to center icon */
-            align-items: center; /* Center vertically */
-            color: white; /* White text */
-        }
-        .controlButton img {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px; /* Space between icon and button text */
-        }
-        .spacer {
-            width: 15px; /* Increased width for spacing between report and help buttons */
-        }
-        #closeButton {
+        #popoutButton {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
+            background-color: #2a2a2a; /* Button color */
+            border: 2px solid white; /* White outline */
+            border-radius: 8px; /* Rounded corners */
+            color: white; /* White text */
+            padding: 10px 15px; /* Padding for the button */
+            cursor: pointer; /* Pointer cursor on hover */
             z-index: 10; /* Ensure the button is above other elements */
+        }
+        #popoutButton img {
+            width: 20px; /* Adjust icon size */
+            height: 20px; /* Adjust icon size */
+            vertical-align: middle; /* Center icon vertically */
+            margin-right: 5px; /* Space between icon and text */
         }
     </style>
 </head>
@@ -94,27 +78,14 @@
     <div id="loadingText">Ad is loading...</div>
 </div>
 
-<div id="embedContainer">
-    <!-- Close Button -->
-    <button id="closeButton" onclick="exitFullscreen()">
-        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/delete-sign.png" alt="Close Icon">
-    </button>
-    
+<div id="embedContainer" style="display: none;">
+    <!-- Popout Button -->
+    <div id="popoutButton" onclick="window.open('https://zonikyo.github.io/neonwave/embeds/geometry', '_blank')">
+        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/pop-out.png" alt="Popout Icon"> Popout
+    </div>
+
     <!-- Embedded Content -->
     <iframe id="embedIframe" src="https://turbowarp.org/105500895/embed" scrolling="no"></iframe>
-    
-    <!-- Control buttons for Report and Help -->
-    <div id="controls">
-        <!-- Report Button -->
-        <div class="controlButton" onclick="openLink('https://example.com/report')">
-            <img src="report.png" alt="Report Icon"> Report
-        </div>
-        <div class="spacer"></div> <!-- Spacer for spacing -->
-        <!-- Help Button -->
-        <div class="controlButton" onclick="openLink('https://example.com/help')">
-            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
-        </div>
-    </div>
 </div>
 
 <script>
@@ -128,40 +99,6 @@
         document.getElementById('adContainer').style.display = 'none';
         document.getElementById('embedContainer').style.display = 'block';
         document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message after ad
-        document.getElementById('controls').style.display = 'flex'; // Show controls after ad
-        enterFullscreen(); // Enter fullscreen mode after skipping the ad
-    }
-
-    // Function to enter fullscreen mode
-    function enterFullscreen() {
-        const embedIframe = document.getElementById('embedIframe');
-        if (embedIframe.requestFullscreen) {
-            embedIframe.requestFullscreen();
-        } else if (embedIframe.mozRequestFullScreen) { // Firefox
-            embedIframe.mozRequestFullScreen();
-        } else if (embedIframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-            embedIframe.webkitRequestFullscreen();
-        } else if (embedIframe.msRequestFullscreen) { // IE/Edge
-            embedIframe.msRequestFullscreen();
-        }
-    }
-
-    // Function to exit fullscreen mode
-    function exitFullscreen() {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) { // Firefox
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE/Edge
-            document.msExitFullscreen();
-        }
-    }
-
-    // Function to open Report or Help links
-    function openLink(url) {
-        window.open(url, '_blank');
     }
 </script>
 
