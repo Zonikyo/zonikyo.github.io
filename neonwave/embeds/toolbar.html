@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Share Button with Slide-Out Options</title>
+  <title>Horizontal Share Button</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -16,7 +16,7 @@
 
     .share-container {
       position: relative;
-      width: 60px;
+      width: 50px;
     }
 
     .share-btn {
@@ -39,10 +39,9 @@
 
     .share-options {
       position: absolute;
-      left: 60px;
       top: 0;
+      left: 60px;
       display: flex;
-      flex-direction: column;
       gap: 10px;
       opacity: 0;
       transform: translateX(-20px);
@@ -95,7 +94,7 @@
     <div class="share-option" onclick="window.open('https://www.youtube.com', '_blank')">
       <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube">
     </div>
-    <div class="share-option" onclick="copyToClipboard('https://sites.google.com')">
+    <div class="share-option" onclick="copyToClipboard()">
       <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Clipboard.svg" alt="Copy Link">
     </div>
   </div>
@@ -103,7 +102,7 @@
 
 <script>
   function copyToClipboard() {
-    const url = window.location.href;
+    const url = 'https://sites.google.com/view/neonwave';
     navigator.clipboard.writeText(url).then(() => {
       alert("Link copied to clipboard!");
     }).catch(err => {
