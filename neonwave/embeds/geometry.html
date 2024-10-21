@@ -3,89 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad to Embed Transition</title>
+    <title>Ad to Embed with Fullscreen Features</title>
     <style>
-        /* Ensure iframe is responsive and keeps 16:9 aspect ratio */
-        #ad-embed-iframe {
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #1c1c1c; /* Set background to blend with the website */
+            overflow: hidden; /* Prevent scrolling of the body */
+        }
+        #adContainer, #embedContainer {
+            position: absolute;
             width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            position: relative;
+            height: 100%;
         }
-        /* Ensure buttons are aligned and styled */
-        .button-container {
-            margin-top: 10px;
+        #embedIframe {
+            width: 100%; 
+            height: calc(100% - 70px); /* Adjust height to leave space for buttons */
+            max-height: calc(100vw * 9 / 16); /* Maintain 16:9 aspect ratio */
+            border: none;
+            border-radius: 15px; /* Rounded corners for the embed */
+            overflow: hidden; /* Prevent scrolling within the iframe */
         }
-        .button-container a {
-            text-decoration: none;
-            margin-right: 10px;
-            padding: 10px 15px;
-            background-color: #007BFF;
+        #loadingText {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px 0;
+            background-color: #1c1c1c;
             color: white;
-            border-radius: 5px;
         }
-        .button-container img {
-            vertical-align: middle;
+        #loadingMessage {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white; /* White text */
+        }
+        #controls {
+            display: none; /* Initially hidden */
+            justify-content: space-between; /* Align buttons to left and right */
+            margin-top: 10px;
+            position: relative; /* Added to keep it positioned below the embed */
+            padding: 10px 20px; /* Added padding for spacing */
+        }
+        .controlButton {
+            background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
+            padding: 10px 15px; /* Adjust padding for a rectangular shape */
+            border: 2px solid white; /* White outline */
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            display: flex; /* Flex to center icon */
+            align-items: center; /* Center vertically */
+            color: white; /* White text */
+        }
+        .controlButton img {
             width: 24px;
-            height: auto;
+            height: 24px;
+            margin-right: 8px; /* Space between icon and button text */
+        }
+        .spacer {
+            width: 15px; /* Increased width for spacing between report and help buttons */
+        }
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10; /* Ensure the button is above other elements */
         }
     </style>
 </head>
 <body>
 
-    <!-- Ad / Embed Iframe -->
-    <iframe id="ad-embed-iframe" frameborder="0" scrolling="no" allowfullscreen></iframe>
+<div id="loadingMessage">Your Game is loading... please wait</div>
 
-    <!-- Buttons: Popout, Report -->
-    <div class="button-container">
-        <!-- Popout Button -->
-        <a href="https://zonikyo.github.io/neonwave/embeds/geometry" target="_blank">Popout</a>
+<div id="adContainer">
+    <!-- Google Ad -->
+    <iframe id="adIframe" src="AD_CODE_HERE"></iframe>
+    <!-- Loading text -->
+    <div id="loadingText">Ad is loading...</div>
+</div>
 
-        <!-- Report Button with Image Icon -->
-        <a href="https://example.com/report" target="_blank">
-            <img src="report.png" alt="Report" title="Report">
-        </a>
+<div id="embedContainer">
+    <!-- Close Button -->
+    <button id="closeButton" onclick="exitFullscreen()">
+        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/delete-sign.png" alt="Close Icon">
+    </button>
+    
+    <!-- Embedded Content -->
+    <iframe id="embedIframe" src="https://turbowarp.org/105500895/embed" scrolling="no"></iframe>
+    
+    <!-- Control buttons for Report and Help -->
+    <div id="controls">
+        <!-- Report Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/report')">
+            <img src="report.png" alt="Report Icon"> Report
+        </div>
+        <div class="spacer"></div> <!-- Spacer for spacing -->
+        <!-- Help Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/help')">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
+        </div>
     </div>
+</div>
 
-    <script>
-        // Reference to the iframe
-        var iframe = document.getElementById('ad-embed-iframe');
+<script>
+    // Automatically hide ad and show embed after 10 seconds
+    setTimeout(function() {
+        skipAd();
+    }, 10000);
 
-        // Delay for 10 seconds (10000 milliseconds)
-        var delay = 10000;
+    // Function to skip ad and show the embed content
+    function skipAd() {
+        document.getElementById('adContainer').style.display = 'none';
+        document.getElementById('embedContainer').style.display = 'block';
+        document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message after ad
+        document.getElementById('controls').style.display = 'flex'; // Show controls after ad
+        enterFullscreen(); // Enter fullscreen mode after skipping the ad
+    }
 
-        // Set the AdSense ad first
-        iframe.src = 'about:blank'; // Placeholder for ad content
-        var adHtml = `
-            <html>
-            <head>
-                <style>
-                    body { margin: 0; padding: 0; overflow: hidden; }
-                    ins.adsbygoogle { display: block; width: 100%; height: 100%; }
-                </style>
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            </head>
-            <body>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="YOUR_ADSENSE_CLIENT_ID"  <!-- Replace with your AdSense Client ID -->
-                     data-ad-slot="YOUR_AD_SLOT_ID"></ins>    <!-- Replace with your Ad Slot ID -->
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </body>
-            </html>
-        `;
+    // Function to enter fullscreen mode
+    function enterFullscreen() {
+        const embedIframe = document.getElementById('embedIframe');
+        if (embedIframe.requestFullscreen) {
+            embedIframe.requestFullscreen();
+        } else if (embedIframe.mozRequestFullScreen) { // Firefox
+            embedIframe.mozRequestFullScreen();
+        } else if (embedIframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+            embedIframe.webkitRequestFullscreen();
+        } else if (embedIframe.msRequestFullscreen) { // IE/Edge
+            embedIframe.msRequestFullscreen();
+        }
+    }
 
-        // Insert ad HTML into the iframe's content
-        var doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(adHtml);
-        doc.close();
+    // Function to exit fullscreen mode
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+        }
+    }
 
-        // After the delay, switch the iframe content to the embed URL (your specific embed)
-        setTimeout(function() {
-            iframe.src = 'https://turbowarp.org/105500895/embed';
-        }, delay);
-    </script>
+    // Function to open Report or Help links
+    function openLink(url) {
+        window.open(url, '_blank');
+    }
+</script>
 
 </body>
 </html>
