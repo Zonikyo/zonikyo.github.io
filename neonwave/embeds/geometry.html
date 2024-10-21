@@ -3,139 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad to Embed with Features</title>
+    <title>Ad to Embed Transition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #1c1c1c; /* Set background to blend with the website */
-            overflow: hidden; /* Prevent scrolling of the body */
-        }
-        iframe {
+        /* Ensure iframe is responsive and keeps 16:9 aspect ratio */
+        #ad-embed-iframe {
             width: 100%;
-            height: calc(100% - 70px); /* Adjusted to leave space for buttons */
-            border: none;
-            border-radius: 15px; /* Rounded corners for the embed */
-            overflow: hidden; /* Prevent scrolling within the iframe */
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            position: relative;
         }
-        #adContainer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-        #embedContainer {
-            display: none;
-            position: relative; /* Changed to relative for buttons to be positioned correctly */
-        }
-        #loadingText {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 10px 0;
-            background-color: #1c1c1c;
-            color: white;
-        }
-        #loadingMessage {
-            position: absolute;
-            top: 10px;
-            width: 100%;
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: white; /* White text */
-        }
-        #controls {
-            display: none; /* Initially hidden */
-            justify-content: space-between; /* Align buttons to left and right */
+        /* Ensure buttons are aligned and styled */
+        .button-container {
             margin-top: 10px;
-            position: relative; /* Added to keep it positioned below the embed */
-            padding: 10px 20px; /* Added padding for spacing */
         }
-        .controlButton {
-            background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
-            padding: 10px 15px; /* Adjust padding for a rectangular shape */
-            border: 2px solid white; /* White outline */
-            border-radius: 8px; /* Rounded corners */
-            cursor: pointer;
-            display: flex; /* Flex to center icon */
-            align-items: center; /* Center vertically */
-            color: white; /* White text */
+        .button-container a {
+            text-decoration: none;
+            margin-right: 10px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
         }
-        .controlButton img {
+        .button-container img {
+            vertical-align: middle;
             width: 24px;
-            height: 24px;
-            margin-right: 8px; /* Space between icon and button text */
-        }
-        .spacer {
-            width: 15px; /* Increased width for spacing between report and help buttons */
+            height: auto;
         }
     </style>
 </head>
 <body>
 
-<div id="loadingMessage">Your Game is loading... please wait</div>
+    <!-- Ad / Embed Iframe -->
+    <iframe id="ad-embed-iframe" frameborder="0" scrolling="no" allowfullscreen></iframe>
 
-<div id="adContainer">
-    <!-- Google Ad -->
-    <iframe id="adIframe" src="AD_CODE_HERE"></iframe>
-    <!-- Loading text -->
-    <div id="loadingText">Ad is loading...</div>
-</div>
-
-<div id="embedContainer">
-    <!-- Embedded Content -->
-    <iframe id="embedIframe" src="https://turbowarp.org/105500895/embed" scrolling="no"></iframe>
-    
-    <!-- Control buttons for Popout, Report, and Help -->
-    <div id="controls">
+    <!-- Buttons: Popout, Report -->
+    <div class="button-container">
         <!-- Popout Button -->
-        <div class="controlButton" onclick="popoutEmbed()">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="Popout Icon"> Popout
-        </div>
-        <div style="flex-grow: 1;"></div> <!-- Spacer -->
-        <!-- Report Button -->
-        <div class="controlButton" onclick="openLink('https://zonikyo.github.io/neonwave/report')">
-            <img src="report.png" alt="Report Icon"> Report
-        </div>
-        <div class="spacer"></div> <!-- Spacer for spacing -->
-        <!-- Help Button -->
-        <div class="controlButton" onclick="openLink('https://zonikyo.github.io/neonwave/help')">
-            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
-        </div>
+        <a href="https://zonikyo.github.io/neonwave/embeds/geometry" target="_blank">Popout</a>
+
+        <!-- Report Button with Image Icon -->
+        <a href="https://example.com/report" target="_blank">
+            <img src="report.png" alt="Report" title="Report">
+        </a>
     </div>
-</div>
 
-<script>
-    // Automatically hide ad and show embed after 10 seconds
-    setTimeout(function() {
-        skipAd();
-    }, 10000);
+    <script>
+        // Reference to the iframe
+        var iframe = document.getElementById('ad-embed-iframe');
 
-    // Function to skip ad and show the embed content
-    function skipAd() {
-        document.getElementById('adContainer').style.display = 'none';
-        document.getElementById('embedContainer').style.display = 'block';
-        document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message after ad
-        document.getElementById('controls').style.display = 'flex'; // Show controls after ad
-    }
+        // Google AdSense code (replace CLIENT_ID and SLOT_ID with your AdSense info)
+        var adCode = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>' +
+            '<ins class="adsbygoogle" ' +
+            '     style="display:block; width:100%; height:100%;" ' +
+            '     data-ad-client="YOUR_ADSENSE_CLIENT_ID" ' + // Replace with your AdSense Client ID
+            '     data-ad-slot="YOUR_AD_SLOT_ID"></ins>' +
+            '<script>' +
+            '(adsbygoogle = window.adsbygoogle || []).push({});' +
+            '</script>';
 
-    // Function to pop out the embed in a new tab
-    function popoutEmbed() {
-        // Open the full GitHub page in a new tab
-        window.open('https://zonikyo.github.io/neonwave/embeds/geometry', '_blank');
-    }
+        // Insert the ad code into the iframe
+        iframe.srcdoc = adCode;
 
-    // Function to open Report or Help links
-    function openLink(url) {
-        window.open(url, '_blank');
-    }
-</script>
+        // Set the delay for 10 seconds (10000 milliseconds)
+        var delay = 10000;
+
+        // After the delay, switch the iframe content to the embed URL (your specific embed)
+        setTimeout(function() {
+            iframe.src = 'https://turbowarp.org/105500895/embed';
+        }, delay);
+    </script>
 
 </body>
 </html>
