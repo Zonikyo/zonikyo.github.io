@@ -25,7 +25,7 @@
         }
 
         .sidebar::-webkit-scrollbar {
-            width: 10px; /* Width of the scrollbar */
+            width: 16px; /* Thicker width of the scrollbar */
         }
 
         .sidebar::-webkit-scrollbar-thumb {
@@ -41,8 +41,12 @@
         .sidebar h2 {
             color: #fff;
             text-align: center;
-            margin-bottom: 10px; /* Adjust margin for smaller header */
+            margin: 0 0 10px 0; /* Adjust margin for smaller header */
             font-size: 1.2em; /* Smaller font size */
+            position: sticky; /* Keep the header fixed at the top */
+            top: 20px; /* Space from the top */
+            background: #1c1c1c; /* Match sidebar background */
+            z-index: 1; /* Ensure it stays above the scrollbar */
         }
 
         .fade-effect {
