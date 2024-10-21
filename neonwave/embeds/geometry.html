@@ -51,21 +51,35 @@
         // Reference to the iframe
         var iframe = document.getElementById('ad-embed-iframe');
 
-        // Google AdSense code (replace CLIENT_ID and SLOT_ID with your AdSense info)
-        var adCode = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>' +
-            '<ins class="adsbygoogle" ' +
-            '     style="display:block; width:100%; height:100%;" ' +
-            '     data-ad-client="YOUR_ADSENSE_CLIENT_ID" ' + // Replace with your AdSense Client ID
-            '     data-ad-slot="YOUR_AD_SLOT_ID"></ins>' +
-            '<script>' +
-            '(adsbygoogle = window.adsbygoogle || []).push({});' +
-            '</script>';
-
-        // Insert the ad code into the iframe
-        iframe.srcdoc = adCode;
-
-        // Set the delay for 10 seconds (10000 milliseconds)
+        // Delay for 10 seconds (10000 milliseconds)
         var delay = 10000;
+
+        // Set the AdSense ad first
+        iframe.src = 'about:blank'; // Placeholder for ad content
+        var adHtml = `
+            <html>
+            <head>
+                <style>
+                    body { margin: 0; padding: 0; overflow: hidden; }
+                    ins.adsbygoogle { display: block; width: 100%; height: 100%; }
+                </style>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            </head>
+            <body>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="YOUR_ADSENSE_CLIENT_ID"  <!-- Replace with your AdSense Client ID -->
+                     data-ad-slot="YOUR_AD_SLOT_ID"></ins>    <!-- Replace with your Ad Slot ID -->
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </body>
+            </html>
+        `;
+
+        // Insert ad HTML into the iframe's content
+        var doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(adHtml);
+        doc.close();
 
         // After the delay, switch the iframe content to the embed URL (your specific embed)
         setTimeout(function() {
