@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <title>Game Sidebar</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #1c1c1c; /* Set background color */
+        }
+
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 140px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .game-thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Recommended Games</h2>
+    <div id="game-list"></div>
+</div>
+
+<script>
+    const games = [
+        { title: "Game 1", image: "https://via.placeholder.com/300x200?text=Game+1", link: "https://example.com/game1" },
+        { title: "Game 2", image: "https://via.placeholder.com/300x200?text=Game+2", link: "https://example.com/game2" },
+        { title: "Game 3", image: "https://via.placeholder.com/300x200?text=Game+3", link: "https://example.com/game3" },
+        { title: "Game 4", image: "https://via.placeholder.com/300x200?text=Game+4", link: "https://example.com/game4" },
+        { title: "Game 5", image: "https://via.placeholder.com/300x200?text=Game+5", link: "https://example.com/game5" },
+        { title: "Game 6", image: "https://via.placeholder.com/300x200?text=Game+6", link: "https://example.com/game6" },
+        { title: "Game 7", image: "https://via.placeholder.com/300x200?text=Game+7", link: "https://example.com/game7" },
+        { title: "Game 8", image: "https://via.placeholder.com/300x200?text=Game+8", link: "https://example.com/game8" },
+        { title: "Game 9", image: "https://via.placeholder.com/300x200?text=Game+9", link: "https://example.com/game9" },
+        { title: "Game 10", image: "https://via.placeholder.com/300x200?text=Game+10", link: "https://example.com/game10" },
+    ];
+
+    function getRandomGames(games, num) {
+        const shuffled = games.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, num);
+    }
+
+    function displayRandomGames() {
+        const gameList = document.getElementById('game-list');
+        const randomGames = getRandomGames(games, 7);
+
+        randomGames.forEach(game => {
+            const gameDiv = document.createElement('div');
+            gameDiv.classList.add('game-thumbnail');
+            gameDiv.innerHTML = `<a href="${game.link}" target="_blank"><img src="${game.image}" alt="${game.title}"></a>`;
+            gameList.appendChild(gameDiv);
+        });
+    }
+
+    // Load random games on page load
+    displayRandomGames();
+</script>
+
+</body>
+</html>
