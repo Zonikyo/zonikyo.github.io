@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Embed</title>
+    <title>Ad to Embed with Features</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
@@ -14,18 +14,21 @@
             background-color: #1c1c1c; /* Set background to blend with the website */
             overflow: hidden; /* Prevent scrolling of the body */
         }
-        #adContainer, #embedContainer {
+        iframe {
+            width: 100%;
+            height: calc(100% - 70px); /* Adjusted to leave space for buttons */
+            border: none;
+            border-radius: 15px; /* Rounded corners for the embed */
+            overflow: hidden; /* Prevent scrolling within the iframe */
+        }
+        #adContainer {
             position: absolute;
             width: 100%;
             height: 100%;
         }
-        #embedIframe {
-            width: 100%; 
-            height: calc(100% - 70px); /* Adjust height to leave space for buttons */
-            max-height: calc(100vw * 9 / 16); /* Maintain 16:9 aspect ratio */
-            border: none;
-            border-radius: 15px; /* Rounded corners for the embed */
-            overflow: hidden; /* Prevent scrolling within the iframe */
+        #embedContainer {
+            display: none;
+            position: relative; /* Changed to relative for buttons to be positioned correctly */
         }
         #loadingText {
             position: absolute;
@@ -47,23 +50,30 @@
             font-weight: 700;
             color: white; /* White text */
         }
-        #popoutButton {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #2a2a2a; /* Button color */
+        #controls {
+            display: none; /* Initially hidden */
+            justify-content: space-between; /* Align buttons to left and right */
+            margin-top: 10px;
+            position: relative; /* Added to keep it positioned below the embed */
+            padding: 10px 20px; /* Added padding for spacing */
+        }
+        .controlButton {
+            background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
+            padding: 10px 15px; /* Adjust padding for a rectangular shape */
             border: 2px solid white; /* White outline */
             border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            display: flex; /* Flex to center icon */
+            align-items: center; /* Center vertically */
             color: white; /* White text */
-            padding: 10px 15px; /* Padding for the button */
-            cursor: pointer; /* Pointer cursor on hover */
-            z-index: 10; /* Ensure the button is above other elements */
         }
-        #popoutButton img {
-            width: 20px; /* Adjust icon size */
-            height: 20px; /* Adjust icon size */
-            vertical-align: middle; /* Center icon vertically */
-            margin-right: 5px; /* Space between icon and text */
+        .controlButton img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px; /* Space between icon and button text */
+        }
+        .spacer {
+            width: 15px; /* Increased width for spacing between report and help buttons */
         }
     </style>
 </head>
@@ -78,14 +88,27 @@
     <div id="loadingText">Ad is loading...</div>
 </div>
 
-<div id="embedContainer" style="display: none;">
-    <!-- Popout Button -->
-    <div id="popoutButton" onclick="window.open('https://zonikyo.github.io/neonwave/embeds/geometry', '_blank')">
-        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/pop-out.png" alt="Popout Icon"> Popout
-    </div>
-
+<div id="embedContainer">
     <!-- Embedded Content -->
-    <iframe id="embedIframe" src="https://turbowarp.org/105500895/embed" scrolling="no"></iframe>
+    <iframe id="embedIframe" src="EMBED_URL_HERE" scrolling="no"></iframe>
+    
+    <!-- Control buttons for Popout, Report, and Help -->
+    <div id="controls">
+        <!-- Popout Button -->
+        <div class="controlButton" onclick="popoutEmbed()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="Popout Icon"> Popout
+        </div>
+        <div style="flex-grow: 1;"></div> <!-- Spacer -->
+        <!-- Report Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/report')">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/report-file.png" alt="Report Icon"> Report
+        </div>
+        <div class="spacer"></div> <!-- Spacer for spacing -->
+        <!-- Help Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/help')">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
+        </div>
+    </div>
 </div>
 
 <script>
@@ -99,6 +122,18 @@
         document.getElementById('adContainer').style.display = 'none';
         document.getElementById('embedContainer').style.display = 'block';
         document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message after ad
+        document.getElementById('controls').style.display = 'flex'; // Show controls after ad
+    }
+
+    // Function to pop out the embed in a new tab
+    function popoutEmbed() {
+        // Open the full GitHub page in a new tab
+        window.open('https://zonikyo.github.io/neonwave/embeds/example', '_blank');
+    }
+
+    // Function to open Report or Help links
+    function openLink(url) {
+        window.open(url, '_blank');
     }
 </script>
 
