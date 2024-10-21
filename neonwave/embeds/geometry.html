@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad to Embed with Features</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #1c1c1c; /* Set background to blend with the website */
+            overflow: hidden; /* Prevent scrolling of the body */
+        }
+        #adContainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        #embedContainer {
+            display: none;
+            position: absolute; /* Changed to absolute for full width and height */
+            top: 0; /* Start at the top */
+            left: 0; /* Start at the left */
+            width: 100%;
+            height: 100%; /* Take full height */
+        }
+        iframe {
+            width: 100%;
+            height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
+            max-height: calc(100vh - 70px); /* Adjusted to leave space for buttons */
+            border: none;
+            border-radius: 15px; /* Rounded corners for the embed */
+            overflow: hidden; /* Prevent scrolling within the iframe */
+        }
+        #loadingText {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px 0;
+            background-color: #1c1c1c;
+            color: white;
+        }
+        #loadingMessage {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white; /* White text */
+        }
+        #controls {
+            display: none; /* Initially hidden */
+            justify-content: space-between; /* Align buttons to left and right */
+            position: absolute; /* Changed to absolute to position below the embed */
+            bottom: 10px; /* Positioned at the bottom */
+            left: 0; /* Start at the left */
+            width: calc(100% - 20px); /* Full width minus padding to match spacing */
+            padding: 10px; /* Reduced padding for spacing */
+            box-sizing: border-box; /* Ensure padding doesn't affect overall width */
+        }
+        .controlButton {
+            background-color: #2a2a2a; /* Slightly lighter than #1c1c1c */
+            padding: 10px 15px; /* Adjust padding for a rectangular shape */
+            border: 2px solid white; /* White outline */
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            display: flex; /* Flex to center icon */
+            align-items: center; /* Center vertically */
+            color: white; /* White text */
+        }
+        .controlButton img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px; /* Space between icon and button text */
+        }
+        .spacer {
+            width: 15px; /* Increased width for spacing between report and help buttons */
+        }
+    </style>
+</head>
+<body>
+
+<div id="loadingMessage">Your Game is loading... please wait</div>
+
+<div id="adContainer">
+    <!-- Google Ad -->
+    <iframe id="adIframe" src="AD_CODE_HERE"></iframe>
+    <!-- Loading text -->
+    <div id="loadingText">Ad is loading...</div>
+</div>
+
+<div id="embedContainer">
+    <!-- Embedded Content -->
+    <iframe id="embedIframe" src="" scrolling="no"></iframe>
+    
+    <!-- Control buttons for Popout, Report, and Help -->
+    <div id="controls">
+        <!-- Popout Button -->
+        <div class="controlButton" onclick="popoutEmbed()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="Popout Icon"> Popout
+        </div>
+        <div style="flex-grow: 1;"></div> <!-- Spacer -->
+        <!-- Report Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/report')">
+            <img src="https://zonikyo.github.io/report.png" alt="Report Icon"> Report
+        </div>
+        <div class="spacer"></div> <!-- Spacer for spacing -->
+        <!-- Help Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/help')">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
+        </div>
+    </div>
+</div>
+
+<script>
+    // Automatically hide ad and show embed after 10 seconds
+    setTimeout(function() {
+        skipAd();
+    }, 10000);
+
+    // Function to skip ad and show the embed content
+    function skipAd() {
+        document.getElementById('adContainer').style.display = 'none';
+        document.getElementById('embedContainer').style.display = 'block';
+        document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message after ad
+        document.getElementById('controls').style.display = 'flex'; // Show controls after ad
+    }
+
+    // Fetch embed information based on the URL
+    function fetchEmbedInfo() {
+        const urlParts = window.location.pathname.split('/'); // Split URL into parts
+        const gameId = urlParts[urlParts.length - 1]; // Get the last part of the URL
+
+        fetch('embeds.json') // Load the external JSON file
+            .then(response => response.json())
+            .then(data => {
+                if (data[gameId]) {
+                    const embedInfo = data[gameId]; // Get the embed info for the specific game
+                    document.getElementById('embedIframe').src = embedInfo.embedUrl; // Set iframe source
+                    document.getElementById('loadingMessage').textContent = embedInfo.title; // Update loading message
+                } else {
+                    console.error('Game not found:', gameId);
+                    document.getElementById('loadingMessage').textContent = 'Game not found'; // Update loading message
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching embed data:', error);
+            });
+    }
+
+    // Call the function to fetch embed info when the page loads
+    window.onload = function() {
+        fetchEmbedInfo();
+    }
+
+    // Function to pop out the embed in a new tab
+    function popoutEmbed() {
+        // Open the full GitHub page in a new tab
+        window.open('https://zonikyo.github.io/neonwave/embeds/example', '_blank');
+    }
+
+    // Function to open Report or Help links
+    function openLink(url) {
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
