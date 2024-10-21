@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Horizontal Share Button</title>
+  <title>Horizontal Share Button with Larger Radius</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -16,7 +16,11 @@
 
     .share-container {
       position: relative;
-      width: 50px;
+      width: 150px; /* Increased width to expand interaction radius */
+      height: 150px; /* Increased height to expand interaction radius */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .share-btn {
@@ -31,6 +35,7 @@
       font-size: 20px;
       cursor: pointer;
       transition: background-color 0.3s;
+      z-index: 10; /* Ensures button stays on top */
     }
 
     .share-btn:hover {
