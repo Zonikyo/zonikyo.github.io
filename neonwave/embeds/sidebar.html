@@ -19,41 +19,12 @@
             width: 250px;
             padding: 20px;
             overflow-y: auto;
-            position: relative;
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #4f4f4f #1c1c1c; /* For Firefox */
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 16px; /* Thicker width of the scrollbar */
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background-color: #4f4f4f; /* Color of the scrollbar thumb */
-            border-radius: 10px; /* Rounded corners */
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: #1c1c1c; /* Color of the scrollbar track */
-            border-radius: 10px; /* Rounded corners */
         }
 
         .sidebar h2 {
             color: #fff;
             text-align: center;
-            margin: 0 0 10px 0; /* Adjust margin for smaller header */
-            font-size: 1.2em; /* Smaller font size */
-            position: sticky; /* Keep the header fixed at the top */
-            top: 20px; /* Space from the top */
-            background: #1c1c1c; /* Match sidebar background */
-            z-index: 1; /* Ensure it stays above the scrollbar */
-        }
-
-        .fade-effect {
-            height: 40px; /* Height of the fade effect */
-            background: linear-gradient(to bottom, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 1) 100%);
-            pointer-events: none; /* Ensure it doesn’t block interactions */
-            margin-top: -40px; /* Move up to overlap the header */
+            margin-bottom: 20px;
         }
 
         .game-thumbnail {
@@ -82,7 +53,6 @@
 
 <div class="sidebar">
     <h2>Recommended Games</h2>
-    <div class="fade-effect"></div>
     <div id="game-list"></div>
 </div>
 
