@@ -1,0 +1,14 @@
+{
+    "test": {
+        "embedUrl": "https://turbowarp.org/105500895/embed",
+        "title": "Minecraft",
+        "description": "A sandbox game where you can build and explore.",
+        "image": "path/to/minecraft-image.png"
+    },
+    "geometry": {
+        "embedUrl": "https://turbowarp.org/123456789/embed",
+        "title": "Geometry Dash",
+        "description": "A rhythm-based platformer game.",
+        "image": "path/to/geometry-image.png"
+    }
+}
