@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Button with Slide-Out Options</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #1c1c1c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .share-container {
+      position: relative;
+      width: 60px;
+    }
+
+    .share-btn {
+      width: 50px;
+      height: 50px;
+      background-color: #ff6f61;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .share-btn:hover {
+      background-color: #ff4433;
+    }
+
+    .share-options {
+      position: absolute;
+      left: 60px;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform: translateX(-20px);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .share-container:hover .share-options {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+
+    .share-option {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background-color: #333;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .share-option img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .share-option:hover {
+      background-color: #ff6f61;
+    }
+  </style>
+</head>
+<body>
+
+<div class="share-container">
+  <div class="share-btn">➤</div>
+  <div class="share-options">
+    <div class="share-option" onclick="window.open('https://facebook.com', '_blank')">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
+    </div>
+    <div class="share-option" onclick="window.open('https://twitter.com', '_blank')">
+      <img src="https://upload.wikimedia.org/wikipedia/en/6/60/Twitter_Logo_as_of_2021.svg" alt="Twitter">
+    </div>
+    <div class="share-option" onclick="window.open('https://www.tiktok.com', '_blank')">
+      <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok">
+    </div>
+    <div class="share-option" onclick="window.open('https://www.youtube.com', '_blank')">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube">
+    </div>
+    <div class="share-option" onclick="copyToClipboard()">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Clipboard.svg" alt="Copy Link">
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyToClipboard() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+</script>
+
+</body>
+</html>
