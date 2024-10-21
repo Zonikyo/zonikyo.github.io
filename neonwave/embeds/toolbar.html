@@ -1,120 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Horizontal Share Button with Larger Radius</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #1c1c1c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .share-container {
-      position: relative;
-      width: 150px; /* Increased width to expand interaction radius */
-      height: 150px; /* Increased height to expand interaction radius */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .share-btn {
-      width: 50px;
-      height: 50px;
-      background-color: #ff6f61;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      z-index: 10; /* Ensures button stays on top */
-    }
-
-    .share-btn:hover {
-      background-color: #ff4433;
-    }
-
-    .share-options {
-      position: absolute;
-      top: 0;
-      left: 60px;
-      display: flex;
-      gap: 10px;
-      opacity: 0;
-      transform: translateX(-20px);
-      pointer-events: none;
-      transition: all 0.3s ease;
-    }
-
-    .share-container:hover .share-options {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: all;
-    }
-
-    .share-option {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      background-color: #333;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .share-option img {
-      width: 20px;
-      height: 20px;
-    }
-
-    .share-option:hover {
-      background-color: #ff6f61;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Button Embed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1c1c1c;
+            font-family: 'Poppins', sans-serif;
+        }
+        .share-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .share-button, .social-buttons {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .share-button {
+            padding: 15px 30px;
+            background-color: #fff;
+            color: #1c1c1c;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .share-button:hover {
+            background-color: #444;
+            color: #fff;
+        }
+        .social-buttons {
+            display: none;
+            flex-direction: row;
+            gap: 10px;
+        }
+        .social-icon {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .social-icon:hover {
+            background-color: #444;
+        }
+    </style>
 </head>
 <body>
+    <div class="share-container">
+        <button class="share-button" id="shareButton">
+            <span>Share</span>
+            <img src="share-icon.png" alt="Share Icon" width="20">
+        </button>
 
-<div class="share-container">
-  <div class="share-btn">➤</div>
-  <div class="share-options">
-    <div class="share-option" onclick="window.open('https://facebook.com', '_blank')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
+        <div class="social-buttons" id="socialButtons">
+            <div class="social-icon" onclick="window.open('https://twitter.com/share', '_blank')">
+                <img src="twitter.png" alt="Twitter" width="20">
+            </div>
+            <div class="social-icon" onclick="window.open('https://www.tiktok.com/', '_blank')">
+                <img src="tiktok.png" alt="TikTok" width="20">
+            </div>
+            <div class="social-icon" onclick="window.open('https://www.youtube.com/', '_blank')">
+                <img src="youtube.png" alt="YouTube" width="20">
+            </div>
+            <div class="social-icon" onclick="window.open('https://www.facebook.com/', '_blank')">
+                <img src="facebook.png" alt="Facebook" width="20">
+            </div>
+            <div class="social-icon" onclick="window.open('https://www.reddit.com/', '_blank')">
+                <img src="reddit.png" alt="Reddit" width="20">
+            </div>
+            <div class="social-icon" onclick="copyToClipboard('https://your-preset-link.com')">
+                <img src="copy-link.png" alt="Copy Link" width="20">
+            </div>
+        </div>
     </div>
-    <div class="share-option" onclick="window.open('https://twitter.com', '_blank')">
-      <img src="https://upload.wikimedia.org/wikipedia/en/6/60/Twitter_Logo_as_of_2021.svg" alt="Twitter">
-    </div>
-    <div class="share-option" onclick="window.open('https://www.tiktok.com', '_blank')">
-      <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok">
-    </div>
-    <div class="share-option" onclick="window.open('https://www.youtube.com', '_blank')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube">
-    </div>
-    <div class="share-option" onclick="copyToClipboard()">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/Clipboard.svg" alt="Copy Link">
-    </div>
-  </div>
-</div>
 
-<script>
-  function copyToClipboard() {
-    const url = 'https://sites.google.com/view/neonwave';
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Link copied to clipboard!");
-    }).catch(err => {
-      console.error('Failed to copy: ', err);
-    });
-  }
-</script>
+    <script>
+        const shareButton = document.getElementById('shareButton');
+        const socialButtons = document.getElementById('socialButtons');
 
+        shareButton.addEventListener('click', () => {
+            shareButton.style.opacity = '0';
+            shareButton.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                shareButton.style.display = 'none';
+                socialButtons.style.display = 'flex';
+                socialButtons.style.opacity = '1';
+            }, 400);
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+    </script>
 </body>
 </html>
