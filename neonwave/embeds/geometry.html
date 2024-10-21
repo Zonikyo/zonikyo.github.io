@@ -16,10 +16,11 @@
         }
         #adContainer {
             position: absolute;
+            top: 0;
             width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            height: auto;
+            text-align: center;
+            padding: 10px 0;
         }
         #embedContainer {
             display: none;
@@ -92,8 +93,20 @@
 <div id="loadingMessage">Your Game is loading... please wait</div>
 
 <div id="adContainer">
-    <!-- Google Ad -->
-    <iframe id="adIframe" src="AD_CODE_HERE"></iframe>
+    <!-- Google AdSense Code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9127083258392803"
+        crossorigin="anonymous"></script>
+    <!-- In-game ads -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-9127083258392803"
+        data-ad-slot="1420487985"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
     <!-- Loading text -->
     <div id="loadingText">Ad is loading...</div>
 </div>
