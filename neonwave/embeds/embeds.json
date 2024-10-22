@@ -1,6 +1,6 @@
 {
     "minecraft": {
-        "embedUrl": "https://turbowarp.org/105500895/embed",
+        "embedUrl": "https://eag.vercel.app/",
         "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/minecraft",
         "title": "Minecraft",
         "description": "A sandbox game where you can build and explore.",
@@ -12,5 +12,12 @@
         "title": "Geometry Dash",
         "description": "A rhythm-based platformer game.",
         "image": "path/to/geometry-image.png"
+    },
+    "cookie": {
+        "embedUrl": "https://ozh.github.io/cookieclicker/",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/cookie",
+        "title": "Cookie Clicker",
+        "description": "A cookie clicker game. Very addicitive.",
+        "image": "path/to/minecraft-image.png"
     }
 }
