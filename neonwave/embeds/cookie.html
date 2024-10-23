@@ -74,6 +74,20 @@
         .spacer {
             width: 15px;
         }
+        /* Styles for the toggle button */
+        .toggleButton {
+            background-color: #4a4a4a;
+            padding: 10px 15px;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+        }
+        .toggleButton span {
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +105,7 @@
         <div style="flex-grow: 1;"></div> <!-- Spacer -->
         <!-- Report Button -->
         <div class="controlButton" onclick="openLink('https://example.com/report')">
-            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/report-file.png" alt="Report Icon"> Report
+            <img src="https://zonikyo.github.io/report.png" alt="Report Icon"> Report
         </div>
         <div class="spacer"></div>
         <!-- Help Button -->
@@ -99,10 +113,17 @@
             <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
         </div>
     </div>
+
+    <!-- Toggle for Normal/Proxied mode -->
+    <div id="toggleContainer" style="position: absolute; bottom: 50px; left: 10px;">
+        <div class="toggleButton" id="toggleModeButton">
+            <span id="toggleText">Normal Mode</span>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Fetch embed information based on the URL
+    // Function to fetch embed information
     function fetchEmbedInfo() {
         const urlParts = window.location.pathname.split('/');
         const gameId = urlParts[urlParts.length - 1];
@@ -112,7 +133,8 @@
             .then(data => {
                 if (data[gameId]) {
                     const embedInfo = data[gameId];
-                    document.getElementById('embedIframe').src = embedInfo.embedUrl;
+                    document.getElementById('embedIframe').src = getEmbedUrl(embedInfo.embedUrl);
+
                     document.getElementById('loadingMessage').textContent = embedInfo.title;
 
                     // Set the popout button action dynamically
@@ -129,8 +151,42 @@
             });
     }
 
-    // Call the function to fetch embed info when the page loads
+    // Function to determine if Proxied Mode is enabled
+    function isProxiedModeEnabled() {
+        return localStorage.getItem('proxiedMode') === 'true';
+    }
+
+    // Function to update the iframe URL based on the mode
+    function getEmbedUrl(normalUrl) {
+        if (isProxiedModeEnabled()) {
+            const proxiedUrl = `https://translate.google.com/translate?sl=auto&tl=en&u=${encodeURIComponent(normalUrl)}`;
+            return proxiedUrl;
+        } else {
+            return normalUrl;
+        }
+    }
+
+    // Function to toggle between Normal and Proxied modes
+    function toggleMode() {
+        const proxiedMode = isProxiedModeEnabled();
+        if (proxiedMode) {
+            localStorage.setItem('proxiedMode', 'false');
+            document.getElementById('toggleText').textContent = 'Normal Mode';
+        } else {
+            localStorage.setItem('proxiedMode', 'true');
+            document.getElementById('toggleText').textContent = 'Proxied Mode';
+        }
+        fetchEmbedInfo(); // Refresh the iframe with the new URL
+    }
+
+    // Initialize toggle button state and fetch embed info
     window.onload = function() {
+        if (isProxiedModeEnabled()) {
+            document.getElementById('toggleText').textContent = 'Proxied Mode';
+        } else {
+            document.getElementById('toggleText').textContent = 'Normal Mode';
+        }
+        document.getElementById('toggleModeButton').addEventListener('click', toggleMode);
         fetchEmbedInfo();
     };
 
