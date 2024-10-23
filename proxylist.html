@@ -78,21 +78,36 @@
         ];
 
         proxies.forEach(proxy => {
-            fetch(proxy.url, { mode: 'no-cors' })
-                .then(() => {
-                    document.getElementById(proxy.statusId).textContent = 'Can Connect';
-                    document.getElementById(proxy.statusId).classList.add('green');
-                })
-                .catch((error) => {
-                    if (error.message.includes('failed')) {
-                        document.getElementById(proxy.statusId).textContent = 'Blocked or Down';
-                        document.getElementById(proxy.statusId).classList.add('orange');
-                    } else if (error.message.includes('certificate')) {
-                        document.getElementById(proxy.statusId).textContent = 'Blocked';
-                        document.getElementById(proxy.statusId).classList.add('red');
-                    }
-                });
+            checkProxy(proxy.url, proxy.statusId);
         });
+
+        function checkProxy(url, statusId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.timeout = 5000; // Set a timeout to handle unresponsive URLs
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    document.getElementById(statusId).textContent = 'Can Connect';
+                    document.getElementById(statusId).classList.add('green');
+                } else if (xhr.status === 0 || xhr.status >= 400) {
+                    document.getElementById(statusId).textContent = 'Blocked or Down';
+                    document.getElementById(statusId).classList.add('orange');
+                }
+            };
+
+            xhr.onerror = function () {
+                document.getElementById(statusId).textContent = 'Blocked';
+                document.getElementById(statusId).classList.add('red');
+            };
+
+            xhr.ontimeout = function () {
+                document.getElementById(statusId).textContent = 'Blocked or Down';
+                document.getElementById(statusId).classList.add('orange');
+            };
+
+            xhr.send();
+        }
     </script>
 </body>
 </html>
