@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Translate Proxy Viewer</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+        }
+
+        input {
+            width: 300px;
+        }
+
+        iframe {
+            margin-top: 20px;
+            width: 90%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Google Translate Proxy Viewer</h1>
+
+    <form id="proxyForm">
+        <input type="url" id="urlInput" placeholder="Enter a URL" required>
+        <input type="text" id="searchInput" placeholder="Enter a search query (optional)">
+        <button type="submit">View in Google Translate Proxy</button>
+    </form>
+
+    <iframe id="proxyFrame"></iframe>
+
+    <script>
+        document.getElementById('proxyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const url = document.getElementById('urlInput').value;
+            const searchQuery = document.getElementById('searchInput').value;
+            let fullUrl = url;
+
+            // Append search query if provided
+            if (searchQuery) {
+                const searchEncoded = encodeURIComponent(searchQuery);
+                fullUrl += `?q=${searchEncoded}`;
+            }
+
+            // Create Google Translate proxy URL
+            const googleTranslateUrl = `https://translate.google.com/translate?hl=en&sl=auto&tl=en&u=${encodeURIComponent(fullUrl)}`;
+
+            // Update iframe source
+            document.getElementById('proxyFrame').src = googleTranslateUrl;
+        });
+    </script>
+
+</body>
+</html>
