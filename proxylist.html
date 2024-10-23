@@ -3,107 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxy List</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <title>Proxy Checker</title>
     <style>
         body {
             background-color: #1c1c1c;
-            color: #ffffff;
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            margin: 0;
-            padding: 0;
+            color: white;
+            padding: 20px;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
+
         h1 {
-            margin-top: 20px;
+            color: #ffffff;
+            text-align: center;
         }
-        .reload-btn {
-            background-color: #ffffff;
-            color: #1c1c1c;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+
+        .url-list {
+            margin: 20px 0;
+            padding: 0;
+            list-style: none;
         }
-        .reload-btn:hover {
-            background-color: #cccccc;
-        }
-        .proxy-list {
-            width: 90%;
-            max-width: 800px;
-            border-collapse: collapse;
-        }
-        .proxy-list th, .proxy-list td {
-            border: 1px solid #ffffff;
+
+        .url-item {
             padding: 10px;
-            text-align: left;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2a2a2a;
         }
-        .proxy-list th {
-            background-color: #333333;
+
+        .status {
+            font-size: 16px;
+            font-weight: bold;
         }
-        .proxy-list tr:nth-child(even) {
-            background-color: #2c2c2c;
+
+        .green {
+            color: #00ff00;
         }
-        .proxy-list tr:nth-child(odd) {
-            background-color: #3c3c3c;
+
+        .red {
+            color: #ff0000;
+        }
+
+        .orange {
+            color: #ffa500;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Available HTTP/HTTPS Proxies</h1>
-        <button class="reload-btn" onclick="loadProxies()">Reload Proxies</button>
-        <table class="proxy-list">
-            <thead>
-                <tr>
-                    <th>IP Address</th>
-                    <th>Port</th>
-                    <th>Protocol</th>
-                </tr>
-            </thead>
-            <tbody id="proxy-table-body">
-                <!-- Proxies will be populated here -->
-            </tbody>
-        </table>
-    </div>
+    <h1>Proxy Status Checker</h1>
+    <ul class="url-list" id="proxy-list">
+        <li class="url-item">
+            <span class="url">https://exampleproxy1.com</span>
+            <span class="status" id="status1">Checking...</span>
+        </li>
+        <li class="url-item">
+            <span class="url">https://exampleproxy2.com</span>
+            <span class="status" id="status2">Checking...</span>
+        </li>
+        <li class="url-item">
+            <span class="url">https://exampleproxy3.com</span>
+            <span class="status" id="status3">Checking...</span>
+        </li>
+    </ul>
 
     <script>
-        const apiKey = 'AdjFLTZLUwdHAwShJ6r8GespB8YeWmVXK4vF81d4QuXH';
+        const proxies = [
+            { url: 'https://exampleproxy1.com', statusId: 'status1' },
+            { url: 'https://exampleproxy2.com', statusId: 'status2' },
+            { url: 'https://exampleproxy3.com', statusId: 'status3' }
+        ];
 
-        function loadProxies() {
-            fetch(`https://proxify.io/api/proxy/list?key=${apiKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    const proxyTableBody = document.getElementById('proxy-table-body');
-                    proxyTableBody.innerHTML = ''; // Clear existing proxies
-
-                    data.proxies.forEach(proxy => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${proxy.ip}</td>
-                            <td>${proxy.port}</td>
-                            <td>${proxy.protocol}</td>
-                        `;
-                        proxyTableBody.appendChild(row);
-                    });
+        proxies.forEach(proxy => {
+            fetch(proxy.url, { mode: 'no-cors' })
+                .then(() => {
+                    document.getElementById(proxy.statusId).textContent = 'Can Connect';
+                    document.getElementById(proxy.statusId).classList.add('green');
                 })
-                .catch(error => {
-                    console.error('Error fetching proxies:', error);
+                .catch((error) => {
+                    if (error.message.includes('failed')) {
+                        document.getElementById(proxy.statusId).textContent = 'Blocked or Down';
+                        document.getElementById(proxy.statusId).classList.add('orange');
+                    } else if (error.message.includes('certificate')) {
+                        document.getElementById(proxy.statusId).textContent = 'Blocked';
+                        document.getElementById(proxy.statusId).classList.add('red');
+                    }
                 });
-        }
-
-        // Initial load of proxies
-        loadProxies();
+        });
     </script>
 </body>
 </html>
