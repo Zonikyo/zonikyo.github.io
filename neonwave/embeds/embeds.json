@@ -1,7 +1,7 @@
 {
     "minecraft": {
         "embedUrl": "https://zonikyo.github.io/EaglercraftX_1.8_u40_Offline_Signed.html",
-        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/minecraft",
+        "popoutUrl": "https://zonikyo.github.io/EaglercraftX_1.8_u40_Offline_Signed.html",
         "title": "Minecraft",
         "description": "A sandbox game where you can build and explore.",
         "image": "path/to/minecraft-image.png"
