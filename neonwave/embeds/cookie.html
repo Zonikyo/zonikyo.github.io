@@ -3,138 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad to Embed with Proxy Features</title>
+    <title>Embed with Proxy Feature</title>
+
+    <!-- AuthPro Integration -->
+    <script src="https://www.authpro.com/js/auth.js"></script>
+    <script>
+      var ap = new AuthPro('CoolD1234');
+    </script>
+    <script type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-        
+
         body {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #1c1c1c; 
+            background-color: #1c1c1c;
+            overflow: hidden;
+        }
+        #embedContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         iframe {
             width: 100%;
-            height: calc(100vh - 70px); 
+            height: 56.25vw; /* 16:9 aspect ratio */
+            max-height: calc(100vh - 70px);
             border: none;
             border-radius: 15px;
+            overflow: hidden;
         }
-        #controls {
+        #loadingMessage {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        #controls, #proxyControls {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
-            padding: 10px 20px;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
         }
         .controlButton {
-            background-color: #2a2a2a; 
-            padding: 10px 15px; 
-            border: 2px solid white; 
-            border-radius: 8px; 
+            background-color: #2a2a2a;
+            padding: 10px 15px;
+            border: 2px solid white;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
-            align-items: center; 
-            color: white; 
+            align-items: center;
+            color: white;
         }
         .controlButton img {
             width: 24px;
             height: 24px;
-            margin-right: 8px; 
+            margin-right: 8px;
         }
         .spacer {
-            width: 15px; 
+            width: 15px;
         }
-        .proxyInput {
+        #proxyControls {
             display: none;
-            margin-top: 10px;
+            flex-direction: column;
         }
-        .proxyInput input {
-            width: 100%;
+        #proxyInput, #proxyDropdown {
+            margin: 10px 0;
             padding: 10px;
+            font-size: 16px;
+            width: 100%;
             border-radius: 8px;
-            border: 2px solid #2a2a2a;
-            color: #1c1c1c;
+        }
+        #backButton, #okayButton {
+            width: calc(50% - 10px);
+            padding: 10px 15px;
+            background-color: #2a2a2a;
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+        #okayButton.disconnect {
+            background-color: red;
         }
     </style>
-
-    <script src="https://www.authpro.com/js/auth.js"></script>
-    <script>
-        var ap = new AuthPro('CoolD1234');
-    </script>
-    <script type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"></script>
 </head>
 <body>
 
 <div id="embedContainer">
     <!-- Embedded Content -->
-    <iframe id="embedIframe" src="EMBED_URL_HERE" scrolling="no"></iframe>
-    
-    <!-- Control buttons for Popout, Report, and Proxy -->
+    <iframe id="embedIframe" src="" scrolling="no"></iframe>
+
+    <!-- Control buttons for Popout, Report, Help, and Apply Proxy -->
     <div id="controls">
-        <!-- Popout Button -->
-        <div class="controlButton" onclick="popoutEmbed()">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="Popout Icon"> Popout
+        <!-- Apply Proxy Button -->
+        <div class="controlButton" id="applyProxyButton">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/cloud.png" alt="Cloud Icon"> Apply Proxy
         </div>
         <div class="spacer"></div>
+
+        <!-- Popout Button -->
+        <div class="controlButton" id="popoutButton">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/expand-arrow.png" alt="Popout Icon"> Popout
+        </div>
+        <div style="flex-grow: 1;"></div> <!-- Spacer -->
+
         <!-- Report Button -->
-        <div class="controlButton" onclick="openLink('https://zonikyo.github.io/report.png')">
+        <div class="controlButton" id="reportButton" onclick="openLink('https://example.com/report')">
             <img src="https://zonikyo.github.io/report.png" alt="Report Icon"> Report
         </div>
         <div class="spacer"></div>
-        <!-- Proxy Button -->
-        <div class="controlButton" onclick="toggleProxyInput()">
-            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/cloud.png" alt="Proxy Icon"> Switch Proxy
+
+        <!-- Help Button -->
+        <div class="controlButton" onclick="openLink('https://example.com/help')">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/help.png" alt="Help Icon"> Help
         </div>
     </div>
 
-    <!-- Proxy Input Field -->
-    <div class="proxyInput" id="proxyInput">
-        <input type="text" id="proxyUrl" placeholder="Enter your proxy link">
-        <button class="controlButton" onclick="applyProxy()">Apply Proxy</button>
+    <!-- Proxy Controls (Hidden by Default) -->
+    <div id="proxyControls">
+        <input type="text" id="proxyInput" placeholder="Enter Proxy URL" />
+        <select id="proxyDropdown">
+            <option value="interstellar">Interstellar</option>
+            <option value="ultraviolet">Ultraviolet</option>
+            <option value="rammerhead">Rammerhead</option>
+        </select>
+        <div style="display: flex; justify-content: space-between;">
+            <div id="backButton" onclick="showControls()">Back</div>
+            <div id="okayButton" onclick="applyProxy()">Okay</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Popout Embed
-    function popoutEmbed() {
-        window.open('https://zonikyo.github.io/neonwave/embeds/example', '_blank');
+    // Fetch embed information based on the URL
+    function fetchEmbedInfo() {
+        const urlParts = window.location.pathname.split('/');
+        const gameId = urlParts[urlParts.length - 1];
+
+        fetch('embeds.json') // Load the external JSON file
+            .then(response => response.json())
+            .then(data => {
+                if (data[gameId]) {
+                    const embedInfo = data[gameId];
+                    document.getElementById('embedIframe').src = embedInfo.embedUrl;
+                    document.getElementById('loadingMessage').textContent = embedInfo.title;
+
+                    // Set the popout button action dynamically
+                    document.getElementById('popoutButton').onclick = function() {
+                        window.open(embedInfo.popoutUrl, '_blank');
+                    };
+                } else {
+                    console.error('Game not found:', gameId);
+                    document.getElementById('loadingMessage').textContent = 'Game not found';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching embed data:', error);
+            });
     }
 
-    // Open external links
+    // Call the function to fetch embed info when the page loads
+    window.onload = function() {
+        fetchEmbedInfo();
+        loadProxySettings();
+    };
+
+    // Show main controls
+    function showControls() {
+        document.getElementById('proxyControls').style.display = 'none';
+        document.getElementById('controls').style.display = 'flex';
+    }
+
+    // Show proxy input fields
+    document.getElementById('applyProxyButton').onclick = function() {
+        document.getElementById('controls').style.display = 'none';
+        document.getElementById('proxyControls').style.display = 'flex';
+    };
+
+    // Apply proxy settings and update the embed URL
+    function applyProxy() {
+        const proxyUrl = document.getElementById('proxyInput').value;
+        const proxyType = document.getElementById('proxyDropdown').value;
+
+        if (!proxyUrl) {
+            alert('Please enter a proxy URL.');
+            return;
+        }
+
+        let modifiedUrl;
+        switch (proxyType) {
+            case 'interstellar':
+                modifiedUrl = `https://interstellar-proxy.com/service/${proxyUrl}`;
+                break;
+            case 'ultraviolet':
+                modifiedUrl = `https://ultraviolet-proxy.com/service/${proxyUrl}`;
+                break;
+            case 'rammerhead':
+                modifiedUrl = `https://rammerhead-proxy.com/service/${proxyUrl}`;
+                break;
+        }
+
+        document.getElementById('embedIframe').src = modifiedUrl;
+        document.getElementById('okayButton').textContent = 'Disconnect';
+        document.getElementById('okayButton').classList.add('disconnect');
+
+        // Save settings to localStorage
+        localStorage.setItem('proxyUrl', proxyUrl);
+        localStorage.setItem('proxyType', proxyType);
+    }
+
+    // Load proxy settings from localStorage if available
+    function loadProxySettings() {
+        const savedProxyUrl = localStorage.getItem('proxyUrl');
+        const savedProxyType =         localStorage.getItem('proxyType');
+
+        if (savedProxyUrl && savedProxyType) {
+            let modifiedUrl;
+
+            switch (savedProxyType) {
+                case 'interstellar':
+                    modifiedUrl = `https://interstellar-proxy.com/service/${savedProxyUrl}`;
+                    break;
+                case 'ultraviolet':
+                    modifiedUrl = `https://ultraviolet-proxy.com/service/${savedProxyUrl}`;
+                    break;
+                case 'rammerhead':
+                    modifiedUrl = `https://rammerhead-proxy.com/service/${savedProxyUrl}`;
+                    break;
+            }
+
+            document.getElementById('embedIframe').src = modifiedUrl;
+            document.getElementById('proxyInput').value = savedProxyUrl;
+            document.getElementById('proxyDropdown').value = savedProxyType;
+
+            // Update UI to show disconnect option
+            document.getElementById('okayButton').textContent = 'Disconnect';
+            document.getElementById('okayButton').classList.add('disconnect');
+        }
+    }
+
+    // Disconnect proxy and reset the embed iframe
+    function applyProxy() {
+        const proxyUrl = document.getElementById('proxyInput').value;
+        const proxyType = document.getElementById('proxyDropdown').value;
+
+        if (!proxyUrl) {
+            alert('Please enter a proxy URL.');
+            return;
+        }
+
+        // If button is in disconnect mode, reset proxy
+        if (document.getElementById('okayButton').classList.contains('disconnect')) {
+            localStorage.removeItem('proxyUrl');
+            localStorage.removeItem('proxyType');
+            fetchEmbedInfo(); // Reload the original iframe source
+            document.getElementById('okayButton').textContent = 'Okay';
+            document.getElementById('okayButton').classList.remove('disconnect');
+            return;
+        }
+
+        // Generate proxy URL based on proxy type
+        let modifiedUrl;
+        switch (proxyType) {
+            case 'interstellar':
+                modifiedUrl = `https://interstellar-proxy.com/service/${proxyUrl}`;
+                break;
+            case 'ultraviolet':
+                modifiedUrl = `https://ultraviolet-proxy.com/service/${proxyUrl}`;
+                break;
+            case 'rammerhead':
+                modifiedUrl = `https://rammerhead-proxy.com/service/${proxyUrl}`;
+                break;
+        }
+
+        // Update the iframe with the proxy URL
+        document.getElementById('embedIframe').src = modifiedUrl;
+        document.getElementById('okayButton').textContent = 'Disconnect';
+        document.getElementById('okayButton').classList.add('disconnect');
+
+        // Save settings to localStorage
+        localStorage.setItem('proxyUrl', proxyUrl);
+        localStorage.setItem('proxyType', proxyType);
+    }
+
+    // Helper function to open external links
     function openLink(url) {
         window.open(url, '_blank');
-    }
-
-    // Toggle Proxy Input visibility
-    function toggleProxyInput() {
-        const proxyInput = document.getElementById('proxyInput');
-        proxyInput.style.display = proxyInput.style.display === 'block' ? 'none' : 'block';
-    }
-
-    // Apply Proxy
-    function applyProxy() {
-        const proxyUrl = document.getElementById('proxyUrl').value;
-        const embedIframe = document.getElementById('embedIframe');
-        
-        // Check if the proxy URL is from a supported proxy
-        if (proxyUrl.includes('holyunblocker')) {
-            embedIframe.src = `${proxyUrl}/games/embed/EMBED_URL_HERE`;
-        } else {
-            alert("Unsupported proxy type. Please use a supported proxy link.");
-        }
-        
-        // Save proxy setting to localStorage
-        localStorage.setItem('proxyUrl', proxyUrl);
-    }
-
-    // Load saved proxy setting on page load
-    window.onload = function() {
-        const savedProxyUrl = localStorage.getItem('proxyUrl');
-        if (savedProxyUrl) {
-            document.getElementById('proxyUrl').value = savedProxyUrl;
-            applyProxy();
-        }
     }
 </script>
 
 </body>
 </html>
+
