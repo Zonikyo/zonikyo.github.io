@@ -34,36 +34,58 @@
     <!-- AuthPro SDK -->
     <script type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"></script>
 
-    <!-- Download Canny SDK -->
+    <!-- Canny SDK -->
     <script>!function(w,d,i,s){function l(){if(!d.getElementById(i)){var f=d.getElementsByTagName(s)[0],e=d.createElement(s);e.type="text/javascript",e.async=!0,e.src="https://canny.io/sdk.js",f.parentNode.insertBefore(e,f)}}if("function"!=typeof w.Canny){var c=function(){c.q.push(arguments)};c.q=[],w.Canny=c,"complete"===d.readyState?l():w.attachEvent?w.attachEvent("onload",l):w.addEventListener("load",l,!1)}}(window,document,"canny-jssdk","script");</script>
 
     <script>
-    // AuthPro user data callback
-    function onAuthProLoad() {
-        // Assuming the user data is loaded into AuthPro's object (check AuthPro's documentation for exact details)
-        var email = AuthProUser.email;
-        var login = AuthProUser.username; 
-        var avatarURL = AuthProUser.avatar || '';
-        var created = AuthProUser.created || new Date().toISOString(); // Using current date if user creation date is missing
-
-        // Identify user with Canny
-        Canny('identify', {
-            appID: '6719e33ffede910142f309b1',
-            user: {
-                email: email,
-                name: login,
-                id: login,
-                avatarURL: avatarURL,
-                created: new Date(created).toISOString()
-            }
-        });
+    // Debug function to check if AuthPro user data is loaded
+    function checkAuthProData() {
+        if (typeof AuthProUser !== 'undefined') {
+            console.log('AuthProUser:', AuthProUser); // Debugging to check what data is available
+            return true;
+        } else {
+            console.log('AuthProUser data not available yet.');
+            return false;
+        }
     }
 
-    // Ensure AuthPro data is loaded before running Canny identification
-    window.onload = function() {
+    // Wait for AuthPro user data to be available
+    function waitForAuthProUserData(callback) {
+        let attempts = 0;
+        const interval = setInterval(() => {
+            if (checkAuthProData() || attempts >= 10) {
+                clearInterval(interval);
+                callback();
+            }
+            attempts++;
+        }, 500); // Check every 500ms
+    }
+
+    // Function to identify user with Canny after AuthPro data is loaded
+    function identifyUserWithCanny() {
         if (typeof AuthProUser !== 'undefined') {
-            onAuthProLoad();
+            var email = AuthProUser.email;
+            var user = AuthProUser.user; 
+            var reg_date = AuthProUser.reg_date || new Date().toISOString(); // Fallback to current date if not available
+
+            // Canny identification with AuthPro data
+            Canny('identify', {
+                appID: '6719e33ffede910142f309b1',
+                user: {
+                    email: email,
+                    name: user,
+                    id: user,
+                    created: new Date(reg_date).toISOString()
+                }
+            });
+        } else {
+            console.log('AuthProUser data not available.');
         }
+    }
+
+    // Run the identification process after the window loads
+    window.onload = function() {
+        waitForAuthProUserData(identifyUserWithCanny);
     };
     </script>
 </head>
