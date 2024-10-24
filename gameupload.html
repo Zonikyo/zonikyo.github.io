@@ -24,8 +24,9 @@
             background-color: #333;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
         }
-        .container h1 {
+        h1 {
             font-size: 24px;
             margin-bottom: 20px;
         }
@@ -37,6 +38,7 @@
         }
         input, select, textarea {
             width: 100%;
+            box-sizing: border-box;
             padding: 10px;
             margin: 10px 0;
             border: none;
@@ -92,40 +94,35 @@
             text-decoration: underline;
             font-size: 14px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Request a Game</h1>
-
-    <!-- Progress Bar -->
-    <div class="progress-bar">
-        <div id="progress"></div>
-    </div>
-
-    <!-- Initial Selection -->
     <div id="start" class="step active">
+        <h1>Request a Game</h1>
+        <p>Choose an option:</p>
         <button onclick="showStep(1)">Suggest a Game</button>
         <br><br>
         <span class="link" onclick="showMultiGameForm()">Have multiple games?</span>
     </div>
 
-    <!-- Step 1: Game Name -->
+    <!-- Step-by-Step Form -->
     <div id="step1" class="step">
         <h1>What is the name of the game?</h1>
         <input type="text" id="gameName" placeholder="Enter the game name">
         <button onclick="nextStep(2)">Next</button>
     </div>
 
-    <!-- Step 2: Game URL -->
     <div id="step2" class="step">
         <h1>What is the URL of the game?</h1>
         <input type="url" id="gameURL" placeholder="Enter the game URL">
         <button onclick="nextStep(3)">Next</button>
     </div>
 
-    <!-- Step 3: Game Category -->
     <div id="step3" class="step">
         <h1>What is the category of this game?</h1>
         <select id="gameCategory">
@@ -134,12 +131,12 @@
             <option value="Arcade">Arcade</option>
             <option value="Strategy">Strategy</option>
         </select>
-        <button onclick="nextStep(4)">Next</button>
+        <button onclick="submitForm()">Submit</button>
     </div>
 
-    <!-- Thank You Step -->
     <div id="thankyou" class="step">
         <h1>Thank you for your submission!</h1>
+        <p>Your game has been successfully submitted.</p>
     </div>
 
     <!-- Multiple Game Submission Table -->
@@ -165,6 +162,11 @@
         <button onclick="submitMultipleGames()">Submit</button>
     </div>
 
+    <!-- Progress Bar -->
+    <div class="progress-bar hidden" id="progressBar">
+        <div id="progress"></div>
+    </div>
+
 </div>
 
 <script>
@@ -173,6 +175,7 @@
     function showStep(step) {
         document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
         document.getElementById('step' + step).classList.add('active');
+        document.getElementById('progressBar').classList.remove('hidden');
         updateProgress(step);
         currentStep = step;
     }
@@ -180,6 +183,14 @@
     function nextStep(step) {
         if (validateStep(currentStep)) {
             showStep(step);
+        }
+    }
+
+    function submitForm() {
+        if (validateStep(3)) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('thankyou').classList.add('active');
+            document.getElementById('progressBar').classList.add('hidden');
         }
     }
 
