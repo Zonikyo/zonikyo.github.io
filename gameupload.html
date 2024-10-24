@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Request Form</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            background-color: #1c1c1c;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-bar div {
+            height: 100%;
+            background-color: #007bff;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        .table-multi {
+            display: none;
+        }
+        .table-multi.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #555;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .link {
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Request a Game</h1>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div id="progress"></div>
+    </div>
+
+    <!-- Initial Selection -->
+    <div id="start" class="step active">
+        <button onclick="showStep(1)">Suggest a Game</button>
+        <br><br>
+        <span class="link" onclick="showMultiGameForm()">Have multiple games?</span>
+    </div>
+
+    <!-- Step 1: Game Name -->
+    <div id="step1" class="step">
+        <h1>What is the name of the game?</h1>
+        <input type="text" id="gameName" placeholder="Enter the game name">
+        <button onclick="nextStep(2)">Next</button>
+    </div>
+
+    <!-- Step 2: Game URL -->
+    <div id="step2" class="step">
+        <h1>What is the URL of the game?</h1>
+        <input type="url" id="gameURL" placeholder="Enter the game URL">
+        <button onclick="nextStep(3)">Next</button>
+    </div>
+
+    <!-- Step 3: Game Category -->
+    <div id="step3" class="step">
+        <h1>What is the category of this game?</h1>
+        <select id="gameCategory">
+            <option value="Puzzle">Puzzle</option>
+            <option value="Action">Action</option>
+            <option value="Arcade">Arcade</option>
+            <option value="Strategy">Strategy</option>
+        </select>
+        <button onclick="nextStep(4)">Next</button>
+    </div>
+
+    <!-- Thank You Step -->
+    <div id="thankyou" class="step">
+        <h1>Thank you for your submission!</h1>
+    </div>
+
+    <!-- Multiple Game Submission Table -->
+    <div id="multiGameForm" class="table-multi">
+        <h1>Submit Multiple Games</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Game Name</th>
+                    <th>Game URL</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody id="gameTable">
+                <tr>
+                    <td><input type="text" placeholder="Game Name"></td>
+                    <td><input type="url" placeholder="Game URL"></td>
+                    <td><input type="text" placeholder="Category"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="addRow()">Add Another Game</button>
+        <button onclick="submitMultipleGames()">Submit</button>
+    </div>
+
+</div>
+
+<script>
+    let currentStep = 0;
+
+    function showStep(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+        updateProgress(step);
+        currentStep = step;
+    }
+
+    function nextStep(step) {
+        if (validateStep(currentStep)) {
+            showStep(step);
+        }
+    }
+
+    function validateStep(step) {
+        if (step === 1 && !document.getElementById('gameName').value) {
+            alert('Please enter the game name.');
+            return false;
+        }
+        if (step === 2 && !document.getElementById('gameURL').value) {
+            alert('Please enter the game URL.');
+            return false;
+        }
+        return true;
+    }
+
+    function updateProgress(step) {
+        const progress = (step / 3) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+    }
+
+    function showMultiGameForm() {
+        document.getElementById('start').classList.remove('active');
+        document.getElementById('multiGameForm').classList.add('active');
+    }
+
+    function addRow() {
+        const table = document.getElementById('gameTable');
+        const row = table.insertRow();
+        row.innerHTML = '<td><input type="text" placeholder="Game Name"></td><td><input type="url" placeholder="Game URL"></td><td><input type="text" placeholder="Category"></td>';
+    }
+
+    function submitMultipleGames() {
+        alert('Thank you for submitting multiple games!');
+        document.getElementById('multiGameForm').classList.remove('active');
+    }
+</script>
+
+</body>
+</html>
