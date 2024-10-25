@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Section</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #1c1c1c;
+      color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .news-container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #2c2c2c;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .news-item {
+      border-bottom: 1px solid #444;
+      padding: 15px 0;
+      transition: background-color 0.3s ease;
+    }
+
+    .news-item:hover {
+      background-color: #3c3c3c;
+    }
+
+    .news-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #f5f5f5;
+      margin-bottom: 8px;
+    }
+
+    .news-date {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .news-description {
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    .read-more {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #0088cc;
+      text-decoration: none;
+    }
+
+    .read-more:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="news-container">
+    <div class="news-item">
+      <div class="news-title">News Headline 1</div>
+      <div class="news-date">October 26, 2024</div>
+      <div class="news-description">A brief description of the news article goes here, providing a summary that engages readers...</div>
+      <a href="https://example.com/news1" class="read-more" target="_blank">Read more</a>
+    </div>
+    <div class="news-item">
+      <div class="news-title">News Headline 2</div>
+      <div class="news-date">October 25, 2024</div>
+      <div class="news-description">Another summary of a news article with relevant details for readers interested in current events...</div>
+      <a href="https://example.com/news2" class="read-more" target="_blank">Read more</a>
+    </div>
+    <!-- Add more news items as needed -->
+  </div>
+</body>
+</html>
