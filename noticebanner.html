@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive iFrame Banner with Slides</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1c1c1c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .banner-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            border-radius: 15px;
+            border: 5px solid transparent;
+            background: linear-gradient(#1c1c1c, #1c1c1c) padding-box,
+                        linear-gradient(45deg, #ff00cc, #3333ff) border-box;
+        }
+
+        .slides {
+            position: relative;
+            height: 100%;
+            display: flex;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .slide-content {
+            position: absolute;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2vw;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .slide button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            border: none;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            font-size: 1.2vw;
+            transition: background 0.3s;
+        }
+
+        .slide button:hover {
+            background: linear-gradient(45deg, #3333ff, #ff00cc);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-content {
+                font-size: 4vw;
+            }
+
+            .slide button {
+                font-size: 3vw;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="banner-container">
+    <div class="slides" id="slides">
+        <div class="slide active" id="slide1">
+            <img src="https://via.placeholder.com/1600x900/ff00cc/ffffff?text=Slide+1" alt="Slide 1">
+            <div class="slide-content">
+                <p>Take 2 minutes to share your favorite game!</p>
+                <button onclick="openLink('https://neonwave.canny.io/game-requests')">Share now!</button>
+            </div>
+        </div>
+        <div class="slide" id="slide2">
+            <img src="https://via.placeholder.com/1600x900/3333ff/ffffff?text=Slide+2" alt="Slide 2">
+            <div class="slide-content">
+                <p>Apply to become a moderator for us!</p>
+                <button onclick="openLink('https://example.com/2')">Apply now!</button>
+            </div>
+        </div>
+        <div class="slide" id="slide3">
+            <img src="https://via.placeholder.com/1600x900/00ccff/ffffff?text=Slide+3" alt="Slide 3">
+            <div class="slide-content">
+                <p>Keep updated! Signup for updates on the website, new game drops and more!</p>
+                <button onclick="openLink('https://example.com/3')">Sign up!</button>
+            </div>
+        </div>
+        <div class="slide" id="slide4">
+            <img src="https://via.placeholder.com/1600x900/ffcc00/ffffff?text=Slide+4" alt="Slide 4">
+            <div class="slide-content">
+                <p>We want feedback!</p>
+                <button onclick="openLink('https://example.com/4')">Share with us</button>
+            </div>
+        </div>
+        <div class="slide" id="slide5">
+            <img src="https://via.placeholder.com/1600x900/00ffcc/ffffff?text=Slide+5" alt="Slide 5">
+            <div class="slide-content">
+                <p>Share with everyone you know!! (unless they work for contentkeeper)</p>
+                <button onclick="openLink('https://example.com/5')">Spread the word</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showNextSlide() {
+        // Hide current slide
+        slides[currentSlide].classList.remove('active');
+
+        // Move to the next slide, or loop back to the first slide
+        currentSlide = (currentSlide + 1) % totalSlides;
+
+        // Show next slide
+        slides[currentSlide].classList.add('active');
+    }
+
+    function openLink(url) {
+        window.open(url, '_blank');
+    }
+
+    // Automatically change slides every 5 seconds
+    setInterval(showNextSlide, 5000);
+</script>
+
+</body>
+</html>
