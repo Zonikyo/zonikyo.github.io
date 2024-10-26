@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonWave Arcade - Welcome</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1c1c1c;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .welcome-message {
+            display: none; /* Hidden by default */
+            font-size: 1.5rem;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="welcome-message" class="welcome-message">
+    Welcome, <span id="username"></span>!
+</div>
+
+<script src="https://authpro.com/api.js?site=CoolD1234"></script>
+<script>
+    // Wait for the AuthPro API to load
+    document.addEventListener('DOMContentLoaded', function () {
+        // Check if the user is logged in with AuthPro
+        AuthPro.ready(function () {
+            if (AuthPro.isLoggedIn()) {
+                // Retrieve the username
+                const username = AuthPro.getUserData('user');
+                document.getElementById('username').textContent = username;
+
+                // Display the welcome message
+                document.getElementById('welcome-message').style.display = 'block';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
