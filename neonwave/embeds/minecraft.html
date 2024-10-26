@@ -102,37 +102,39 @@
 </div>
 
 <script>
-    // Fetch embed information based on the URL
-    function fetchEmbedInfo() {
-        const urlParts = window.location.pathname.split('/');
-        const gameId = urlParts[urlParts.length - 1];
+    async function fetchEmbedInfo() {
+        try {
+            const urlParts = window.location.pathname.split('/');
+            const gameId = urlParts[urlParts.length - 1];
 
-        fetch('embeds.json') // Load the external JSON file
-            .then(response => response.json())
-            .then(data => {
-                if (data[gameId]) {
-                    const embedInfo = data[gameId];
-                    document.getElementById('embedIframe').src = embedInfo.embedUrl;
-                    document.getElementById('loadingMessage').textContent = embedInfo.title;
+            const response = await fetch('embeds.json');
+            if (!response.ok) {
+                throw new Error('Failed to load embeds.json');
+            }
 
-                    // Set the popout button action dynamically
-                    document.getElementById('popoutButton').onclick = function() {
-                        window.open(embedInfo.popoutUrl, '_blank');
-                    };
-                } else {
-                    console.error('Game not found:', gameId);
-                    document.getElementById('loadingMessage').textContent = 'Game not found';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching embed data:', error);
-            });
+            const data = await response.json();
+            if (!data[gameId]) {
+                document.getElementById('loadingMessage').textContent = 'Game not found';
+                console.error('Game not found:', gameId);
+                return;
+            }
+
+            const embedInfo = data[gameId];
+            document.getElementById('embedIframe').src = embedInfo.embedUrl;
+
+            // Set up the popout button with the URL from embeds.json
+            document.getElementById('popoutButton').onclick = () => {
+                window.open(embedInfo.popoutUrl, '_blank');
+            };
+
+            console.log('Embed info loaded:', embedInfo);
+        } catch (error) {
+            console.error('Error fetching embed data:', error);
+        }
     }
 
-    // Call the function to fetch embed info when the page loads
-    window.onload = function() {
-        fetchEmbedInfo();
-    };
+    // Load the embed information when the page loads
+    window.onload = fetchEmbedInfo;
 
     // Function to open Report or Help links
     function openLink(url) {
