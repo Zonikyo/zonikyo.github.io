@@ -108,20 +108,28 @@
         const urlParams = new URLSearchParams(window.location.search);
         const gameId = urlParams.get('game') || window.location.pathname.split('/').pop();
 
-        fetch('embeds.json') // Load the external JSON file
-            .then(response => response.json())
+        fetch('embeds.json') // Ensure the correct path to 'embeds.json'
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log("JSON data loaded:", data); // Log JSON data to confirm loading
                 if (data[gameId]) {
                     const embedInfo = data[gameId];
+                    console.log("Embed Info found for gameId:", embedInfo);
                     document.getElementById('embedIframe').src = embedInfo.embedUrl;
                     document.getElementById('loadingMessage').textContent = embedInfo.title;
 
                     // Set the popout button action dynamically
                     document.getElementById('popoutButton').onclick = function() {
+                        console.log("Popout button clicked, opening URL:", embedInfo.popoutUrl);
                         window.open(embedInfo.popoutUrl, '_blank');
                     };
                 } else {
-                    console.error('Game not found:', gameId);
+                    console.error('Game not found in JSON for gameId:', gameId);
                     document.getElementById('loadingMessage').textContent = 'Game not found';
                 }
             })
