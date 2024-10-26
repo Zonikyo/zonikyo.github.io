@@ -104,8 +104,9 @@
 <script>
     // Fetch embed information based on the URL
     function fetchEmbedInfo() {
-        const urlParts = window.location.pathname.split('/');
-        const gameId = urlParts[urlParts.length - 1];
+        // Attempt to extract the game ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('game') || window.location.pathname.split('/').pop();
 
         fetch('embeds.json') // Load the external JSON file
             .then(response => response.json())
@@ -126,6 +127,7 @@
             })
             .catch(error => {
                 console.error('Error fetching embed data:', error);
+                document.getElementById('loadingMessage').textContent = 'Error loading game';
             });
     }
 
