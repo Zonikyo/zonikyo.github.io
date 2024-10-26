@@ -26,5 +26,82 @@
         "title": "Bitlife",
         "description": "Bitlife life simulator.",
         "image": "path/to/minecraft-image.png"
+    },
+    "motox3m": {
+        "embedUrl": "https://chsunblocked.github.io/chilibowlflash/motox3m/",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/motox3m",
+        "title": "Bitlife",
+        "description": "Bitlife life simulator.",
+        "image": "path/to/minecraft-image.png"
+    },
+    "retrobowl": {
+        "embedUrl": "https://chsunblocked.github.io/yexex/retro-bowl/retro.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/retrobowl",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "cuttherope": {
+        "embedUrl": "https://chsunblocked.github.io/chilibowlflash/ctr/index.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/cuttherope",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "fruitninja": {
+        "embedUrl": "https://chsunblocked.github.io/games-1/fruitninja/",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/fruitninja",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "paperio2": {
+        "embedUrl": "https://chsunblocked.github.io/yexex/paperio2/",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/paperio2",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "happywheels": {
+        "embedUrl": "chsunblocked.github.io/chilibowlflash/hw/index.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/happywheels",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "monkeymart": {
+        "embedUrl": "https://chsunblocked.github.io/games-4/monkeymart/index%20(1).html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/monkeymart",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "1v1lol": {
+        "embedUrl": "https://chsunblocked.github.io/chilibowlflash/miscgame/1v1lol.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/1v1lol",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "run3": {
+        "embedUrl": "https://chsunblocked.github.io/chilibowlflash/run3/index.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/run3",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "bloonstd4": {
+        "embedUrl": "https://chsunblocked.github.io/yexex/btd4.html",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/bloonstd4",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
+    },
+    "slope": {
+        "embedUrl": "https://firespread01.github.io/slope/",
+        "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/slope",
+        "title": "Generic title - Not applicalble in this version",
+        "description": "description. not applicable in this version",
+        "image": "path/to/minecraft-image.png"
     }
 }
