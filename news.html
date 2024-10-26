@@ -12,25 +12,35 @@
       padding: 0;
     }
 
-    body {
+    body, html {
       font-family: 'Poppins', sans-serif;
       background-color: #1c1c1c;
       color: #f5f5f5;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .container {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      width: 200%;
+      transition: transform 0.6s ease;
+      height: 100vh;
+    }
+
+    .news-list, .news-detail {
+      width: 50%;
       padding: 20px;
       overflow-y: auto;
     }
 
-    .news-container {
-      width: 100%;
-      max-width: 700px;
+    .news-list {
+      background-color: #1c1c1c;
+    }
+
+    .news-detail {
       background-color: #2c2c2c;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
     }
 
     .news-item {
@@ -66,29 +76,71 @@
       margin-top: 10px;
       font-size: 0.9rem;
       color: #0088cc;
-      text-decoration: none;
+      cursor: pointer;
     }
 
-    .read-more:hover {
-      text-decoration: underline;
+    .back-button {
+      font-size: 1rem;
+      color: #0088cc;
+      cursor: pointer;
+      display: block;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="news-container">
-    <div class="news-item">
+  <div class="container">
+    <!-- News List -->
+    <div class="news-list">
+      <div class="news-item" onclick="showDetail('news1')">
+        <div class="news-title">News Headline 1</div>
+        <div class="news-date">October 26, 2024</div>
+        <div class="news-description">A brief description of the news article goes here, providing a summary...</div>
+        <span class="read-more">Read more</span>
+      </div>
+      <div class="news-item" onclick="showDetail('news2')">
+        <div class="news-title">News Headline 2</div>
+        <div class="news-date">October 25, 2024</div>
+        <div class="news-description">Another summary of a news article with relevant details...</div>
+        <span class="read-more">Read more</span>
+      </div>
+      <!-- Add more news items as needed -->
+    </div>
+
+    <!-- News Detail -->
+    <div class="news-detail" id="news1">
+      <span class="back-button" onclick="showList()">← Back to News List</span>
       <div class="news-title">News Headline 1</div>
       <div class="news-date">October 26, 2024</div>
-      <div class="news-description">A brief description of the news article goes here, providing a summary that engages readers...</div>
-      <a href="https://example.com/news1" class="read-more" target="_blank">Read more</a>
+      <div class="news-description">
+        Full details about News Headline 1 go here. This includes a deeper dive into the article with all necessary content.
+      </div>
     </div>
-    <div class="news-item">
+
+    <div class="news-detail" id="news2">
+      <span class="back-button" onclick="showList()">← Back to News List</span>
       <div class="news-title">News Headline 2</div>
       <div class="news-date">October 25, 2024</div>
-      <div class="news-description">Another summary of a news article with relevant details for readers interested in current events...</div>
-      <a href="https://example.com/news2" class="read-more" target="_blank">Read more</a>
+      <div class="news-description">
+        Full details about News Headline 2 go here. This provides comprehensive information about the news.
+      </div>
     </div>
-    <!-- Add more news items as needed -->
   </div>
+
+  <script>
+    const container = document.querySelector('.container');
+    const newsList = document.querySelector('.news-list');
+    const newsDetails = document.querySelectorAll('.news-detail');
+
+    function showDetail(newsId) {
+      newsDetails.forEach(detail => detail.style.display = 'none');
+      document.getElementById(newsId).style.display = 'block';
+      container.style.transform = 'translateX(-50%)';
+    }
+
+    function showList() {
+      container.style.transform = 'translateX(0)';
+    }
+  </script>
 </body>
 </html>
