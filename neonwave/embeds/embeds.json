@@ -21,7 +21,7 @@
         "image": "path/to/minecraft-image.png"
     },
     "bitlife": {
-        "embedUrl": "https://chsunblocked.github.io/embed/?url=/games-1/bitlife/index.html",
+        "embedUrl": "https://chsunblocked.github.io/games-1/bitlife/index.html",
         "popoutUrl": "https://zonikyo.github.io/neonwave/embeds/bitlife",
         "title": "Bitlife",
         "description": "Bitlife life simulator",
