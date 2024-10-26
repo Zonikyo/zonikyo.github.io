@@ -102,47 +102,39 @@
 </div>
 
 <script>
-    // Fetch embed information based on the URL
-    function fetchEmbedInfo() {
-        // Attempt to extract the game ID from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameId = urlParams.get('game') || window.location.pathname.split('/').pop();
+    async function fetchEmbedInfo() {
+        try {
+            const urlParts = window.location.pathname.split('/');
+            const gameId = urlParts[urlParts.length - 1];
 
-        fetch('embeds.json') // Ensure the correct path to 'embeds.json'
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("JSON data loaded:", data); // Log JSON data to confirm loading
-                if (data[gameId]) {
-                    const embedInfo = data[gameId];
-                    console.log("Embed Info found for gameId:", embedInfo);
-                    document.getElementById('embedIframe').src = embedInfo.embedUrl;
-                    document.getElementById('loadingMessage').textContent = embedInfo.title;
+            const response = await fetch('embeds.json');
+            if (!response.ok) {
+                throw new Error('Failed to load embeds.json');
+            }
 
-                    // Set the popout button action dynamically
-                    document.getElementById('popoutButton').onclick = function() {
-                        console.log("Popout button clicked, opening URL:", embedInfo.popoutUrl);
-                        window.open(embedInfo.popoutUrl, '_blank');
-                    };
-                } else {
-                    console.error('Game not found in JSON for gameId:', gameId);
-                    document.getElementById('loadingMessage').textContent = 'Game not found';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching embed data:', error);
-                document.getElementById('loadingMessage').textContent = 'Error loading game';
-            });
+            const data = await response.json();
+            if (!data[gameId]) {
+                document.getElementById('loadingMessage').textContent = 'Game not found';
+                console.error('Game not found:', gameId);
+                return;
+            }
+
+            const embedInfo = data[gameId];
+            document.getElementById('embedIframe').src = embedInfo.embedUrl;
+
+            // Set up the popout button with the URL from embeds.json
+            document.getElementById('popoutButton').onclick = () => {
+                window.open(embedInfo.popoutUrl, '_blank');
+            };
+
+            console.log('Embed info loaded:', embedInfo);
+        } catch (error) {
+            console.error('Error fetching embed data:', error);
+        }
     }
 
-    // Call the function to fetch embed info when the page loads
-    window.onload = function() {
-        fetchEmbedInfo();
-    };
+    // Load the embed information when the page loads
+    window.onload = fetchEmbedInfo;
 
     // Function to open Report or Help links
     function openLink(url) {
