@@ -9,9 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load URLs from query parameters if available
   const params = new URLSearchParams(window.location.search);
   const urls = params.get('urls') ? params.get('urls').split(',') : [];
-  urls.forEach(addUrlToList);
+  urls.forEach(url => fetchAndAddUrlInfo(url));
 
-  // Add "https://" if missing, and add URL to list
   addUrlButton.addEventListener('click', () => {
     let url = urlInput.value.trim();
     if (!url) return;
@@ -20,16 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
       url = `https://${url}`;
     }
     
-    addUrlToList(url);
+    fetchAndAddUrlInfo(url);
     saveUrls();
     urlInput.value = '';
   });
 
-  function addUrlToList(url) {
+  function fetchAndAddUrlInfo(url) {
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const title = doc.querySelector('title') ? doc.querySelector('title').innerText : url;
+        const favicon = doc.querySelector('link[rel="icon"]') ? new URL(doc.querySelector('link[rel="icon"]').href, url).href : '';
+        addUrlToList(url, title, favicon);
+      })
+      .catch(() => addUrlToList(url, url, ''));
+  }
+
+  function addUrlToList(url, title, favicon) {
     const listItem = document.createElement('div');
     listItem.className = 'url-item';
     listItem.innerHTML = `
-      <span>${url}</span>
+      <img src="${favicon}" alt="" class="favicon" onerror="this.style.display='none';">
+      <span class="url-title">${title}</span>
       <span class="url-status">Checking...</span>
       <button class="open-button">Open Website</button>
       <button class="preview-button">Preview Website</button>
@@ -37,78 +50,69 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     urlList.appendChild(listItem);
 
-    // Check URL availability and update status
     checkUrlStatus(url, listItem.querySelector('.url-status'));
 
-    // Button to open the link in a new tab
     listItem.querySelector('.open-button').addEventListener('click', () => {
       window.open(url, '_blank');
     });
 
-    // Button to preview the website in an iframe
     listItem.querySelector('.preview-button').addEventListener('click', () => {
       previewFrame.src = url;
       previewPopup.classList.remove('hidden');
     });
 
-    // Button to delete the URL from the list
     listItem.querySelector('.delete-button').addEventListener('click', () => {
       listItem.remove();
-      saveUrls(); // Update the saved URLs in the query string
+      saveUrls();
     });
   }
 
   closePreviewButton.addEventListener('click', () => {
     previewPopup.classList.add('hidden');
-    previewFrame.src = ''; // Stop loading the iframe when closed
+    previewFrame.src = '';
   });
 
   async function checkUrlStatus(url, statusElement) {
     try {
-      // First attempt: Fetch request to check headers
       const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
       if (response.ok || response.type === 'opaque') {
         statusElement.textContent = 'Accessible';
-        statusElement.classList.add('status-accessible');
+        statusElement.style.color = '#28a745';
       } else {
         statusElement.textContent = 'Blocked/Down';
-        statusElement.classList.add('status-blocked');
+        statusElement.style.color = '#dc3545';
       }
-    } catch (error) {
-      console.log("Fetch failed; trying iframe fallback");
-
-      // Second attempt: Use iframe to check if URL can be embedded
+    } catch {
       const iframe = document.createElement('iframe');
-      iframe.style.display = 'none'; // Hide iframe
+      iframe.style.display = 'none';
       document.body.appendChild(iframe);
 
-      // Set up a 5-second timeout to check for iframe load success
       const iframeCheckTimeout = setTimeout(() => {
         statusElement.textContent = 'Blocked/Down';
-        statusElement.classList.add('status-blocked');
+        statusElement.style.color = '#dc3545';
         document.body.removeChild(iframe);
       }, 5000);
 
       iframe.onload = () => {
-        clearTimeout(iframeCheckTimeout); // Clear timeout if iframe loads successfully
+        clearTimeout(iframeCheckTimeout);
         statusElement.textContent = 'Accessible';
-        statusElement.classList.add('status-accessible');
+        statusElement.style.color = '#28a745';
         document.body.removeChild(iframe);
       };
 
       iframe.onerror = () => {
         clearTimeout(iframeCheckTimeout);
         statusElement.textContent = 'Blocked/Down';
-        statusElement.classList.add('status-blocked');
+        statusElement.style.color = '#dc3545';
         document.body.removeChild(iframe);
       };
 
-      iframe.src = url; // Attempt to load the URL in the iframe
+      iframe.src = url;
     }
   }
 
   function saveUrls() {
-    const urls = Array.from(document.querySelectorAll('.url-item span:first-child')).map(span => span.textContent);
+    const urls = Array.from(document.querySelectorAll('.url-item .url-title')).map(span => span.textContent);
     const queryString = new URLSearchParams({ urls: urls.join(',') }).toString();
     window.history.replaceState(null, '', `?${queryString}`);
   }
