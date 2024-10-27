@@ -55,15 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function checkUrlStatus(url, statusElement) {
-    fetch(url, { method: 'HEAD' })
-      .then(() => {
-        statusElement.textContent = 'Accessible';
-        statusElement.classList.add('status-accessible');
-      })
-      .catch(() => {
-        statusElement.textContent = 'Blocked/Down';
-        statusElement.classList.add('status-blocked');
-      });
+    try {
+      // Attempt to fetch resource head for quick availability check
+      fetch(url, { method: 'HEAD', mode: 'no-cors' }) 
+        .then(response => {
+          if (response.ok || response.type === 'opaque') {
+            // If the fetch response is 'opaque', it could be a CORS issue but the site may still be accessible.
+            statusElement.textContent = 'Accessible';
+            statusElement.classList.add('status-accessible');
+          } else {
+            statusElement.textContent = 'Blocked/Down';
+            statusElement.classList.add('status-blocked');
+          }
+        })
+        .catch(error => {
+          console.error(`Error checking URL: ${url}`, error);
+          statusElement.textContent = 'Blocked/Down';
+          statusElement.classList.add('status-blocked');
+        });
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+      statusElement.textContent = 'Blocked/Down';
+      statusElement.classList.add('status-blocked');
+    }
   }
 
   function saveUrls() {
