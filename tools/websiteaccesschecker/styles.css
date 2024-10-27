@@ -118,3 +118,21 @@ button.open-button, button.preview-button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.favicon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.url-title {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.url-status {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
