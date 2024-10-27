@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urls = params.get('urls') ? params.get('urls').split(',') : [];
   urls.forEach(addUrlToList);
 
-  // Smart input function to add "https://" if missing
+  // Add "https://" if missing, and add URL to list
   addUrlButton.addEventListener('click', () => {
     let url = urlInput.value.trim();
     if (!url) return;
@@ -33,19 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
       <span class="url-status">Checking...</span>
       <button class="open-button">Open Website</button>
       <button class="preview-button">Preview Website</button>
+      <button class="delete-button">Delete</button>
     `;
-
     urlList.appendChild(listItem);
 
+    // Check URL availability and update status
     checkUrlStatus(url, listItem.querySelector('.url-status'));
 
+    // Button to open the link in a new tab
     listItem.querySelector('.open-button').addEventListener('click', () => {
       window.open(url, '_blank');
     });
 
+    // Button to preview the website in an iframe
     listItem.querySelector('.preview-button').addEventListener('click', () => {
       previewFrame.src = url;
       previewPopup.classList.remove('hidden');
+    });
+
+    // Button to delete the URL from the list
+    listItem.querySelector('.delete-button').addEventListener('click', () => {
+      listItem.remove();
+      saveUrls(); // Update the saved URLs in the query string
     });
   }
 
@@ -54,29 +63,47 @@ document.addEventListener('DOMContentLoaded', () => {
     previewFrame.src = ''; // Stop loading the iframe when closed
   });
 
-  function checkUrlStatus(url, statusElement) {
+  async function checkUrlStatus(url, statusElement) {
     try {
-      // Attempt to fetch resource head for quick availability check
-      fetch(url, { method: 'HEAD', mode: 'no-cors' }) 
-        .then(response => {
-          if (response.ok || response.type === 'opaque') {
-            // If the fetch response is 'opaque', it could be a CORS issue but the site may still be accessible.
-            statusElement.textContent = 'Accessible';
-            statusElement.classList.add('status-accessible');
-          } else {
-            statusElement.textContent = 'Blocked/Down';
-            statusElement.classList.add('status-blocked');
-          }
-        })
-        .catch(error => {
-          console.error(`Error checking URL: ${url}`, error);
-          statusElement.textContent = 'Blocked/Down';
-          statusElement.classList.add('status-blocked');
-        });
+      // First attempt: Fetch request to check headers
+      const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+      if (response.ok || response.type === 'opaque') {
+        statusElement.textContent = 'Accessible';
+        statusElement.classList.add('status-accessible');
+      } else {
+        statusElement.textContent = 'Blocked/Down';
+        statusElement.classList.add('status-blocked');
+      }
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
-      statusElement.textContent = 'Blocked/Down';
-      statusElement.classList.add('status-blocked');
+      console.log("Fetch failed; trying iframe fallback");
+
+      // Second attempt: Use iframe to check if URL can be embedded
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none'; // Hide iframe
+      document.body.appendChild(iframe);
+
+      // Set up a 5-second timeout to check for iframe load success
+      const iframeCheckTimeout = setTimeout(() => {
+        statusElement.textContent = 'Blocked/Down';
+        statusElement.classList.add('status-blocked');
+        document.body.removeChild(iframe);
+      }, 5000);
+
+      iframe.onload = () => {
+        clearTimeout(iframeCheckTimeout); // Clear timeout if iframe loads successfully
+        statusElement.textContent = 'Accessible';
+        statusElement.classList.add('status-accessible');
+        document.body.removeChild(iframe);
+      };
+
+      iframe.onerror = () => {
+        clearTimeout(iframeCheckTimeout);
+        statusElement.textContent = 'Blocked/Down';
+        statusElement.classList.add('status-blocked');
+        document.body.removeChild(iframe);
+      };
+
+      iframe.src = url; // Attempt to load the URL in the iframe
     }
   }
 
