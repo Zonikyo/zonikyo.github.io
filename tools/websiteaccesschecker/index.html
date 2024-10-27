@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Status Checker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Website Status Checker</h1>
+    <input type="text" id="urlInput" placeholder="Enter website URL here...">
+    <button id="addUrlButton">+ Add Link</button>
+    
+    <div id="urlList"></div>
+  </div>
+  
+  <div id="previewPopup" class="popup hidden">
+    <iframe id="previewFrame" class="iframe-rounded"></iframe>
+    <button id="closePreviewButton">Close</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
