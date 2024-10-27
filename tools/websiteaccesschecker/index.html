@@ -1,25 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Status Checker</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Status Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #1c1c1c;
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Sticky input area */
+  .input-section {
+    position: sticky;
+    top: 0;
+    background-color: #333;
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  #urlInput {
+    padding: 8px;
+    width: 70%;
+    border: none;
+    border-radius: 5px;
+  }
+
+  #addUrlButton {
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #addUrlButton:hover {
+    background-color: #218838;
+  }
+
+  .url-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #444;
+    padding: 10px;
+    margin: 10px 20px;
+    border-radius: 8px;
+  }
+
+  .url-status {
+    margin-right: auto;
+    margin-left: 15px;
+    font-weight: bold;
+  }
+
+  .open-button,
+  .preview-button,
+  .delete-button {
+    padding: 5px 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .open-button {
+    background-color: #007bff;
+  }
+  
+  .open-button:hover {
+    background-color: #0069d9;
+  }
+
+  .preview-button {
+    background-color: #ffc107;
+  }
+  
+  .preview-button:hover {
+    background-color: #e0a800;
+  }
+
+  .delete-button {
+    background-color: #dc3545;
+  }
+
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+
+  /* Popup styling */
+  #previewPopup {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 80%;
+    background-color: #222;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 20;
+    overflow: hidden;
+  }
+
+  #previewFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+  }
+
+  #closePreviewButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 30;
+  }
+
+  #closePreviewButton:hover {
+    background-color: #c82333;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Website Status Checker</h1>
-    <input type="text" id="urlInput" placeholder="Enter website URL here...">
-    <button id="addUrlButton">+ Add Link</button>
-    
-    <div id="urlList"></div>
-  </div>
-  
-  <div id="previewPopup" class="popup hidden">
-    <iframe id="previewFrame" class="iframe-rounded"></iframe>
-    <button id="closePreviewButton">Close</button>
-  </div>
 
-  <script src="script.js"></script>
+<div class="input-section">
+  <input type="text" id="urlInput" placeholder="Enter website URL">
+  <button id="addUrlButton">Add URL</button>
+</div>
+
+<div id="urlList"></div>
+
+<div id="previewPopup">
+  <iframe id="previewFrame"></iframe>
+  <button id="closePreviewButton">Close</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
