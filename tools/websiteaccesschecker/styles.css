@@ -120,10 +120,11 @@ button.open-button, button.preview-button {
 }
 
 .favicon {
-  width: 16px;
-  height: 16px;
+  width: 20px; /* Set to a small, consistent size */
+  height: 20px;
   margin-right: 10px;
   vertical-align: middle;
+  border-radius: 4px; /* Optional: slight rounding for a softer look */
 }
 
 .url-title {
