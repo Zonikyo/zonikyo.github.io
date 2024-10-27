@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+#urlInput {
+  width: 70%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  margin-right: 10px;
+}
+
+#addUrlButton {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.url-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.url-status {
+  font-weight: 700;
+}
+
+.status-accessible {
+  color: #4caf50;
+}
+
+.status-blocked {
+  color: #f44336;
+}
+
+button.open-button, button.preview-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.open-button {
+  background-color: #1e88e5;
+  color: #fff;
+}
+
+.preview-button {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.iframe-rounded {
+  width: 80%;
+  height: 80%;
+  border-radius: 10px;
+  border: none;
+}
+
+#closePreviewButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  font-weight: 700;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
