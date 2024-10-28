@@ -3,65 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Embed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <title>Game Suggestion</title>
     <style>
         body {
             background-color: #1c1c1c;
             font-family: 'Poppins', sans-serif;
-            color: white;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-        .container {
-            text-align: center;
-            width: 100%;
-        }
-        .greeting {
+        #message {
             font-size: 24px;
-            font-weight: bold;
-            color: white;
-        }
-        .greeting .username {
-            background: linear-gradient(90deg, #ff7e5f, #feb47b);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        iframe {
-            width: 100%;
-            height: 90vh;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
     </style>
-    <script src="https://authpro.com/js/api.js"></script>
 </head>
 <body>
-    <div class="container" id="container">
-        <!-- Content will be dynamically inserted here based on login status -->
-    </div>
+    <div id="message">Loading...</div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Check if user is logged in based on AuthPro variables
-            const isUserLoggedIn = typeof user !== "undefined" && user !== "";
-            const username = isUserLoggedIn ? user : "";
+        async function getUsername() {
+            const apiUrl = 'https://api.authpro.com/v1/user'; // Replace with actual AuthPro endpoint
+            const apiKey = '4z49ge54sp271i7u'; // Your API key
+            const username = 'CoolD1234'; // Your AuthPro username
 
-            if (isUserLoggedIn) {
-                // Display game embed with personalized greeting
-                document.getElementById("container").innerHTML = `
-                    <div class="greeting">What would you like to play today, <span class="username">${username}</span>?</div>
-                    <iframe src="https://turbowarp.org/105500895/embed" title="Game Embed"></iframe>
-                `;
-            } else {
-                // Redirect to the login-prompt page before AuthPro popup
-                window.location.href = "login-prompt.html";
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const userName = data.user.username || username; // Fallback to provided username if not found
+                document.getElementById('message').innerText = `What would you like to play, ${userName}?`;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('message').innerText = 'Error loading username.';
             }
-        });
+        }
+
+        getUsername();
     </script>
 </body>
 </html>
