@@ -58,11 +58,11 @@
                 const userName = data.members[0].login; // Extract the username
                 document.getElementById('message').innerText = `What would you like to play, ${userName}?`;
             } else {
-                document.getElementById('message').innerText = 'User not found.';
+                document.getElementById('message').innerText = '';
             }
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
-            document.getElementById('message').innerText = 'Error loading username.';
+            document.getElementById('message').innerText = '';
         }
     }
 
