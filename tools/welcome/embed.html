@@ -26,17 +26,22 @@
 
     <script>
         async function getUsername() {
-            const apiUrl = 'https://api.authpro.com/v1/user'; // Replace with actual AuthPro endpoint
+            const apiUrl = 'https://www.authpro.com/api2/list/'; // AuthPro API endpoint
             const apiKey = '4z49ge54sp271i7u'; // Your API key
             const username = 'CoolD1234'; // Your AuthPro username
 
             try {
                 const response = await fetch(apiUrl, {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    }
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        user: username,
+                        api_key: apiKey,
+                        record: '{login}', // Only retrieve the login field
+                        limit: '1' // Limit the result to one user
+                    })
                 });
 
                 if (!response.ok) {
@@ -44,8 +49,12 @@
                 }
 
                 const data = await response.json();
-                const userName = data.user.username || username; // Fallback to provided username if not found
-                document.getElementById('message').innerText = `What would you like to play, ${userName}?`;
+                if (data.members && data.members.length > 0) {
+                    const userName = data.members[0].login; // Extract the username
+                    document.getElementById('message').innerText = `What would you like to play, ${userName}?`;
+                } else {
+                    document.getElementById('message').innerText = 'User not found.';
+                }
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
                 document.getElementById('message').innerText = 'Error loading username.';
