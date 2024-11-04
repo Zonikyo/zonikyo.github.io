@@ -3,48 +3,48 @@
   "games": [
     {
       "id": 1,
-      "title": "Space Invaders",
-      "thumbnail": "https://via.placeholder.com/200x150?text=Space+Invaders",
-      "description": "Classic arcade game where you defend Earth from alien invaders.",
-      "embedUrl": "https://example.com/space-invaders-embed",
-      "rating": 4.5,
-      "ratingCount": 100
+      "title": "Neon Racer",
+      "description": "Race through a futuristic city in this high-speed arcade game.",
+      "thumbnail": "https://example.com/neon-racer-thumb.jpg",
+      "embedUrl": "https://example.com/neon-racer-embed",
+      "instructions": "Use arrow keys to steer, Space to boost.",
+      "category": "Racing"
     },
     {
       "id": 2,
-      "title": "Tetris",
-      "thumbnail": "https://via.placeholder.com/200x150?text=Tetris",
-      "description": "Addictive puzzle game where you arrange falling blocks to clear lines.",
-      "embedUrl": "https://example.com/tetris-embed",
-      "rating": 4.8,
-      "ratingCount": 150
+      "title": "Cyber Puzzle",
+      "description": "Solve mind-bending puzzles in a cyberpunk world.",
+      "thumbnail": "https://example.com/cyber-puzzle-thumb.jpg",
+      "embedUrl": "https://example.com/cyber-puzzle-embed",
+      "instructions": "Click and drag pieces to solve the puzzle.",
+      "category": "Puzzle"
     },
     {
       "id": 3,
-      "title": "Pac-Man",
-      "thumbnail": "https://via.placeholder.com/200x150?text=Pac-Man",
-      "description": "Navigate through a maze, eating dots and avoiding ghosts.",
-      "embedUrl": "https://example.com/pacman-embed",
-      "rating": 4.7,
-      "ratingCount": 120
+      "title": "Neon Shooter",
+      "description": "Defend your base against waves of neon enemies in this action-packed shooter.",
+      "thumbnail": "https://example.com/neon-shooter-thumb.jpg",
+      "embedUrl": "https://example.com/neon-shooter-embed",
+      "instructions": "Use WASD to move, mouse to aim and shoot.",
+      "category": "Action"
     },
     {
       "id": 4,
-      "title": "Snake",
-      "thumbnail": "https://via.placeholder.com/200x150?text=Snake",
-      "description": "Control a growing snake, eat food, and avoid collisions.",
-      "embedUrl": "https://example.com/snake-embed",
-      "rating": 4.2,
-      "ratingCount": 80
+      "title": "Synthwave Rhythm",
+      "description": "Test your rhythm skills with this synthwave-inspired music game.",
+      "thumbnail": "https://example.com/synthwave-rhythm-thumb.jpg",
+      "embedUrl": "https://example.com/synthwave-rhythm-embed",
+      "instructions": "Press the corresponding keys as the notes reach the bottom of the screen.",
+      "category": "Music"
     },
     {
       "id": 5,
-      "title": "Asteroids",
-      "thumbnail": "https://via.placeholder.com/200x150?text=Asteroids",
-      "description": "Pilot a spaceship and shoot asteroids while avoiding collisions.",
-      "embedUrl": "https://example.com/asteroids-embed",
-      "rating": 4.4,
-      "ratingCount": 90
+      "title": "Neon Platformer",
+      "description": "Navigate through challenging neon-lit levels in this retro-style platformer.",
+      "thumbnail": "https://example.com/neon-platformer-thumb.jpg",
+      "embedUrl": "https://example.com/neon-platformer-embed",
+      "instructions": "Use arrow keys to move, Space to jump.",
+      "category": "Platformer"
     }
   ]
 }
