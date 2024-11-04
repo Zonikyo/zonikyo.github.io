@@ -1,281 +1,157 @@
 
-let gamesData = [];
-let currentUser = null;
+// Simulating content loading
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.querySelectorAll('main > *, header').forEach(el => {
+            el.classList.add('slide-up');
+        });
+    }, 2000);
+});
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Search functionality
+const searchBtn = document.getElementById('search-btn');
+const searchContainer = document.getElementById('search-container');
+const searchInput = document.getElementById('search-input');
+const header = document.querySelector('header');
+
+searchBtn.addEventListener('click', () => {
+    header.classList.toggle('hidden');
+    searchContainer.classList.toggle('hidden');
+    if (!searchContainer.classList.contains('hidden')) {
+        searchInput.focus();
+    }
+});
+
+searchInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        performSearch(searchInput.value);
+    }
+});
+
+function performSearch(query) {
+    query = query.toLowerCase();
+    const filteredGames = games.filter(game => 
+        game.title.toLowerCase().includes(query) || 
+        game.description.toLowerCase().includes(query) ||
+        game.category.toLowerCase().includes(query)
+    );
+    displayGames(filteredGames);
+    document.querySelector('.game-grid').classList.add('slide-up');
+}
+
+// Navigation
+const navLinks = document.querySelectorAll('.nav-links a');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        showSection(targetId);
+    });
+});
+
+function showSection(sectionId) {
+    document.querySelectorAll('main > section').forEach(section => {
+        section.classList.add('hidden');
+    });
+    const targetSection = document.getElementById(sectionId);
+    targetSection.classList.remove('hidden');
+    targetSection.classList.add('slide-up');
+}
+
+// Game modal
+function openGameModal(gameId) {
+    const game = games.find(g => g.id === gameId);
+    if (!game) return;
+
+    const gameModal = document.getElementById('game-modal');
+    const gameContent = gameModal.querySelector('.game-content');
+    const recommendedGames = gameModal.querySelector('.recommended-games');
+
+    gameContent.innerHTML = `
+        <h2>${game.title}</h2>
+        <p>${game.description}</p>
+        <iframe src="${game.embedUrl}" frameborder="0" allowfullscreen></iframe>
+        <div class="game-controls">
+            <button id="fullscreen-btn">Fullscreen</button>
+            <button id="report-btn">Report Problem</button>
+            <button id="help-btn">Help</button>
+        </div>
+        <h3>Instructions:</h3>
+        <p>${game.instructions}</p>
+    `;
+
+    const recommendations = getRecommendations(game);
+    recommendedGames.innerHTML = '<h3>Recommended Games:</h3>';
+    recommendations.forEach(rec => {
+        const recTile = document.createElement('div');
+        recTile.classList.add('game-tile');
+        recTile.innerHTML = `
+            <img src="${rec.thumbnail}" alt="${rec.title}">
+            <div class="game-title">${rec.title}</div>
+        `;
+        recTile.addEventListener('click', () => openGameModal(rec.id));
+        recommendedGames.appendChild(recTile);
+    });
+
+    gameModal.classList.remove('hidden');
+    gameModal.classList.add('slide-up');
+
+    // Update URL
+    history.pushState({gameId}, '', `#game-${gameId}`);
+}
+
+document.getElementById('back-btn').addEventListener('click', () => {
+    const gameModal = document.getElementById('game-modal');
+    gameModal.classList.add('hidden');
+    gameModal.classList.remove('slide-up');
+    history.pushState({}, '', '/');
+});
+
+// Simple recommendation system
+function getRecommendations(currentGame) {
+    return games
+        .filter(game => game.category === currentGame.category && game.id !== currentGame.id)
+        .slice(0, 3);
+}
+
+// Fetch and display games
+let games = [];
+
+async function fetchGames() {
     try {
         const response = await fetch('games.json');
         const data = await response.json();
-        gamesData = data.games;
+        games = data.games;
+        displayGames(games);
     } catch (error) {
-        console.error('Error loading games data:', error);
+        console.error('Error fetching games:', error);
     }
+}
 
-    const loadingScreen = document.getElementById('loading-screen');
-    const gameGrid = document.getElementById('game-grid');
-    const searchButton = document.getElementById('search-button');
-    const searchContainer = document.getElementById('search-container');
-    const searchInput = document.getElementById('search-input');
-    const gamePage = document.getElementById('game-page');
-    const gameContent = document.getElementById('game-content');
-    const backButton = document.getElementById('back-button');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const userProfile = document.getElementById('user-profile');
-    const userAvatar = document.getElementById('user-avatar');
-    const userName = document.getElementById('user-name');
-    const gameRating = document.getElementById('game-rating');
-    const starRating = document.querySelector('.star-rating');
-    const averageRating = document.getElementById('average-rating');
-    const recommendationsContainer = document.getElementById('recommendations');
-    const recommendationGrid = document.getElementById('recommendation-grid');
-
-    // Simulated loading delay
-    setTimeout(() => {
-        loadingScreen.classList.add('slide-up');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            animatePageElements();
-        }, 500);
-    }, 2000);
-
-    function animatePageElements() {
-        const elements = document.querySelectorAll('header, main > *');
-        elements.forEach((el, index) => {
-            setTimeout(() => {
-                el.classList.add(el.tagName === 'HEADER' ? 'slide-down' : 'slide-up');
-            }, index * 100);
-        });
-    }
-
-    function createGameTiles() {
-        gameGrid.innerHTML = ''; // Clear existing tiles
-        gamesData.forEach(game => {
-            const tile = document.createElement('div');
-            tile.classList.add('game-tile');
-            tile.innerHTML = `
-                <img src="${game.thumbnail}" alt="${game.title}">
-                <h3>${game.title}</h3>
-            `;
-            tile.addEventListener('click', () => openGamePage(game));
-            gameGrid.appendChild(tile);
-        });
-    }
-
-    function showPage(pageId) {
-        const pages = document.querySelectorAll('.content-container > section');
-        pages.forEach(page => {
-            if (page.id === pageId) {
-                page.classList.add('active');
-            } else {
-                page.classList.remove('active');
-            }
-        });
-
-        if (pageId === 'home') {
-            createGameTiles();
-        }
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const pageId = e.target.getAttribute('href').substring(1);
-            showPage(pageId);
-        });
-    });
-
-    // Show home page by default
-    showPage('home');
-
-    searchButton.addEventListener('click', () => {
-        const navLinks = document.querySelector('.nav-links');
-        const navButtons = document.querySelector('.nav-buttons');
-        const searchContainer = document.getElementById('search-container');
-
-        if (searchContainer.classList.contains('hidden')) {
-            navLinks.classList.add('slide-up');
-            navButtons.classList.add('slide-up');
-            setTimeout(() => {
-                navLinks.style.display = 'none';
-                navButtons.style.display = 'none';
-                searchContainer.classList.remove('hidden');
-                searchContainer.classList.add('slide-down');
-            }, 300);
-        } else {
-            searchContainer.classList.remove('slide-down');
-            searchContainer.classList.add('slide-up');
-            setTimeout(() => {
-                searchContainer.classList.add('hidden');
-                navLinks.style.display = 'flex';
-                navButtons.style.display = 'flex';
-                navLinks.classList.remove('slide-up');
-                navButtons.classList.remove('slide-up');
-                navLinks.classList.add('slide-down');
-                navButtons.classList.add('slide-down');
-            }, 300);
-        }
-    });
-
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredGames = gamesData.filter(game => game.title.toLowerCase().includes(searchTerm));
-        createGameTiles(filteredGames);
-    });
-
-    function openGamePage(game) {
-        gameContent.innerHTML = `
-            <h2>${game.title}</h2>
+function displayGames(gamesToDisplay) {
+    const gameGrid = document.querySelector('.game-grid');
+    gameGrid.innerHTML = '';
+    gamesToDisplay.forEach(game => {
+        const gameTile = document.createElement('div');
+        gameTile.classList.add('game-tile');
+        gameTile.innerHTML = `
             <img src="${game.thumbnail}" alt="${game.title}">
-            <p>${game.description}</p>
-            <div class="embed-container">
-                <iframe src="${game.embedUrl}" frameborder="0"></iframe>
-            </div>
-            <button id="fullscreen-button">Fullscreen</button>
-            <button id="report-button">Report Problem</button>
-            <button id="help-button">Help</button>
+            <div class="game-title">${game.title}</div>
         `;
-        gamePage.classList.remove('hidden');
-        gamePage.classList.add('fade-in');
-        
-        document.getElementById('fullscreen-button').addEventListener('click', () => {
-            const iframe = document.querySelector('.embed-container iframe');
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            } else if (iframe.webkitRequestFullscreen) {
-                iframe.webkitRequestFullscreen();
-            } else if (iframe.mozRequestFullScreen) {
-                iframe.mozRequestFullScreen();
-            } else if (iframe.msRequestFullscreen) {
-                iframe.msRequestFullscreen();
-            }
-        });
-
-        document.getElementById('report-button').addEventListener('click', () => {
-            alert('Report problem functionality will be implemented here.');
-        });
-
-        document.getElementById('help-button').addEventListener('click', () => {
-            alert('Help functionality will be implemented here.');
-        });
-
-        // Show game rating
-        gameRating.classList.remove('hidden');
-        updateGameRating(game);
-
-        // Show recommendations
-        showRecommendations(game);
-    }
-
-    function updateGameRating(game) {
-        const stars = starRating.querySelectorAll('.star');
-        stars.forEach((star, index) => {
-            star.classList.toggle('active', index < game.rating);
-            star.addEventListener('click', () => rateGame(game, index + 1));
-        });
-        averageRating.querySelector('span').textContent = game.rating.toFixed(1);
-    }
-
-    function rateGame(game, rating) {
-        if (currentUser) {
-            game.rating = (game.rating * game.ratingCount + rating) / (game.ratingCount + 1);
-            game.ratingCount++;
-            updateGameRating(game);
-        } else {
-            alert('Please log in to rate games.');
-        }
-    }
-
-    function showRecommendations(currentGame) {
-        const recommendations = gamesData
-            .filter(game => game.id !== currentGame.id)
-            .sort((a, b) => b.rating - a.rating)
-            .slice(0, 3);
-
-        recommendationGrid.innerHTML = '';
-        recommendations.forEach(game => {
-            const tile = document.createElement('div');
-            tile.classList.add('game-tile');
-            tile.innerHTML = `
-                <img src="${game.thumbnail}" alt="${game.title}">
-                <h3>${game.title}</h3>
-            `;
-            tile.addEventListener('click', () => openGamePage(game));
-            recommendationGrid.appendChild(tile);
-        });
-
-        recommendationsContainer.classList.remove('hidden');
-    }
-
-    // Simulated login function (replace with actual AuthPro integration)
-    function login() {
-        currentUser = {
-            name: 'John Doe',
-            avatar: 'https://via.placeholder.com/40'
-        };
-        userProfile.classList.remove('hidden');
-        userAvatar.src = currentUser.avatar;
-        userName.textContent = currentUser.name;
-    }
-
-    // Call login function when the login button is clicked (replace with actual AuthPro integration)
-    document.querySelector('.login-button').addEventListener('click', (e) => {
-        e.preventDefault();
-        login();
+        gameTile.addEventListener('click', () => openGameModal(game.id));
+        gameGrid.appendChild(gameTile);
     });
+}
 
-    searchButton.addEventListener('click', () => {
-        const navLinks = document.querySelector('.nav-links');
-        const navButtons = document.querySelector('.nav-buttons');
+fetchGames();
 
-        if (searchContainer.classList.contains('hidden')) {
-            navLinks.classList.add('slide-up');
-            navButtons.classList.add('slide-up');
-            setTimeout(() => {
-                navLinks.style.display = 'none';
-                navButtons.style.display = 'none';
-                searchContainer.classList.remove('hidden');
-                searchContainer.classList.add('slide-down');
-            }, 300);
-        } else {
-            searchContainer.classList.remove('slide-down');
-            searchContainer.classList.add('slide-up');
-            setTimeout(() => {
-                searchContainer.classList.add('hidden');
-                navLinks.style.display = 'block';
-                navButtons.style.display = 'block';
-                navLinks.classList.remove('slide-up');
-                navButtons.classList.remove('slide-up');
-                navLinks.classList.add('slide-down');
-                navButtons.classList.add('slide-down');
-            }, 300);
-        }
-    });
-
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredGames = gamesData.filter(game => game.title.toLowerCase().includes(searchTerm));
-        gameGrid.innerHTML = '';
-        filteredGames.forEach(game => {
-            const tile = document.createElement('div');
-            tile.classList.add('game-tile');
-            tile.innerHTML = `
-                <img src="${game.thumbnail}" alt="${game.title}">
-                <h3>${game.title}</h3>
-            `;
-            tile.addEventListener('click', () => openGamePage(game));
-            gameGrid.appendChild(tile);
-        });
-    });
-
-    backButton.addEventListener('click', () => {
-        gamePage.classList.remove('fade-in');
-        gamePage.classList.add('fade-out');
-        setTimeout(() => {
-            gamePage.classList.add('hidden');
-            gamePage.classList.remove('fade-out');
-        }, 300);
-    });
-
-    createGameTiles();
+// Handle browser navigation
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.gameId) {
+        openGameModal(event.state.gameId);
+    } else {
+        document.getElementById('game-modal').classList.add('hidden');
+    }
 });
