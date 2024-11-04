@@ -13,8 +13,8 @@
 </head>
 <body>
     <div id="loading-screen">
-        <div class="logo">NeonWave</div>
         <div class="spinner"></div>
+        <img src="neonwave-logo.png" alt="NeonWave Logo" class="logo">
     </div>
 
     <header>
@@ -26,12 +26,13 @@
                 <a href="#developers">Developers</a>
             </div>
             <div class="nav-buttons">
-                <a href="authpro:login" class="login-button">Login / Signup</a>
-                <button id="search-button">Search</button>
-                <div id="user-profile" class="hidden">
-                    <img src="https://via.placeholder.com/40" alt="User Avatar" id="user-avatar">
-                    <span id="user-name">User</span>
-                </div>
+                <a href='authpro:login' class="login-btn">Login / Signup</a>
+                <button id="search-btn" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
             </div>
         </nav>
         <div id="search-container" class="hidden">
@@ -40,52 +41,45 @@
     </header>
 
     <main>
-        <div class="content-container">
-            <section id="home" class="active">
-                <div id="ad-placeholder-top" class="ad-placeholder">
-                    <p>Ad Placeholder</p>
-                </div>
-                <div id="game-grid"></div>
-                <div id="ad-placeholder-bottom" class="ad-placeholder">
-                    <p>Ad Placeholder</p>
-                </div>
-            </section>
-            <section id="ai">
-                <div class="embed-container">
-                    <iframe src="about:blank" frameborder="0"></iframe>
-                </div>
-            </section>
-            <section id="proxies">
-                <div class="embed-container">
-                    <iframe src="about:blank" frameborder="0"></iframe>
-                </div>
-            </section>
-            <section id="developers">
-                <h2>Coming Soon</h2>
-                <p>Our developers section is under construction. Stay tuned for exciting updates!</p>
-            </section>
-        </div>
+        <section id="home" class="active">
+            <div class="game-grid">
+                <!-- Game tiles will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <section id="ai" class="hidden">
+            <div class="loading-container">
+                <div class="spinner"></div>
+            </div>
+            <iframe src="ai-embed-url" frameborder="0"></iframe>
+        </section>
+
+        <section id="proxies" class="hidden">
+            <div class="loading-container">
+                <div class="spinner"></div>
+            </div>
+            <iframe src="proxies-embed-url" frameborder="0"></iframe>
+        </section>
+
+        <section id="developers" class="hidden">
+            <h2>Coming Soon</h2>
+            <p>Our developers section is under construction. Stay tuned for exciting updates!</p>
+        </section>
     </main>
 
-    <div id="game-page" class="hidden">
-        <button id="back-button">Back</button>
-        <div id="game-content"></div>
-        <div id="game-rating">
-            <h3>Rate this game:</h3>
-            <div class="star-rating">
-                <span class="star" data-rating="1">&#9733;</span>
-                <span class="star" data-rating="2">&#9733;</span>
-                <span class="star" data-rating="3">&#9733;</span>
-                <span class="star" data-rating="4">&#9733;</span>
-                <span class="star" data-rating="5">&#9733;</span>
-            </div>
-            <p id="average-rating">Average Rating: <span></span></p>
+    <div id="game-modal" class="hidden">
+        <button id="back-btn" aria-label="Back">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <div class="game-content">
+            <!-- Game details will be dynamically inserted here -->
         </div>
-    </div>
-
-    <div id="recommendations" class="hidden">
-        <h2>Recommended Games</h2>
-        <div id="recommendation-grid"></div>
+        <div class="recommended-games">
+            <!-- Recommended games will be dynamically inserted here -->
+        </div>
     </div>
 
     <script src="script.js"></script>
