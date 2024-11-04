@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
 });
 
-// Search functionality
+// Search functionalityy
 const searchBtn = document.getElementById('search-btn');
 const searchContainer = document.getElementById('search-container');
 const searchInput = document.getElementById('search-input');
