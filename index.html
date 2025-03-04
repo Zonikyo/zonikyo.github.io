@@ -174,48 +174,48 @@
         </div>
         <div class="image-gallery" id="image-gallery"></div>
 
+        <script>
+          // Game information
+          const gamesData = [
+            {
+              name: 'Game 1',
+              description: 'Short description of Game 1.',
+              image: 'path/to/image1.jpg',
+              url: 'https://example.com/game1'
+            },
+            {
+              name: 'Game 2',
+              description: 'Short description of Game 2.',
+              image: 'path/to/image2.jpg',
+              url: 'https://example.com/game2'
+            }
+            // More game objects as needed
+          ];
         
+          function createGalleryItem(game) {
+            const item = document.createElement('div');
+            item.className = 'image-item';
+            item.innerHTML = `
+              <img src="${game.image}" alt="${game.name}">
+              <div class="overlay">
+                <div class="text">
+                  <h3>${game.name}</h3>
+                  <p>${game.description}</p>
+                </div>
+              </div>
+            `;
+            item.addEventListener('click', () => {
+              window.location.href = `/game-player.html#${game.url}`;
+            });
+            return item;
+          }
+        
+          document.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.getElementById('image-gallery');
+            gamesData.forEach(game => {
+              gallery.appendChild(createGalleryItem(game));
+            });
+          });
+        </script>
     </body>
-    <script>
-      // Game information
-      const gamesData = [
-        {
-          name: 'Game 1',
-          description: 'Short description of Game 1.',
-          image: 'path/to/image1.jpg'
-        },
-        {
-          name: 'Game 2',
-          description: 'Short description of Game 2.',
-          image: 'path/to/image2.jpg'
-        }
-        // More game objects as needed
-      ];
-    
-      function createGalleryItem(game) {
-        const item = document.createElement('div');
-        item.className = 'image-item';
-        item.innerHTML = `
-          <img src="${game.image}" alt="${game.name}">
-          <div class="overlay">
-            <div class="text">
-              <h3>${game.name}</h3>
-              <p>${game.description}</p>
-            </div>
-          </div>
-        `;
-        item.addEventListener('click', () => {
-          const gameName = game.name.replace(/\s+/g, '-').toLowerCase();
-          window.location.href = `/game-player.html#${gameName}`;
-        });
-        return item;
-      }
-    
-      document.addEventListener('DOMContentLoaded', () => {
-        const gallery = document.getElementById('image-gallery');
-        gamesData.forEach(game => {
-          gallery.appendChild(createGalleryItem(game));
-        });
-      });
-    </script>
 </html>
