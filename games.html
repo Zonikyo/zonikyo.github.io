@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      body {
+        margin: 0;
+        font-family: poppins;
+        background-color: #1c1c1c;
+        color: #fff;
+      }
+      .iframe-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .game-iframe {
+        width: 80%;
+        height: 80%;
+        border: none;
+        border-radius: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iframe-container">
+      <iframe class="game-iframe" id="game-iframe" src=""></iframe>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const gameIframe = document.getElementById('game-iframe');
+        const gameUrl = window.location.hash.substring(1); // Get the game URL from the hash
+        if (gameUrl) {
+          gameIframe.src = gameUrl;
+        } else {
+          gameIframe.src = '/error.html'; // Set a default error page if no game URL is found
+        }
+      });
+    </script>
+  </body>
+</html>
