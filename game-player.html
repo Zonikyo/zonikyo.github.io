@@ -9,66 +9,129 @@
         background-color: #1c1c1c;
         color: #fff;
       }
-      .navbar {
-        width: 100%;
-        height: 50px;
-        background-color: #333;
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-      }
-      .navbar a {
-        color: #fff;
-        text-decoration: none;
-        margin-right: 20px;
-      }
       .iframe-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: calc(100vh - 50px);
+        height: 100vh;
         position: relative;
-        margin-top: 50px;
+        padding: 10px;
       }
       .game-iframe {
         width: 80%;
         height: 80%;
         border: none;
         border-radius: 15px;
-        position: relative;
       }
       .fullscreen-btn {
         position: absolute;
         bottom: 10px;
-        right: 10px;
-        padding: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
+        left: 10px;
+        padding: 10px 20px;
+        background-color: #ff6600;
         color: white;
         border: none;
-        border-radius: 50%;
+        border-radius: 5px;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
-      .fullscreen-btn img {
-        width: 20px;
-        height: 20px;
-      }
+
+            ul {
+            list-style-type: none;
+            margin: 10px;
+            padding: 5px;
+            padding-top: 6px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #333;
+            position: sticky;
+            position: -webkit-sticky; /* Safari */
+            }
+
+            li {
+            float: left;
+            padding-left: 4px;
+            }
+
+            li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            }
+
+            /* Change the link color to #111 (black) on hover */
+            li a:hover {
+            background-color: #111;
+            }
+
+            .active {
+            background-color: #04AA6D;
+            }
+
+            .logo {
+            width: auto;
+            height: 45px;
+            padding: 4px 4px;
+            float: left;
+            }
+
+            .welcome-msg {
+            border-radius: 10px;
+            background-color: #333;
+            margin: 10px;
+            padding: 10px;
+            }
+
+            .welcome-msg-text {
+            margin: 1px;
+            }
+
+            .inline-text-welcome-msg-gradient {
+            display: inline;
+            margin: 1px;
+            background: #09CF0D;
+            background: linear-gradient(to right, #09CF0D 0%, #06CFC5 57%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            }
+
+            .inline-text-welcome-msg {
+            display: inline;
+            margin: 1px;
+            }
+
+            .signup-btn {
+            background: #09CF0D;
+            background: linear-gradient(to right, #09CF0D 0%, #06CFC5 57%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            float: right;
+            border-style: solid;
+            border-color: #09CF0D;
+            border-color: linear-gradient(to right, #09CF0D 0%, #06CFC5 57%);
+            border-width: 1px;
+            }
+
+            .signup-btn:hover {
+            color: #fff;
+            }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <a href="#">Home</a>
-      <a href="#">Games</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </div>
+    <ul>
+            <img href="index.html" class="logo" src="/img/neonwave-logo.png">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li style="float: right;"><a class="signup-btn" href="#authpro.login">Log in or Sign up</a></li>
+        </ul> 
     <div class="iframe-container">
       <iframe class="game-iframe" id="game-iframe" src=""></iframe>
-      <button class="fullscreen-btn" id="fullscreen-btn">
-        <img src="fullscreen-icon.png" alt="Fullscreen">
-      </button>
+      <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
