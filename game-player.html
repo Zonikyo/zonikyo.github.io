@@ -14,6 +14,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        position: relative;
       }
       .game-iframe {
         width: 80%;
@@ -21,11 +22,23 @@
         border: none;
         border-radius: 15px;
       }
+      .fullscreen-btn {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <div class="iframe-container">
       <iframe class="game-iframe" id="game-iframe" src=""></iframe>
+      <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -36,6 +49,19 @@
         } else {
           gameIframe.src = '/error.html'; // Set a default error page if no game URL is found
         }
+
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        fullscreenBtn.addEventListener('click', () => {
+          if (gameIframe.requestFullscreen) {
+            gameIframe.requestFullscreen();
+          } else if (gameIframe.mozRequestFullScreen) { // Firefox
+            gameIframe.mozRequestFullScreen();
+          } else if (gameIframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            gameIframe.webkitRequestFullscreen();
+          } else if (gameIframe.msRequestFullscreen) { // IE/Edge
+            gameIframe.msRequestFullscreen();
+          }
+        });
       });
     </script>
   </body>
