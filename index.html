@@ -7,11 +7,11 @@
 
         <style>
             body {
-                margin: 0;
-                font-family: poppins;
-                font-size: 700;
-                background-color:#1c1c1c;
-                color: #fff;
+            margin: 0;
+            font-family: poppins;
+            font-size: 700;
+            background-color:#1c1c1c;
+            color: #fff;
             }
 
             ul {
@@ -98,6 +98,65 @@
             .signup-btn:hover {
             color: #fff;
             }
+
+            .image-gallery {
+              display: flex;
+              flex-wrap: wrap;
+            }
+            
+            .image-item {
+              position: relative;
+              width: 30%;
+              margin: 1.5%;
+              overflow: hidden;
+              border-radius: 15px;
+            }
+            
+            .image-item img {
+              width: 100%;
+              height: auto;
+              display: block;
+              border-radius: 15px;
+            }
+            
+            .overlay {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.5);
+              opacity: 0;
+              transition: opacity 0.5s;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .image-item:hover .overlay {
+              opacity: 1;
+            }
+            
+            .text {
+              color: white;
+              text-align: center;
+            }
+            
+            .image-item {
+              cursor: pointer;
+            }
+            
+            .image-item:hover {
+              cursor: pointer;
+            }
+            
+            .image-item:hover .overlay {
+              opacity: 1;
+            }
+            
+            .image-item:hover .text {
+              display: block;
+            }
         </style>
     </head>
     <body>
@@ -113,5 +172,50 @@
         <p class="inline-text-welcome-msg">An all in one, free and <p class="inline-text-welcome-msg-gradient">unblocked</p> video games library with advanced features to enhance your Gaming experience.</p>
         <p class="welcome-msg-text">If you are seeing this it means that NeonWave is actually not ready to be used yet. Bookmark this tab and check back later :)</p>
         </div>
+        <div class="image-gallery" id="image-gallery"></div>
+
+        
     </body>
+    <script>
+      // Game information
+      const gamesData = [
+        {
+          name: 'Game 1',
+          description: 'Short description of Game 1.',
+          image: 'path/to/image1.jpg'
+        },
+        {
+          name: 'Game 2',
+          description: 'Short description of Game 2.',
+          image: 'path/to/image2.jpg'
+        }
+        // More game objects as needed
+      ];
+    
+      function createGalleryItem(game) {
+        const item = document.createElement('div');
+        item.className = 'image-item';
+        item.innerHTML = `
+          <img src="${game.image}" alt="${game.name}">
+          <div class="overlay">
+            <div class="text">
+              <h3>${game.name}</h3>
+              <p>${game.description}</p>
+            </div>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          const gameName = game.name.replace(/\s+/g, '-').toLowerCase();
+          window.location.href = `/game-player.html#${gameName}`;
+        });
+        return item;
+      }
+    
+      document.addEventListener('DOMContentLoaded', () => {
+        const gallery = document.getElementById('image-gallery');
+        gamesData.forEach(game => {
+          gallery.appendChild(createGalleryItem(game));
+        });
+      });
+    </script>
 </html>
