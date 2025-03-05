@@ -126,7 +126,7 @@ li a:hover {
 .image-item {
     position: relative;
     width: 20%;
-    margin: 1.5%;
+    margin: 0.5%;
     overflow: hidden;
     border-radius: 15px;
     }
