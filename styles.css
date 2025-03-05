@@ -189,10 +189,12 @@ li a:hover {
   z-index: 9999;
   opacity: 1;
   transition: opacity 1s ease-in-out;
+    pointer-events: none; /* Allow passthrough */
 }
 
 #splash-screen img {
   max-width: 200px;
+  pointer-events: auto;
 }
 
 #splash-screen.fade-out {
