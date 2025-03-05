@@ -80,6 +80,13 @@
               gallery.appendChild(createGalleryItem(game));
             });
           });
+            window.addEventListener('load', function() {
+              var splashScreen = document.getElementById('splash-screen');
+              setTimeout(function() {
+                splashScreen.classList.add('fade-out');
+              }, 1000);
+            });
+
         </script>
     </body>
 </html>
