@@ -3,6 +3,7 @@
     <head>
         <title>NeonWave</title>
         <link rel="icon" href="/img/neonwave-icon.png">
+        <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
         <meta name="description" content="NeonWave Arcade, An all in one, feature packed, online video games library for FREE!">
         <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Gaming Website, Web Games, Fun Games, Flash Games Alternative, No Download Games, Multiplayer Games, Best Online Games, Casual Games, Instant Games, Free Games for Kids, Action Games, Strategy Games, Puzzle Games, Adventure Games, Racing Games, Shooting Games, Platformer Games, Educational Games, Classic Games, Retro Games, WebGL Games, Cloud Gaming, Play Anywhere Games, No Lag Games, School Safe Games, Mobile Games, PC Games, Chromebook Games, Gaming Hub, Free Gaming Site, Best Gaming Website, Online Arcade, Instant Play Games, Game Collection, Trending Games, Popular Online Games">  
         <meta name="author" content="Zonikyo">
@@ -38,7 +39,7 @@
             <li><a href="categories.html">Categories</a></li>
             <li><a href="contact.html">Contact</a></li>
             <li><a href="uptime.html">Uptime Stats</a></li>
-            <li style="float: right;"><a class="signup-btn" href="#authpro.login">Log in or Sign up</a></li>
+            <li style="float: right;"><a class="signup-btn" id="btn-login" onlick="login()">Log in or Sign up</a></li>
         </ul> 
         <div class="welcome-msg">
         <h1 class="welcome-msg-text">Welcome to NeonWave!</h1>
@@ -95,6 +96,38 @@
                 splashScreen.classList.add('fade-out');
               }, 1000);
             });
+            var auth0 = null;
+
+            window.onload = async () => {
+              auth0 = await createAuth0Client({
+                domain: "<YOUR_DOMAIN>",
+                client_id: "<YOUR_CLIENT_ID>"
+              });
+            };
+
+            const login = async () => {
+              await auth0.loginWithRedirect({
+                redirect_uri: window.location.origin
+              });
+            };
+            
+            const logout = () => {
+              auth0.logout({
+                returnTo: window.location.origin
+              });
+            };
+
+            const updateUI = async () => {
+              const isAuthenticated = await auth0.isAuthenticated();
+            
+              document.getElementById("btn-login").style.display = isAuthenticated ? "none" : "block";
+              document.getElementById("btn-logout").style.display = isAuthenticated ? "block" : "none";
+            };
+            
+            window.onload = async () => {
+              await auth0.handleRedirectCallback();
+              updateUI();
+            };
 
         </script>
     </body>
