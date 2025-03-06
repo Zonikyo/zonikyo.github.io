@@ -30,7 +30,7 @@ body {
     font-size: 700;
     background-color:#1c1c1c;
     color: #fff;
-    cursor: url('path/to/your-image.png'), auto;
+    cursor: url('cursor.png'), auto;
     }
 
 ul {
