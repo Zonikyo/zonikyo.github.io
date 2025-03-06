@@ -104,49 +104,50 @@
               }, 1000);
             });
 
-            var auth0 = null;
+            // Initialize Auth0
+          var auth0 = null;
 
-            window.onload = async () => {
-              auth0 = await createAuth0Client({
-                domain: "dev-lciqwnyb52wdezeo.us.auth0.com",
-                client_id: "sbABJXSUTPmROG9WTrdB0LrUBtTwnWxO"
-              });
-            
-              // Handle the redirect from Auth0
-              if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-                await auth0.handleRedirectCallback();
-                window.history.replaceState({}, document.title, "/");
-              }
-            
-              updateUI();
-            };
-            
-            const login = async () => {
-              await auth0.loginWithRedirect({
-                redirect_uri: window.location.origin
-              });
-            };
-            
-            const logout = () => {
-              auth0.logout({
-                returnTo: window.location.origin
-              });
-            };
-            
-            const updateUI = async () => {
-              const isAuthenticated = await auth0.isAuthenticated();
-            
-              if (isAuthenticated) {
-                const user = await auth0.getUser();
-                document.getElementById("btn-login").style.display = "none";
-                document.getElementById("user-profile").style.display = "block";
-                document.getElementById("profile-picture").src = user.picture;
-                document.getElementById("username").innerText = user.name;
-              } else {
-                document.getElementById("btn-login").style.display = "block";
-                document.getElementById("user-profile").style.display = "none";
-              }
-            };
+          window.onload = async () => {
+            auth0 = await createAuth0Client({
+              domain: "YOUR_DOMAIN",
+              client_id: "YOUR_CLIENT_ID"
+            });
+
+            // Handle the redirect from Auth0
+            if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+              await auth0.handleRedirectCallback();
+              window.history.replaceState({}, document.title, "/");
+            }
+
+            updateUI();
+          };
+
+          const login = async () => {
+            await auth0.loginWithRedirect({
+              redirect_uri: window.location.origin
+            });
+          };
+
+          const logout = () => {
+            auth0.logout({
+              returnTo: window.location.origin
+            });
+          };
+
+          const updateUI = async () => {
+            const isAuthenticated = await auth0.isAuthenticated();
+
+            if (isAuthenticated) {
+              const user = await auth0.getUser();
+              document.getElementById("btn-login").style.display = "none";
+              document.getElementById("user-profile").style.display = "block";
+              document.getElementById("profile-picture").src = user.picture;
+              document.getElementById("username").innerText = user.name;
+            } else {
+              document.getElementById("btn-login").style.display = "block";
+              document.getElementById("user-profile").style.display = "none";
+            }
+          };
 
             
 
