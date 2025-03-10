@@ -169,10 +169,12 @@
           var ap = new AuthPro('CoolD1234');
           
           function updateAuthProUI() {
-            if (typeof login !== 'undefined' && login !== '') {
+            const loginStatus = await auth0.isAuthenticated();
+            if (loginStatus) {
+              const user = await auth0.getUser();
               document.getElementById("auth-buttons").style.display = "none";
               document.getElementById("welcome-message").style.display = "block";
-              document.getElementById("ap_welcome").innerHTML = "Welcome, " + login;
+              document.getElementById("ap_welcome").innerHTML = "Welcome, " + user.name;
             } else {
               document.getElementById("auth-buttons").style.display = "block";
               document.getElementById("welcome-message").style.display = "none";
