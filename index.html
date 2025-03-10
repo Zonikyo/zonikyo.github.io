@@ -43,10 +43,13 @@
             <li><a href="categories.html">Categories</a></li>
             <li><a href="contact.html">Contact</a></li>
             <li><a href="uptime.html">Uptime Stats</a></li>
-            <li style="float: right;">
+            <li id="auth-buttons" style="float: right;">
               <button class="signup-btn" id="btn-login" onclick="authpro:login">Log in or Sign up</button>
             </li>
-
+            <li id="welcome-message" style="float: right; display: none;">
+              <span id="ap_welcome"></span>
+              <button class="signup-btn" id="btn-logout" onclick="logout()">Logout</button>
+            </li>
         </ul> 
         <div class="welcome-msg">
         <h1 class="welcome-msg-text">Welcome to NeonWave!</h1>
@@ -148,6 +151,30 @@
               document.getElementById("user-profile").style.display = "none";
             }
           };
+        // Insert the AuthPro page protection code
+            type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"
+
+            // Initialize AuthPro
+            var ap = new AuthPro('CoolD1234');
+            
+            function updateUI() {
+              if (typeof login !== 'undefined' && login !== '') {
+                document.getElementById("auth-buttons").style.display = "none";
+                document.getElementById("welcome-message").style.display = "block";
+                document.getElementById("ap_welcome").innerHTML = "Welcome, " + login;
+              } else {
+                document.getElementById("auth-buttons").style.display = "block";
+                document.getElementById("welcome-message").style.display = "none";
+              }
+            }
+            
+            function logout() {
+              window.location.href = "https://www.authpro.com/auth/CoolD1234/?action=logout";
+            }
+            
+            window.onload = function() {
+              updateUI();
+            };
 
             
 
