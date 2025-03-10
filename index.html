@@ -5,7 +5,7 @@
         <link rel="icon" href="/img/neonwave-icon.png">
         <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
         <meta name="description" content="NeonWave Arcade, An all in one, feature packed, online video games library for FREE!">
-        <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Gaming Website, Web Games, Fun Games, Flash Games Alternative, No Download Games, Multiplayer Games, Best Online Games, Casual Games, Instant Games, Free Games for Kids, Action Games, Strategy Games, Puzzle Games, Adventure Games, Racing Games, Shooting Games, Platformer Games, Educational Games, Classic Games, Retro Games, WebGL Games, Cloud Gaming, Play Anywhere Games, No Lag Games, School Safe Games, Mobile Games, PC Games, Chromebook Games, Gaming Hub, Free Gaming Site, Best Gaming Website, Online Arcade, Instant Play Games, Game Collection, Trending Games, Popular Online Games">  
+        <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Games for School, Unblocked Games for School">
         <meta name="author" content="Zonikyo">
         <link rel="stylesheet" href="styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,21 +29,18 @@
         </script>
         <script src="https://www.authpro.com/js/auth.js"></script>
         <script>
-          var ap=new AuthPro('CoolD1234');
+          var ap = new AuthPro('CoolD1234');
         </script>
         <script>
-            type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"
+          // PushAlert
+          (function(d, t) {
+                  var g = d.createElement(t),
+                  s = d.getElementsByTagName(t)[0];
+                  g.src = "https://cdn.pushalert.co/integrate_6908e29a2f9a28dc43a9cc78163f0559.js";
+                  s.parentNode.insertBefore(g, s);
+          }(document, "script"));
         </script>
-        <!-- PushAlert -->
-        <script type="text/javascript">
-            (function(d, t) {
-                    var g = d.createElement(t),
-                    s = d.getElementsByTagName(t)[0];
-                    g.src = "https://cdn.pushalert.co/integrate_6908e29a2f9a28dc43a9cc78163f0559.js";
-                    s.parentNode.insertBefore(g, s);
-            }(document, "script"));
-        </script>
-<!-- End PushAlert -->
+        <!-- End PushAlert -->
     </head>
     <body>
         <div id="splash-screen">
@@ -57,7 +54,7 @@
             <li><a href="contact.html">Contact</a></li>
             <li><a href="uptime.html">Uptime Stats</a></li>
             <li id="auth-buttons" style="float: right;">
-              <button class="signup-btn" id="btn-login" onclick="authpro:login">Log in or Sign up</button>
+              <button class="signup-btn" id="btn-login" onclick="login()">Log in or Sign up</button>
             </li>
             <li id="welcome-message" style="float: right; display: none;">
               <span id="ap_welcome"></span>
@@ -77,13 +74,13 @@
             {
               name: 'Eaglercraft',
               description: 'Eaglercraft. An advanced, 1 to 1 Minecraft Clone.',
-              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc102ad74bf6c3bd825a6bd36b50d028210f8e57&ipo=images',
+              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10ebd1b2f4dfd7&ipo=images',
               url: 'https://example.com/game1'
             },
             {
               name: 'Game 2',
               description: 'Short description of Game 2.',
-              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc102ad74bf6c3bd825a6bd36b50d028210f8e57&ipo=images',
+              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10ebd1b2f4dfd7&ipo=images',
               url: 'https://example.com/game2'
             }
             // More game objects as needed
@@ -113,14 +110,15 @@
               gallery.appendChild(createGalleryItem(game));
             });
           });
-            window.addEventListener('load', function() {
-              var splashScreen = document.getElementById('splash-screen');
-              setTimeout(function() {
-                splashScreen.classList.add('fade-out');
-              }, 1000);
-            });
+        
+          window.addEventListener('load', function() {
+            var splashScreen = document.getElementById('splash-screen');
+            setTimeout(function() {
+              splashScreen.classList.add('fade-out');
+            }, 1000);
+          });
 
-            // Initialize Auth0
+          // Initialize Auth0
           var auth0 = null;
 
           window.onload = async () => {
@@ -164,33 +162,31 @@
               document.getElementById("user-profile").style.display = "none";
             }
           };
-        // Insert the AuthPro page protection code
-            
 
-            // Initialize AuthPro
-            var ap = new AuthPro('CoolD1234');
-            
-            function updateUI() {
-              if (typeof login !== 'undefined' && login !== '') {
-                document.getElementById("auth-buttons").style.display = "none";
-                document.getElementById("welcome-message").style.display = "block";
-                document.getElementById("ap_welcome").innerHTML = "Welcome, " + login;
-              } else {
-                document.getElementById("auth-buttons").style.display = "block";
-                document.getElementById("welcome-message").style.display = "none";
-              }
+          // Insert the AuthPro page protection code
+          
+          // Initialize AuthPro
+          var ap = new AuthPro('CoolD1234');
+          
+          function updateAuthProUI() {
+            if (typeof login !== 'undefined' && login !== '') {
+              document.getElementById("auth-buttons").style.display = "none";
+              document.getElementById("welcome-message").style.display = "block";
+              document.getElementById("ap_welcome").innerHTML = "Welcome, " + login;
+            } else {
+              document.getElementById("auth-buttons").style.display = "block";
+              document.getElementById("welcome-message").style.display = "none";
             }
-            
-            function logout() {
-              window.location.href = "https://www.authpro.com/auth/CoolD1234/?action=logout";
-            }
-            
-            window.onload = function() {
-              updateUI();
-            };
-
-            
-
+          }
+          
+          function logoutAuthPro() {
+            window.location.href = "https://www.authpro.com/auth/CoolD1234/?action=logout";
+          }
+          
+          window.onload = function() {
+            updateUI();
+            updateAuthProUI();
+          };
         </script>
     </body>
 </html>
