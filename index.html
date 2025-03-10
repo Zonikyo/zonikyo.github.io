@@ -3,9 +3,8 @@
     <head>
         <title>NeonWave</title>
         <link rel="icon" href="/img/neonwave-icon.png">
-        <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
         <meta name="description" content="NeonWave Arcade, An all in one, feature packed, online video games library for FREE!">
-        <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Games for School, Unblocked Games for School">
+        <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Gaming">
         <meta name="author" content="Zonikyo">
         <link rel="stylesheet" href="styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,10 +26,7 @@
           window.location.replace('https://neonwave.netlify.app');
         }
         </script>
-        <script src="https://www.authpro.com/js/auth.js"></script>
-        <script>
-          var ap = new AuthPro('CoolD1234');
-        </script>
+        <script type="text/javascript" src="https://www.authpro.com/auth/CoolD1234/?action=pp"></script>
         <script>
           // PushAlert
           (function(d, t) {
@@ -58,7 +54,7 @@
             </li>
             <li id="welcome-message" style="float: right; display: none;">
               <span id="ap_welcome"></span>
-              <button class="signup-btn" id="btn-logout" onclick="https://www.authpro.com/auth/CoolD1234/?action=logout">Logout</button>
+              <a href="https://www.authpro.com/auth/CoolD1234/?action=logout" class="signup-btn">Logout</a>
             </li>
         </ul> 
         <div class="welcome-msg">
@@ -74,13 +70,13 @@
             {
               name: 'Eaglercraft',
               description: 'Eaglercraft. An advanced, 1 to 1 Minecraft Clone.',
-              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10ebd1b2f4dfd7&ipo=images',
+              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10f0b8a73b4f8d&ipo=images',
               url: 'https://example.com/game1'
             },
             {
               name: 'Game 2',
               description: 'Short description of Game 2.',
-              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10ebd1b2f4dfd7&ipo=images',
+              image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=ce543f3dda50a85905eaa4c9dc10f0b8a73b4f8d&ipo=images',
               url: 'https://example.com/game2'
             }
             // More game objects as needed
@@ -118,75 +114,19 @@
             }, 1000);
           });
 
-          // Initialize Auth0
-          var auth0 = null;
-
-          window.onload = async () => {
-            auth0 = await createAuth0Client({
-              domain: "dev-lciqwnyb52wdezeo.us.auth0.com",
-              client_id: "sbABJXSUTPmROG9WTrdB0LrUBtTwnWxO"
-            });
-
-            // Handle the redirect from Auth0
-            if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-              await auth0.handleRedirectCallback();
-              window.history.replaceState({}, document.title, "/");
-            }
-
-            updateUI();
-          };
-
-          const login = async () => {
-            await auth0.loginWithRedirect({
-              redirect_uri: window.location.origin
-            });
-          };
-
-          const logout = () => {
-            auth0.logout({
-              returnTo: window.location.origin
-            });
-          };
-
-          const updateUI = async () => {
-            const isAuthenticated = await auth0.isAuthenticated();
-
-            if (isAuthenticated) {
-              const user = await auth0.getUser();
-              document.getElementById("btn-login").style.display = "none";
-              document.getElementById("user-profile").style.display = "block";
-              document.getElementById("profile-picture").src = user.picture;
-              document.getElementById("username").innerText = user.name;
-            } else {
-              document.getElementById("btn-login").style.display = "block";
-              document.getElementById("user-profile").style.display = "none";
-            }
-          };
-
-          // Insert the AuthPro page protection code
-          
-          // Initialize AuthPro
-          var ap = new AuthPro('CoolD1234');
-          
           function updateAuthProUI() {
-            const loginStatus = await auth0.isAuthenticated();
+            const loginStatus = ap.isAuthenticated();
             if (loginStatus) {
-              const user = await auth0.getUser();
               document.getElementById("auth-buttons").style.display = "none";
               document.getElementById("welcome-message").style.display = "block";
-              document.getElementById("ap_welcome").innerHTML = "Welcome, " + user.name;
+              document.getElementById("ap_welcome").innerHTML = "Welcome, " + ap.getLogin();
             } else {
               document.getElementById("auth-buttons").style.display = "block";
               document.getElementById("welcome-message").style.display = "none";
             }
           }
           
-          function logoutAuthPro() {
-            window.location.href = "https://www.authpro.com/auth/CoolD1234/?action=logout";
-          }
-          
           window.onload = function() {
-            updateUI();
             updateAuthProUI();
           };
         </script>
