@@ -26,7 +26,11 @@
           // Redirect the user to the new URL
           window.location.replace('https://neonwave.netlify.app');
         }
-  </script>
+        </script>
+        <script src="https://www.authpro.com/js/auth.js"></script>
+        <script>
+          var ap=new AuthPro('CoolD1234');
+        </script>
     </head>
     <body>
         <div id="splash-screen">
@@ -40,11 +44,7 @@
             <li><a href="contact.html">Contact</a></li>
             <li><a href="uptime.html">Uptime Stats</a></li>
             <li style="float: right;">
-              <button class="signup-btn" id="btn-login" onclick="login()">Log in or Sign up</button>
-              <div id="user-profile" style="display: none;">
-                <img id="profile-picture" src="" alt="Profile Picture" style="width: 30px; height: 30px; border-radius: 50%;">
-                <span id="username"></span>
-              </div>
+              <button class="signup-btn" id="btn-login" onclick="authpro:login">Log in or Sign up</button>
             </li>
 
         </ul> 
