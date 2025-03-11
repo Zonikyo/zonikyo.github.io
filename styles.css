@@ -150,9 +150,12 @@ li a:hover {
     }
 
 .image-gallery {
+    flex: 1; /* Allow the gallery to take up available space */
     display: flex;
     flex-wrap: wrap;
-    }
+    justify-content: center;
+    padding: 10px;
+}
             
 .image-item {
     position: relative;
