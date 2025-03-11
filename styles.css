@@ -1,3 +1,34 @@
+.ad-game-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.ad-section {
+    border-radius: 10px;
+    background-color: #333;
+    margin: 10px;
+    padding: 10px;
+}
+
+.top-ad {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.vertical-ad {
+    width: 240px;
+    height: 1000px;
+}
+
+.game-tiles {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+}
+
 .iframe-container {
     display: flex;
     justify-content: center;
