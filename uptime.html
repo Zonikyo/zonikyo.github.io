@@ -31,10 +31,15 @@
             <li><a href="uptime.html" class="active">Uptime Stats</a></li>
             <li style="float: right;"><a class="signup-btn" href="#authpro.login">Log in or Sign up</a></li>
         </ul> 
-    <div class="iframe-container">
-      <iframe class="game-iframe" id="game-iframe" src="https://stats.uptimerobot.com/UsdybHl4UE"></iframe>
-      <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
-    </div>
+      <div class="welcome-msg">
+        <h1 class="welcome-msg-text">Uptime Status</h1>
+        <p class="inline-text-welcome-msg">Check if the NeonWave servers are  <p class="inline-text-welcome-msg-gradient">online</p>. This tool also checks authpro.com, which manages all NeonWave accounts.</p>
+        <p class="welcome-msg-text">If the servers are online, and the functions are still not working, try visitng both neonwave.netlify.app and www.authpro.com</p>
+      </div>
+      <div style="display: flex;">
+        <iframe src="https://check-host.net/check-ping?host=authpro.com" style="flex: 1; height: 500px;" frameborder="0"></iframe>
+        <iframe src="https://check-host.net/check-ping?host=neonwave.netlify.app" style="flex: 1; height: 500px;" frameborder="0"></iframe>
+      </div>
     </script>
   </body>
 </html>
