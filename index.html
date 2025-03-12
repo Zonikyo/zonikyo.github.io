@@ -521,6 +521,45 @@ function googleTranslateElementInit() {
           window.onload = function() {
             updateAuthProUI();
           };
+            // Add this after the createGalleryItem function
+function filterGames(searchTerm) {
+    const gallery = document.getElementById('image-gallery');
+    gallery.innerHTML = ''; // Clear current gallery
+    
+    const filteredGames = gamesData.filter(game => 
+        game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        game.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    filteredGames.forEach((game, index) => {
+        const item = createGalleryItem(game);
+        gallery.appendChild(item);
+        // Staggered animation for filtered items
+        setTimeout(() => {
+            item.classList.add('visible');
+        }, index * 50);
+    });
+}
+
+// Add search functionality on DOM content loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const gallery = document.getElementById('image-gallery');
+    const searchBar = document.getElementById('search-bar');
+    
+    // Initial gallery load
+    gamesData.forEach((game, index) => {
+        const item = createGalleryItem(game);
+        gallery.appendChild(item);
+        setTimeout(() => {
+            item.classList.add('visible');
+        }, index * 50);
+    });
+
+    // Search bar event listener
+    searchBar.addEventListener('input', (e) => {
+        filterGames(e.target.value);
+    });
+});
         </script>
     </body>
 </html>
