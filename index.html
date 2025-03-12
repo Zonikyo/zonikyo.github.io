@@ -82,16 +82,16 @@
         </script>
     </div>
 
-        <!-- Search Bar -->
-<div class="search-container">
-    <input type="text" id="search-bar" placeholder="Search games by title or description...">
-    <div class="search-icon">
-        <svg viewBox="0 0 24 24">
-            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-        </svg>
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search games by title or description...">
+        <div class="search-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        </div>
     </div>
-</div>
-        
+
     <!-- Vertical Ads on Either Side and Centered Game Tiles -->
     <div class="ad-game-container">
         <div class="ad-section vertical-ad left-ad">
@@ -126,7 +126,7 @@
             </script>
         </div>
     </div>
-         <script type="text/javascript">
+    <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 }
@@ -494,8 +494,32 @@ function googleTranslateElementInit() {
         
           document.addEventListener('DOMContentLoaded', () => {
             const gallery = document.getElementById('image-gallery');
-            gamesData.forEach(game => {
-              gallery.appendChild(createGalleryItem(game));
+            const searchBar = document.getElementById('search-bar');
+
+            // Function to populate gallery
+            function populateGallery(games) {
+                gallery.innerHTML = ''; // Clear gallery
+                games.forEach((game, index) => {
+                    const item = createGalleryItem(game);
+                    gallery.appendChild(item);
+                    // Staggered animation on load
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 50);
+                });
+            }
+
+            // Load all games initially
+            populateGallery(gamesData);
+
+            // Search functionality
+            searchBar.addEventListener('input', (e) => {
+                const searchTerm = e.target.value;
+                const filteredGames = gamesData.filter(game => 
+                    game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    game.description.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                populateGallery(filteredGames);
             });
           });
         
@@ -521,45 +545,6 @@ function googleTranslateElementInit() {
           window.onload = function() {
             updateAuthProUI();
           };
-            // Add this after the createGalleryItem function
-function filterGames(searchTerm) {
-    const gallery = document.getElementById('image-gallery');
-    gallery.innerHTML = ''; // Clear current gallery
-    
-    const filteredGames = gamesData.filter(game => 
-        game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        game.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    filteredGames.forEach((game, index) => {
-        const item = createGalleryItem(game);
-        gallery.appendChild(item);
-        // Staggered animation for filtered items
-        setTimeout(() => {
-            item.classList.add('visible');
-        }, index * 50);
-    });
-}
-
-// Add search functionality on DOM content loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const gallery = document.getElementById('image-gallery');
-    const searchBar = document.getElementById('search-bar');
-    
-    // Initial gallery load
-    gamesData.forEach((game, index) => {
-        const item = createGalleryItem(game);
-        gallery.appendChild(item);
-        setTimeout(() => {
-            item.classList.add('visible');
-        }, index * 50);
-    });
-
-    // Search bar event listener
-    searchBar.addEventListener('input', (e) => {
-        filterGames(e.target.value);
-    });
-});
         </script>
     </body>
 </html>
