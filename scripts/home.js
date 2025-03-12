@@ -1,6 +1,3 @@
-// Game data (same as in your original file)
-const gamesData = [/* ... your game data here ... */];
-
 // Gallery creation and search logic
 function createGalleryItem(game) {
     const item = document.createElement('div');
@@ -37,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Load all games initially
+    // Load all games initially using global gamesData
     populateGallery(gamesData);
 
     // Search functionality
