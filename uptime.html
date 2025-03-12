@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <include src="templates/head.html"></include>
+    <head>
+        <div id="head-placeholder"></div>
+        <script src="/scripts/common.js"></script>
+    </head>
     <body>
-        <include src="templates/navbar.html"></include>
+        <div id="navbar-placeholder"></div>
         <script>
-            document.getElementById('nav-uptime').classList.add('active');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('nav-uptime').classList.add('active');
+            });
         </script>
         <div class="welcome-msg">
             <h1 class="welcome-msg-text">Uptime Status</h1>
