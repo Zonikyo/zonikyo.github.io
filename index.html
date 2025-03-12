@@ -6,9 +6,7 @@
         <meta name="description" content="NeonWave Arcade, An all in one, feature packed, online video games library for FREE!">
         <meta name="keywords" content="Games, Unblocked Games, NeonWave, Unblocked Games for School, Free Online Games, Play Games Online, HTML5 Games, Browser Games, Arcade Games, School Games, Gaming">
         <meta name="author" content="Zonikyo">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2197905823374701"
-        crossorigin="anonymous">  
-        </script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2197905823374701" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,8 +14,6 @@
             function isMobileDevice() {
                 return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
-            
-            // Check if user is on mobile and redirect
             if (isMobileDevice()) {
                 window.location.href = "/mobile-not-available.html";
             }
@@ -29,13 +25,10 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
           gtag('config', 'G-V2GDEPT9SW');
         </script>
         <script>
-        // Check the current domain
         if (window.location.hostname === 'zonikyo.github.io') {
-          // Redirect the user to the new URL
           window.location.replace('https://neonwave.netlify.app');
         }
         </script>
@@ -54,85 +47,96 @@
         </script>
     </head>
     <body>
-    <div id="splash-screen">
-      <img src="/img/neonwave-logo.png" alt="Logo">
-    </div>
+        <div id="splash-screen">
+            <img src="/img/neonwave-logo.png" alt="Logo">
+        </div>
 
-    <ul>
-        <a href="index.html"><img class="logo" src="/img/neonwave-logo.png"></a>
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="categories.html">Categories</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="uptime.html">Uptime Stats</a></li>
-        <li style="float:right"><div class="google_translate" id="google_translate_element"></div></li>
-    </ul> 
-    <div class="welcome-msg">
-    <h1 class="welcome-msg-text">Welcome to NeonWave!</h1>
-    <p class="inline-text-welcome-msg">An all in one, free and <p class="inline-text-welcome-msg-gradient">unblocked</p> video games library with advanced features to enhance your Gaming experience.</p>
-    <p class="welcome-msg-text">NeonWave is in very early beta, and serves ads to help pay for the development and upkeep of the website. Turning off your adblocker would help support the website.</p>
-    </div>
-    <!-- Horizontal Ad at the Top -->
-    <div class="ad-section top-ad">
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:728px;height:90px"
-             data-ad-client="ca-pub-2197905823374701"
-             data-ad-slot="4715332132"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+        <!-- Navigation -->
+        <header class="nav-container">
+            <a href="index.html"><img class="logo" src="/img/neonwave-logo.png" alt="NeonWave Logo"></a>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="uptime.html">Uptime Stats</a></li>
+                <li class="translate"><div class="google_translate" id="google_translate_element"></div></li>
+            </ul>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <section class="welcome-section">
+                <h1>Welcome to NeonWave!</h1>
+                <p>An all in one, free and <span class="gradient-text">unblocked</span> video games library with advanced features to enhance your Gaming experience.</p>
+                <p>NeonWave is in very early beta, and serves ads to help pay for the development and upkeep of the website. Turning off your adblocker would help support the website.</p>
+            </section>
+
+            <!-- Top Ad -->
+            <div class="ad-section top-ad">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-2197905823374701"
+                     data-ad-slot="4715332132"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search games by title or description...">
+                <div class="search-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Game Gallery with Vertical Ads -->
+            <div class="content-container">
+                <div class="ad-section vertical-ad left-ad">
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:150px;height:2000px"
+                         data-ad-client="ca-pub-2197905823374701"
+                         data-ad-slot="2138675228"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
+                <div class="image-gallery" id="image-gallery">
+                    <!-- Game tiles dynamically inserted here -->
+                </div>
+
+                <div class="ad-section vertical-ad right-ad">
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:150px;height:2000px"
+                         data-ad-client="ca-pub-2197905823374701"
+                         data-ad-slot="2138675228"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+
+            <!-- Additional Bottom Ad -->
+            <div class="ad-section bottom-ad">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-2197905823374701"
+                     data-ad-slot="4715332132"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </main>
+
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            }
         </script>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="search-container">
-        <input type="text" id="search-bar" placeholder="Search games by title or description...">
-        <div class="search-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-        </div>
-    </div>
-
-    <!-- Vertical Ads on Either Side and Centered Game Tiles -->
-    <div class="ad-game-container">
-        <div class="ad-section vertical-ad left-ad">
-            <!-- Left Vertical Ads -->
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2197905823374701"
-                 crossorigin="anonymous"></script>
-            <!-- Ads on sides of homepage -->
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:150px;height:500px"
-                 data-ad-client="ca-pub-2197905823374701"
-                 data-ad-slot="2138675228"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-        
-        <div class="image-gallery" id="image-gallery">
-            <!-- Game tiles will be dynamically inserted here -->
-        </div>
-        
-        <div class="ad-section vertical-ad right-ad">
-            <!-- Right Vertical Ads -->
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2197905823374701"
-                 crossorigin="anonymous"></script>
-            <!-- Ads on sides of homepage -->
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:150px;height:500px"
-                 data-ad-client="ca-pub-2197905823374701"
-                 data-ad-slot="2138675228"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    </div>
-    <script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-}
-</script>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         <script>
           // Game information 
           const gamesData = [
@@ -473,7 +477,7 @@ function googleTranslateElementInit() {
     "url": "https://sreekar617.github.io/hw/index.html"
   }
 ];
-        
+
           function createGalleryItem(game) {
             const item = document.createElement('div');
             item.className = 'image-item';
@@ -491,28 +495,24 @@ function googleTranslateElementInit() {
             });
             return item;
           }
-        
+
           document.addEventListener('DOMContentLoaded', () => {
             const gallery = document.getElementById('image-gallery');
             const searchBar = document.getElementById('search-bar');
 
-            // Function to populate gallery
             function populateGallery(games) {
-                gallery.innerHTML = ''; // Clear gallery
+                gallery.innerHTML = '';
                 games.forEach((game, index) => {
                     const item = createGalleryItem(game);
                     gallery.appendChild(item);
-                    // Staggered animation on load
                     setTimeout(() => {
                         item.classList.add('visible');
-                    }, index * 50);
+                    }, index * 100); // Slower animation for better effect
                 });
             }
 
-            // Load all games initially
             populateGallery(gamesData);
 
-            // Search functionality
             searchBar.addEventListener('input', (e) => {
                 const searchTerm = e.target.value;
                 const filteredGames = gamesData.filter(game => 
@@ -522,23 +522,24 @@ function googleTranslateElementInit() {
                 populateGallery(filteredGames);
             });
           });
-        
+
           window.addEventListener('load', function() {
             var splashScreen = document.getElementById('splash-screen');
             setTimeout(function() {
               splashScreen.classList.add('fade-out');
+              setTimeout(() => splashScreen.style.display = 'none', 1000);
             }, 1000);
           });
 
           function updateAuthProUI() {
             const loginStatus = ap.isAuthenticated();
             if (loginStatus) {
-              document.getElementById("auth-buttons").style.display = "none";
-              document.getElementById("welcome-message").style.display = "block";
-              document.getElementById("ap_welcome").innerHTML = "Welcome, " + ap.getLogin();
+              document.getElementById("auth-buttons")?.style.display = "none";
+              document.getElementById("welcome-message")?.style.display = "block";
+              document.getElementById("ap_welcome")?.innerHTML = "Welcome, " + ap.getLogin();
             } else {
-              document.getElementById("auth-buttons").style.display = "block";
-              document.getElementById("welcome-message").style.display = "none";
+              document.getElementById("auth-buttons")?.style.display = "block";
+              document.getElementById("welcome-message")?.style.display = "none";
             }
           }
           
