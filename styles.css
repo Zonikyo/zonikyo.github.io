@@ -37,13 +37,15 @@
     position: relative;
     padding: 10px;
     padding-top: 1px;
-    }
+}
+
 .game-iframe {
     width: 100%;
     height: 100%;
     border: none;
     border-radius: 15px;
-    }
+}
+
 .fullscreen-btn {
     position: absolute;
     bottom: 15px;
@@ -54,15 +56,16 @@
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    }
+}
+
 body {
     margin: 0;
     font-family: poppins;
     font-size: 700;
-    background-color:#1c1c1c;
+    background-color: #1c1c1c;
     color: #fff;
     cursor: url('cursor.png'), auto;
-    }
+}
 
 ul {
     list-style-type: none;
@@ -74,12 +77,12 @@ ul {
     background-color: #333;
     position: sticky;
     position: -webkit-sticky; /* Safari */
-    }
+}
 
 li {
     float: left;
     padding-left: 4px;
-    }
+}
 
 li a {
     display: block;
@@ -88,34 +91,34 @@ li a {
     padding: 14px 16px;
     text-decoration: none;
     border-radius: 5px;
-    }
+}
 
-            /* Change the link color to #111 (black) on hover */
+/* Change the link color to #111 (black) on hover */
 li a:hover {
     background-color: #111;
-    }
+}
 
 .active {
     background-color: #04AA6D;
-    }
+}
 
 .logo {
     width: auto;
     height: 45px;
     padding: 4px 4px;
     float: left;
-    }
+}
 
 .welcome-msg {
     border-radius: 10px;
     background-color: #333;
     margin: 10px;
     padding: 10px;
-    }
+}
 
 .welcome-msg-text {
     margin: 1px;
-    }
+}
 
 .inline-text-welcome-msg-gradient {
     display: inline;
@@ -125,12 +128,12 @@ li a:hover {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    }
+}
 
 .inline-text-welcome-msg {
     display: inline;
     margin: 1px;
-    }
+}
 
 .signup-btn {
     background: #09CF0D;
@@ -143,11 +146,11 @@ li a:hover {
     border-color: #09CF0D;
     border-color: linear-gradient(to right, #09CF0D 0%, #06CFC5 57%);
     border-width: 1px;
-    }
+}
 
 .signup-btn:hover {
     color: #fff;
-    }
+}
 
 .image-gallery {
     flex: 1; /* Allow the gallery to take up available space */
@@ -156,7 +159,7 @@ li a:hover {
     justify-content: center;
     padding: 10px;
 }
-            
+
 .image-item {
     position: relative;
     width: 23.9%;
@@ -204,65 +207,65 @@ li a:hover {
     text-align: left;
     margin-bottom: 3px;
 }
-            
+
 .image-item {
     cursor: pointer;
-    }
-            
+}
+
 .image-item:hover {
     cursor: pointer;
-    }
-            
+}
+
 .image-item:hover .overlay {
     opacity: 1;
-    }
-            
+}
+
 .image-item:hover .text {
     display: block;
-    }
+}
 
 #splash-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #1c1c1c;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1c1c1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
     pointer-events: none; /* Allow passthrough */
 }
 
 #splash-screen img {
-  max-width: 200px;
-  pointer-events: auto;
+    max-width: 200px;
+    pointer-events: auto;
 }
 
 #splash-screen.fade-out {
-  opacity: 0;
+    opacity: 0;
 }
 
 .signup-btn {
-  background-color: #4CAF50; /* Green background */
-  border: none; /* Remove border */
-  color: white; /* White text */
-  padding: 10px 20px; /* Some padding */
-  text-align: center; /* Centered text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Make the container inline-block */
-  font-size: 16px; /* Increase font size */
-  margin: 4px 2px; /* Add some margin */
-  cursor: pointer; /* Add a pointer cursor on hover */
-  border-radius: 12px; /* Rounded corners */
-  transition: background-color 0.3s; /* Smooth background transition */
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 20px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make the container inline-block */
+    font-size: 16px; /* Increase font size */
+    margin: 4px 2px; /* Add some margin */
+    cursor: pointer; /* Add a pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth background transition */
 }
 
 .signup-btn:hover {
-  background-color: #45a049; /* Darker green on hover */
+    background-color: #45a049; /* Darker green on hover */
 }
 
 .google_translate a {
@@ -276,11 +279,11 @@ li a:hover {
     border-radius: 10px;
 }
 
+/* Updated Search Bar Styles */
 .search-container {
     position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
+    width: calc(100% - 20px); /* Full width minus 10px on each side */
+    margin: 20px 10px; /* 10px margin on left and right */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -292,7 +295,7 @@ li a:hover {
     font-size: 16px;
     font-family: 'Poppins', sans-serif;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px; /* Matches .ad-section, ul, .welcome-msg */
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
@@ -304,7 +307,7 @@ li a:hover {
     outline: none;
     background: rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-    transform: scale(1.02);
+    transform: scale(1.01); /* Subtle scale on focus */
 }
 
 #search-bar::placeholder {
