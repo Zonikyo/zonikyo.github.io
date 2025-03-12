@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <include src="templates/head.html"></include>
+    <head>
+        <div id="head-placeholder"></div>
+        <script src="/scripts/common.js"></script>
+    </head>
     <body>
         <div id="splash-screen">
             <img src="/img/neonwave-logo.png" alt="Logo">
         </div>
-        <include src="templates/navbar.html"></include>
+        <div id="navbar-placeholder"></div>
         <script>
-            document.getElementById('nav-home').classList.add('active');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('nav-home').classList.add('active');
+            });
         </script>
         <div class="welcome-msg">
             <h1 class="welcome-msg-text">Welcome to NeonWave!</h1>
