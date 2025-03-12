@@ -43,7 +43,7 @@
         </script>
         <script src="https://www.authpro.com/js/auth.js"></script>
         <script>
-          var ap=new AuthPro('CoolD1234');
+          var ap = new AuthPro('CoolD1234');
         </script>
     </head>
     <body>
@@ -497,38 +497,44 @@
           }
 
           document.addEventListener('DOMContentLoaded', () => {
+            const splashScreen = document.getElementById('splash-screen');
             const gallery = document.getElementById('image-gallery');
             const searchBar = document.getElementById('search-bar');
 
+            // Remove splash screen after 1 second
+            setTimeout(() => {
+              splashScreen.classList.add('fade-out');
+              setTimeout(() => {
+                splashScreen.style.display = 'none';
+              }, 1000); // Matches CSS transition duration
+            }, 1000);
+
+            // Populate gallery
             function populateGallery(games) {
-                gallery.innerHTML = '';
-                games.forEach((game, index) => {
-                    const item = createGalleryItem(game);
-                    gallery.appendChild(item);
-                    setTimeout(() => {
-                        item.classList.add('visible');
-                    }, index * 100); // Slower animation for better effect
-                });
+              gallery.innerHTML = '';
+              games.forEach((game, index) => {
+                const item = createGalleryItem(game);
+                gallery.appendChild(item);
+                setTimeout(() => {
+                  item.classList.add('visible');
+                }, index * 100);
+              });
             }
 
             populateGallery(gamesData);
 
+            // Search functionality
             searchBar.addEventListener('input', (e) => {
-                const searchTerm = e.target.value;
-                const filteredGames = gamesData.filter(game => 
-                    game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    game.description.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                populateGallery(filteredGames);
+              const searchTerm = e.target.value;
+              const filteredGames = gamesData.filter(game => 
+                game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                game.description.toLowerCase().includes(searchTerm.toLowerCase())
+              );
+              populateGallery(filteredGames);
             });
-          });
 
-          window.addEventListener('load', function() {
-            var splashScreen = document.getElementById('splash-screen');
-            setTimeout(function() {
-              splashScreen.classList.add('fade-out');
-              setTimeout(() => splashScreen.style.display = 'none', 1000);
-            }, 1000);
+            // Update AuthPro UI after DOM is ready
+            updateAuthProUI();
           });
 
           function updateAuthProUI() {
@@ -542,10 +548,6 @@
               document.getElementById("welcome-message")?.style.display = "none";
             }
           }
-          
-          window.onload = function() {
-            updateAuthProUI();
-          };
         </script>
     </body>
 </html>
