@@ -257,3 +257,6 @@ li a:hover {
   background-color: #45a049; /* Darker green on hover */
 }
 
+.google_translate a {
+    padding: 0;
+}
