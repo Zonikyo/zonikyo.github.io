@@ -19,6 +19,7 @@
 .vertical-ad {
     width: 150px;
     height: 2000px; /* Updated to 2000px */
+    margin-top: 0px;
 }
 
 .game-tiles {
