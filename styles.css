@@ -283,7 +283,7 @@ li a:hover {
 .search-container {
     position: relative;
     width: calc(100% - 20px); /* Full width minus 10px on each side */
-    margin: 20px 10px; /* 10px margin on left and right */
+    margin: 10px 10px; /* 10px margin on left and right */
     display: flex;
     align-items: center;
     justify-content: center;
