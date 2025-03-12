@@ -260,3 +260,8 @@ li a:hover {
 .google_translate a {
     padding: 0;
 }
+
+.google_translate {
+    background-color: #333;
+    color: #fff;
+}
