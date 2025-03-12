@@ -63,9 +63,14 @@ body {
     margin: 0;
     font-family: poppins;
     font-size: 700;
-    background-color: #1c1c1c;
     color: #fff;
     cursor: url('cursor.png'), auto;
+    background: url('background.png') center/cover no-repeat;
+    filter: blur(10px); /* Adjust blur intensity as needed */
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
 }
 
 ul {
