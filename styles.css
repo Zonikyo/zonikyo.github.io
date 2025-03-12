@@ -163,6 +163,14 @@ li a:hover {
     margin: 0.5%;
     overflow: hidden;
     border-radius: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.image-item.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .image-item img {
@@ -266,4 +274,52 @@ li a:hover {
     color: #fff;
     padding: 5px 5px;
     border-radius: 10px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 15px 50px 15px 20px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+#search-bar:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    transform: scale(1.02);
+}
+
+#search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    width: 24px;
+    height: 24px;
+    fill: #00ffff;
+    transition: transform 0.3s ease;
+}
+
+.search-icon:hover {
+    transform: scale(1.1);
 }
