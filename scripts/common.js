@@ -28,6 +28,3 @@ if (isMobileDevice()) {
 if (window.location.hostname === 'zonikyo.github.io') {
     window.location.replace('https://neonwave.netlify.app');
 }
-
-// AuthPro integration
-var ap = new AuthPro('CoolD1234');
