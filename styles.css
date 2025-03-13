@@ -106,6 +106,7 @@ li img {
     position: relative;
     padding: 10px;
     padding-top: 1px;
+    margin-top: 10px;
 }
 
 .game-iframe {
