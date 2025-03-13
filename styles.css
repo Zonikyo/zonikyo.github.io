@@ -1,5 +1,17 @@
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .ad-game-container {
-    display: flex;
+     display: flex;
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -71,6 +83,10 @@ body {
     -moz-filter: blur(10px);
     -o-filter: blur(10px);
     -ms-filter: blur(10px);
+    background-attachment: fixed;
+    padding: 0;
+    overflow: auto;
+    height: 100vh;
 }
 
 ul {
