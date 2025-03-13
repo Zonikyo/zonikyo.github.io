@@ -51,19 +51,23 @@
     <script src="/scripts/home.js"></script>
     <script>
         const updateTime = () => {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('current-time').innerText = timeString;
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('current-time').innerText = timeString;
 
-            const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
-            document.getElementById('welcome-message').innerText = welcomeMessage;
-        };
+        const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
+        const welcomeElement = document.getElementById('welcome-message');
+        welcomeElement.innerText = welcomeMessage;
 
-        setInterval(updateTime, 1000);
-        updateTime();
+        // Trigger the gradient animation
+        welcomeElement.style.animation = 'gradient-move-once 1s forwards';
+    };
+
+    setInterval(updateTime, 1000);
+    updateTime();
     </script>
 </body>
 </html>
