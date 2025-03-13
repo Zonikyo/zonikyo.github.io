@@ -81,10 +81,8 @@ ul {
 
 .vertical-ad {
     width: 150px;
-    height: 100vh; /* Updated to 2000px */
+    height: 3000px; /* Updated to 2000px */
     margin-top: 0px;
-    height: 100%;
-    position: absolute;
 }
 
 .game-tiles {
