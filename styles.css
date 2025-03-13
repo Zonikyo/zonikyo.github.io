@@ -407,7 +407,7 @@ li a:hover {
 
 #welcome-message {
     display: inline-block;
-    background: linear-gradient(90deg, blue, green);
+    background: linear-gradient(90deg, #00fbff, #49ff00);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
