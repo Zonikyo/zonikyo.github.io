@@ -174,8 +174,9 @@ li a:hover {
 
 .logo {
     width: auto;
-    height: 45px;
-    padding: 10px 10px;
+    height: 50px;
+    padding-left: 4px;
+    padding-top: 10px;
     float: left;
 }
 
