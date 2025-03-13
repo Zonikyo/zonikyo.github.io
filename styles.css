@@ -396,7 +396,7 @@ li a:hover {
     transform: scale(1.1);
 }
 
-@keyframes gradient-move {
+@keyframes gradient-move-once {
     0% {
         background-position: 0% 50%;
     }
@@ -411,5 +411,4 @@ li a:hover {
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient-move 5s ease infinite;
 }
