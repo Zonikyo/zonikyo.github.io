@@ -68,6 +68,17 @@
 
     setInterval(updateTime, 1000);
     updateTime();
+
+    window.addEventListener('load', function() {
+        var splashScreen = document.getElementById('splash-screen');
+        setTimeout(function() {
+            splashScreen.classList.add('fade-out');
+            setTimeout(function() {
+                const welcomeElement = document.getElementById('welcome-message');
+                welcomeElement.style.animation = 'gradient-move-once 1s forwards';
+            }, 1000); // Adjust this timeout to match the fade-out duration
+        }, 1000);
+    });
     </script>
 </body>
 </html>
