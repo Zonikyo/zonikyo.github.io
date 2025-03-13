@@ -78,11 +78,6 @@ body {
     color: #fff;
     cursor: url('cursor.png'), auto;
     background: url('background.png') center/cover no-repeat;
-    filter: blur(10px); /* Adjust blur intensity as needed */
-    -webkit-filter: blur(10px);
-    -moz-filter: blur(10px);
-    -o-filter: blur(10px);
-    -ms-filter: blur(10px);
     background-attachment: fixed;
     padding: 0;
     overflow: auto;
