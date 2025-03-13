@@ -396,15 +396,6 @@ li a:hover {
     transform: scale(1.1);
 }
 
-@keyframes gradient-move-once {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
 #welcome-message {
     display: inline-block;
     background: linear-gradient(90deg, #00fbff, #49ff00);
