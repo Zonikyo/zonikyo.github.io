@@ -28,6 +28,3 @@ if (isMobileDevice()) {
 if (window.location.hostname === 'zonikyo.github.io') {
     window.location.replace('https://neonwave.netlify.app');
 }
-
-const sidebar = document.querySelector('.vertical-ad');
-sidebar.style.height = `${document.documentElement.scrollHeight}px`;
