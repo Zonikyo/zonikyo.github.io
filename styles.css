@@ -395,3 +395,21 @@ li a:hover {
 .search-icon:hover {
     transform: scale(1.1);
 }
+
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+#welcome-message {
+    display: inline-block;
+    background: linear-gradient(90deg, blue, green);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-move 5s ease infinite;
+}
