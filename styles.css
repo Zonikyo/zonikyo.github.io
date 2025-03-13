@@ -101,7 +101,8 @@ li img {
     display: flex;
     justify-content: center;
     align-items: top;
-    height: 90vh;
+    height: auto; /* Adjusted to fit content */
+    width: calc(100% - 300px); /* Adjusted width to fit within ad content */
     position: relative;
     padding: 10px;
     padding-top: 1px;
@@ -109,7 +110,7 @@ li img {
 
 .game-iframe {
     width: 100%;
-    height: 100%;
+    height: 90vh; /* Adjusted height to fit the viewport */
     border: none;
     border-radius: 15px;
 }
