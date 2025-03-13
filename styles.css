@@ -313,14 +313,14 @@ li a:hover {
     font-family: 'Poppins', sans-serif;
     border: none;
     border-radius: 10px; /* Matches .ad-section, ul, .welcome-msg */
-    background: rgba(255, 255, 255, 0.1);
+    background: #333;
     color: #fff;
     transition: background 0.3s ease; /* Smooth background transition */
 }
 
 #search-bar:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.2); /* Slight background change on focus */
+    background: #444; /* Slight background change on focus */
 }
 
 #search-bar::placeholder {
