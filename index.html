@@ -16,7 +16,10 @@
         });
     </script>
     <div class="welcome-msg">
-        <h1 class="welcome-msg-text">Welcome to NeonWave!</h1>
+        <h1 class="welcome-msg-text">
+            <span id="welcome-message"></span>
+            <span id="current-time" style="float: right;"></span>
+        </h1>
         <p class="inline-text-welcome-msg">An all in one, free and <p class="inline-text-welcome-msg-gradient">unblocked</p> video games library with advanced features to enhance your Gaming experience.</p>
         <p class="welcome-msg-text">NeonWave is in very early beta, and serves ads to help pay for the development and upkeep of the website. Turning off your adblocker would help support the website.</p>
     </div>
@@ -30,33 +33,39 @@
         <input type="text" id="search-bar" placeholder="Search games by title or description...">
         <div class="search-icon">
             <svg viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
             </svg>
         </div>
     </div>
     <!-- Ad and Game Container -->
     <div class="ad-game-container">
         <div class="ad-section vertical-ad left-ad">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:130px;height:500px"
-                 data-ad-client="ca-pub-2197905823374701"
-                 data-ad-slot="2138675228"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <ins class="adsbygoogle" style="display:inline-block;width:130px;height:500px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="2138675228"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
         <div class="image-gallery" id="image-gallery"></div>
         <div class="ad-section vertical-ad right-ad">
-           <ins class="adsbygoogle"
-                 style="display:inline-block;width:130px;height:500px"
-                 data-ad-client="ca-pub-2197905823374701"
-                 data-ad-slot="2138675228"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <ins class="adsbygoogle" style="display:inline-block;width:130px;height:500px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="2138675228"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
     <script src="/scripts/games-data.js"></script>
     <script src="/scripts/home.js"></script>
+    <script>
+        const updateTime = () => {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-time').innerText = timeString;
+
+            const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
+            document.getElementById('welcome-message').innerText = welcomeMessage;
+        };
+
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
 </body>
 </html>
