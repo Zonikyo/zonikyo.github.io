@@ -1,3 +1,55 @@
+/* Glassy, Blurry Effect */
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ad-section, .welcome-msg, .google_translate {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dynamic Look */
+.image-item {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.image-item:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.signup-btn {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.signup-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* Simplified Layout */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f4f9;
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 li img {
     margin: 10px;
 }
@@ -14,7 +66,7 @@ li img {
 }
 
 .ad-game-container {
-     display: flex;
+    display: flex;
     justify-content: space-between;
     align-items: flex-start;
 }
