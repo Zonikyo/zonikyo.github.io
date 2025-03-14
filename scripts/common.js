@@ -28,3 +28,15 @@ if (isMobileDevice()) {
 if (window.location.hostname === 'zonikyo.github.io') {
     window.location.replace('https://neonwave.netlify.app');
 }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const footerPlaceholder = document.createElement('div');
+        footerPlaceholder.id = 'footer-placeholder';
+        document.body.appendChild(footerPlaceholder);
+        
+        fetch('/templates/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                footerPlaceholder.innerHTML = data;
+            });
+    });
