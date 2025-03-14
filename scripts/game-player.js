@@ -4,10 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const debugUrl = document.getElementById('debug-url');
 
     // Check if elements exist
-    if (!gameIframe || !fullscreenBtn || !debugUrl) {
+    if (!gameIframe || !fullscreenBtn) {
         console.error('Required elements not found in DOM');
-        if (debugUrl) debugUrl.textContent = 'Error: Required elements missing';
-        return;
     }
 
     // Get the game URL from the hash
@@ -53,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('hashchange', () => {
         gameUrl = window.location.hash.substring(1);
         console.log('Hash changed, new URL:', gameUrl);
-        debugUrl.textContent = gameUrl || 'No URL provided in hash';
         gameIframe.src = gameUrl || 'data:text/html,<h1>No Game Selected</h1>';
     });
 });
