@@ -4,7 +4,6 @@
     backdrop-filter: blur(10px);
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
 }
 
 .ad-section, .welcome-msg, .google_translate {
@@ -177,6 +176,7 @@ li a:hover {
     border-radius: 10px;
     background-color: #333;
     margin: 10px;
+    margin-top: 30px;
     padding: 10px;
 }
 
