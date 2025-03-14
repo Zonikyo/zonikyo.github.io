@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameIframe = document.getElementById('game-iframe');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const debugUrl = document.getElementById('debug-url');
 
     // Check if elements exist
     if (!gameIframe || !fullscreenBtn) {
@@ -10,11 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Get the game URL from the hash
     let gameUrl = window.location.hash.substring(1);
-
-    // Debug: Log and display the URL
-    console.log('Raw hash:', window.location.hash);
-    console.log('Extracted game URL:', gameUrl);
-    debugUrl.textContent = gameUrl || 'No URL provided in hash';
 
     // Set iframe src with a fallback
     if (gameUrl) {
@@ -25,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             console.error('Invalid URL:', gameUrl, e);
             gameIframe.src = 'data:text/html,<h1>Invalid Game URL</h1>';
-            debugUrl.textContent = 'Invalid URL: ' + gameUrl;
         }
     } else {
         gameIframe.src = 'data:text/html,<h1>No Game Selected</h1>';
