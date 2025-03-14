@@ -2,19 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameIframe = document.getElementById('game-iframe');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
 
-    // Check if elements exist
     if (!gameIframe || !fullscreenBtn) {
         console.error('Required elements not found in DOM');
+        return;
     }
 
-    // Get the game URL from the hash
     let gameUrl = window.location.hash.substring(1);
 
-    // Set iframe src with a fallback
     if (gameUrl) {
-        // Ensure the URL is valid (basic check)
         try {
-            new URL(gameUrl); // Throws if invalid
+            new URL(gameUrl);
             gameIframe.src = gameUrl;
         } catch (e) {
             console.error('Invalid URL:', gameUrl, e);
@@ -24,26 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
         gameIframe.src = 'data:text/html,<h1>No Game Selected</h1>';
     }
 
-    // Handle fullscreen button
     fullscreenBtn.addEventListener('click', () => {
         if (gameIframe.requestFullscreen) {
             gameIframe.requestFullscreen().catch(err => {
                 console.error('Fullscreen failed:', err);
                 alert('Fullscreen mode is not supported for this content.');
             });
-        } else if (gameIframe.mozRequestFullScreen) { // Firefox
+        } else if (gameIframe.mozRequestFullScreen) {
             gameIframe.mozRequestFullScreen();
-        } else if (gameIframe.webkitRequestFullscreen) { // Chrome, Safari
+        } else if (gameIframe.webkitRequestFullscreen) {
             gameIframe.webkitRequestFullscreen();
-        } else if (gameIframe.msRequestFullscreen) { // IE/Edge
+        } else if (gameIframe.msRequestFullscreen) {
             gameIframe.msRequestFullscreen();
         }
     });
 
-    // Listen for hash changes (e.g., if user navigates back/forward)
     window.addEventListener('hashchange', () => {
         gameUrl = window.location.hash.substring(1);
-        console.log('Hash changed, new URL:', gameUrl);
         gameIframe.src = gameUrl || 'data:text/html,<h1>No Game Selected</h1>';
     });
 });
