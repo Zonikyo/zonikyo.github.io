@@ -111,7 +111,7 @@ body {
     color: white;
     border: none;
     border-radius: 15px;
-    cursor: pointer;
+    cursor: url('select-cursor.png'), auto;
 }
 
 body {
@@ -125,6 +125,10 @@ body {
     padding: 0;
     overflow: auto;
     height: 100vh;
+}
+
+a:hover {
+    cursor: url('select-cursor.png'), auto;
 }
 
 ul {
@@ -273,11 +277,11 @@ li a:hover {
 }
 
 .image-item {
-    cursor: pointer;
+    cursor: url('select-cursor.png'), auto;
 }
 
 .image-item:hover {
-    cursor: pointer;
+    cursor: url('select-cursor.png'), auto;
 }
 
 .image-item:hover .overlay {
@@ -323,7 +327,7 @@ li a:hover {
     display: inline-block; /* Make the container inline-block */
     font-size: 16px; /* Increase font size */
     margin: 4px 2px; /* Add some margin */
-    cursor: pointer; /* Add a pointer cursor on hover */
+    cursor: url('select-cursor.png'), auto; /* Add a pointer cursor on hover */
     border-radius: 12px; /* Rounded corners */
     transition: background-color 0.3s; /* Smooth background transition */
 }
