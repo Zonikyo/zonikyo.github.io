@@ -40,3 +40,22 @@ if (window.location.hostname === 'zonikyo.github.io') {
                 footerPlaceholder.innerHTML = data;
             });
     });
+
+function duplicateAds(containerId, adCount) {
+    const container = document.getElementById(containerId);
+    const adContent = `
+        <ins class="adsbygoogle" style="display:inline-block;width:130px;height:500px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="2138675228"></ins>
+    `;
+    
+    for (let i = 0; i < adCount; i++) {
+        const adElement = document.createElement('div');
+        adElement.innerHTML = adContent;
+        container.appendChild(adElement);
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    duplicateAds('left-ad-container', 3); // Adjust the number of ads as needed
+    duplicateAds('right-ad-container', 3); // Adjust the number of ads as needed
+});
