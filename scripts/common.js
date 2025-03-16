@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Mobile device check and redirect
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-if (isMobileDevice()) {
-    window.location.href = "/mobile-not-available.html";
-}
+//function isMobileDevice() {
+//    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+//}
+//if (isMobileDevice()) {
+//    window.location.href = "/mobile-not-available.html";
+//}
 
 // Domain redirect
 if (window.location.hostname === 'zonikyo.github.io') {
