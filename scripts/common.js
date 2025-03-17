@@ -65,7 +65,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
     authDomain: "neonwave-arcade.firebaseapp.com",
     projectId: "neonwave-arcade",
-    storageBucket: "neonwave-arcade.firebaseapp.com",
+    storageBucket: "neonwave-arcade.firebasestorage.app",
     messagingSenderId: "430507600648",
     appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
     measurementId: "G-RY4QR9LLKW"
@@ -77,10 +77,10 @@ function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
         .then((result) => {
-            console.log('User signed in:', result.user);
+            console.log('User signed in with Google:', result.user);
         })
         .catch((error) => {
-            console.error('Error during sign-in:', error.message);
+            console.error('Error during Google sign-in:', error.message);
         });
 }
 
@@ -110,7 +110,7 @@ function checkSignInStatus() {
         firebase.auth().signInWithEmailLink(email, window.location.href)
             .then((result) => {
                 window.localStorage.removeItem('emailForSignIn');
-                console.log('User signed in:', result.user);
+                console.log('User signed in with email link:', result.user);
             })
             .catch((error) => {
                 console.error('Error during sign-in:', error.message);
@@ -122,7 +122,9 @@ function checkSignInStatus() {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sign-in-btn').addEventListener('click', () => {
         const email = window.prompt('Enter your email for passwordless sign-in');
-        sendSignInLinkToEmail(email);
+        if (email) {
+            sendSignInLinkToEmail(email);
+        }
     });
 
     document.getElementById('sign-up-btn').addEventListener('click', signInWithGoogle);
