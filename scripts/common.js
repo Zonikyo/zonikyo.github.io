@@ -128,3 +128,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sign-up-btn').addEventListener('click', signInWithGoogle);
     checkSignInStatus();
 });
+
+// Register a new user
+registerBtn.addEventListener('click', () => {
+    firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
+        .then((userCredential) => {
+            console.log('User registered:', userCredential.user);
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+        });
+});
+
+// Log in an existing user
+loginBtn.addEventListener('click', () => {
+    firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+        .then((userCredential) => {
+            console.log('User logged in:', userCredential.user);
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+        });
+});
