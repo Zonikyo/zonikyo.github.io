@@ -75,6 +75,63 @@ const password = document.getElementById('password');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
 
+const googleSignInBtn = document.getElementById('google-signin');
+
+googleSignInBtn.addEventListener('click', () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider)
+    .then((result) => {
+      console.log('Google user:', result.user);
+    })
+    .catch((error) => {
+      console.error('Error:', error.message);
+    });
+});
+
+// Monitor auth state
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log('User is signed in:', user.displayName);
+    // Update UI (e.g., show user’s name or profile pic)
+  } else {
+    console.log('No user signed in.');
+  }
+});
+
+const emailInput = document.getElementById('email');
+const sendLinkBtn = document.getElementById('send-link');
+
+sendLinkBtn.addEventListener('click', () => {
+  const actionCodeSettings = {
+    url: 'https://username.github.io', // Your GitHub Pages URL
+    handleCodeInApp: true,
+  };
+  firebase.auth().sendSignInLinkToEmail(emailInput.value, actionCodeSettings)
+    .then(() => {
+      // Save email to localStorage for verification later
+      localStorage.setItem('emailForSignIn', emailInput.value);
+      alert('Sign-in link sent! Check your email.');
+    })
+    .catch((error) => {
+      console.error('Error:', error.message);
+    });
+});
+
+// Check if user clicked the link
+if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+  const email = localStorage.getItem('emailForSignIn');
+  if (email) {
+    firebase.auth().signInWithEmailLink(email, window.location.href)
+      .then((result) => {
+        console.log('Signed in:', result.user);
+        localStorage.removeItem('emailForSignIn'); // Clean up
+      })
+      .catch((error) => {
+        console.error('Error:', error.message);
+      });
+  }
+}
+
 // Register a new user
 registerBtn.addEventListener('click', () => {
   firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
