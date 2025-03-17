@@ -237,6 +237,7 @@ li a:hover {
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.3s ease;
+    aspect-ratio: 2/3;
 }
 
 .image-item.visible {
@@ -249,6 +250,8 @@ li a:hover {
     height: 100%;
     display: block;
     border-radius: 15px;
+    object-fit: cover;
+    object-position: center;
 }
 
 .overlay {
