@@ -59,3 +59,40 @@ document.addEventListener('DOMContentLoaded', () => {
     duplicateAds('left-ad-container', 3); // Adjust the number of ads as needed
     duplicateAds('right-ad-container', 3); // Adjust the number of ads as needed
 });
+
+// Initialize Firebase with your config
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-auth-domain",
+  projectId: "your-project-id",
+  // ... other config values from Firebase Console
+};
+firebase.initializeApp(firebaseConfig);
+
+// Get DOM elements
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const registerBtn = document.getElementById('register');
+const loginBtn = document.getElementById('login');
+
+// Register a new user
+registerBtn.addEventListener('click', () => {
+  firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
+    .then((userCredential) => {
+      console.log('User registered:', userCredential.user);
+    })
+    .catch((error) => {
+      console.error('Error:', error.message);
+    });
+});
+
+// Log in an existing user
+loginBtn.addEventListener('click', () => {
+  firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+    .then((userCredential) => {
+      console.log('User logged in:', userCredential.user);
+    })
+    .catch((error) => {
+      console.error('Error:', error.message);
+    });
+});
