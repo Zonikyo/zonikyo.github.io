@@ -13,6 +13,20 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Medium devices: 2 images per row */
+@media (max-width: 768px) {
+    .image-item {
+        width: 48%;
+    }
+}
+
+/* Small devices: 1 image per row */
+@media (max-width: 480px) {
+    .image-item {
+        width: 98%;
+    }
+}
+
 /* Dynamic Look */
 .image-item {
     transition: transform 0.3s ease, opacity 0.3s ease;
