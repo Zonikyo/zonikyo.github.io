@@ -62,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize Firebase with your config
 const firebaseConfig = {
-  apiKey: "your-api-key",
+  apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
   authDomain: "your-auth-domain",
-  projectId: "your-project-id",
+  projectId: "neonwave-arcade",
   // ... other config values from Firebase Console
 };
 firebase.initializeApp(firebaseConfig);
