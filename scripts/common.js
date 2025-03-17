@@ -63,9 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize Firebase with your config
 const firebaseConfig = {
   apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
-  authDomain: "your-auth-domain",
+  authDomain: "neonwave-arcade.firebaseapp.com",
   projectId: "neonwave-arcade",
-  // ... other config values from Firebase Console
+  storageBucket: "neonwave-arcade.firebasestorage.app",
+  messagingSenderId: "430507600648",
+  appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
+  measurementId: "G-RY4QR9LLKW"
 };
 firebase.initializeApp(firebaseConfig);
 
