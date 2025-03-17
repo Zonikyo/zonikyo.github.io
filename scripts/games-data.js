@@ -3,31 +3,31 @@ const gamesData = [
     {
         "name": "Eaglercraft 1.5.2 (Eagtek)",
         "description": "A version of Minecraft 1.5.2 tailored for browser play, offering the classic survival and creative modes.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/eaglercraft1.5.2.png",
         "url": "https://eaglercraftgame.github.io/go/minecraft-1.5.2/"
     },
     {
         "name": "Eaglercraft X 1.8 (Astraclient)",
         "description": "An enhanced version of Minecraft 1.8 for browsers, featuring additional client-side improvements and tweaks.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/eaglercraft1.8.png",
         "url": "https://astraclientorg.github.io/"
     },
     {
         "name": "Minecraft Classic (Mojang Studios)",
         "description": "The original Minecraft experience, playable in a web browser, offering the iconic sandbox gameplay.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/Survival-games-Minecraft-3852067660.jpg",
         "url": "https://minecraftunblocked.gitlab.io/go/minecraft-beta/"
     },
     {
         "name": "Slope",
         "description": "A fast-paced 3D running game where you navigate a ball down a steep, endless slope.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/slope.png",
         "url": "https://theslope.github.io/games/slope/index.html"
     },
     {
         "name": "Slope 2",
         "description": "The sequel to Slope, featuring more challenging levels and enhanced graphics.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/slope2.png",
         "url": "https://slope-2.gitlab.io/file/"
     },
     {
@@ -75,13 +75,13 @@ const gamesData = [
     {
         "name": "Moto X3M",
         "description": "A motocross racing game with challenging tracks and obstacles.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/motox3m.png",
         "url": "https://motox3m.gitlab.io/game/moto-x3m/"
     },
     {
         "name": "Moto X3M Extended",
         "description": "An extended version of Moto X3M with additional levels.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/motox3mextended.png",
         "url": "https://motox3m.gitlab.io/x3m-1.20.1p/"
     },
     {
@@ -105,25 +105,25 @@ const gamesData = [
     {
         "name": "Duck Life 2",
         "description": "The sequel to Duck Life with more features and challenges.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/ducklife2.png",
         "url": "https://unblockeds-games.github.io/iframe/Duck-Life-2/"
     },
     {
         "name": "Duck Life 3",
         "description": "Another sequel in the Duck Life series with enhanced gameplay.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/ducklife3.png",
         "url": "https://unblockedgames911.gitlab.io/duck-life-3/"
     },
     {
         "name": "Duck Life 4",
         "description": "The fourth installment in the Duck Life series.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/ducklife4.png",
         "url": "https://htmlxm.github.io/h/duck-life-4"
     },
     {
         "name": "Stunt Master City",
         "description": "A stunt driving game set in a city environment.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/citycarstuntdriver.png",
         "url": "https://ubg77.github.io/edit/city-car-driving-stunt-master/"
     },
     {
@@ -141,13 +141,13 @@ const gamesData = [
     {
         "name": "2048",
         "description": "A sliding puzzle game where you combine tiles to reach the number 2048.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/2048.png",
         "url": "https://ovolve.github.io/2048-AI/"
     },
     {
         "name": "Sniper Assassin",
         "description": "A shooting game where you play as a sniper completing various missions.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/sniperassasin.png",
         "url": "https://unblockeds-games.github.io/iframe/Sniper-Assassin/"
     },
     {
@@ -159,31 +159,31 @@ const gamesData = [
     {
         "name": "Sniper Assassin 3",
         "description": "The third installment in the Sniper Assassin series.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/sniperassasin3.png",
         "url": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-3/"
     },
     {
         "name": "Sniper Assassin 4",
         "description": "Another sequel in the Sniper Assassin series.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/sniperassasin4.png",
         "url": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-4/"
     },
     {
         "name": "Sniper Assassin 5",
         "description": "The fifth installment in the Sniper Assassin series.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/sniperassasinfinal.png",
         "url": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-5/"
     },
     {
         "name": "Tactical Assassin",
         "description": "A tactical shooting game with various missions.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/tacticalassasin2.png",
         "url": "https://unblockeds-games.github.io/iframe/Tactical-Assassin/"
     },
     {
         "name": "Tactical Assassin 2",
         "description": "The sequel to Tactical Assassin with new missions.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/tactical-assassin-android-001-3883766304.webp",
         "url": "https://unblockeds-games.github.io/iframe/Tactical-Assassin-2/"
     },
     {
@@ -237,19 +237,19 @@ const gamesData = [
     {
         "name": "Geometry Dash",
         "description": "A rhythm-based platformer with challenging levels.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/geometrydash.png",
         "url": "https://geometry-dash.gitlab.io/file/"
     },
     {
         "name": "BulletForce",
         "description": "A first-person shooter game with various multiplayer modes.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/bulletforce.png",
         "url": "https://ubg44.github.io/BulletForce/"
     },
     {
         "name": "Cookie Clicker",
         "description": "An incremental game where you click to produce cookies.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/cookieclicker.png",
         "url": "https://ozh.github.io/cookieclicker/"
     },
     {
@@ -261,13 +261,13 @@ const gamesData = [
     {
         "name": "Little Alchemy 2",
         "description": "A puzzle game where you combine elements to create new items.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/littlealchemy2.png",
         "url": "https://classroom15x.com/coolmath/LittleAlchemy2/?gd_sdk_referrer_url=https://classroom15x.com/play/little-alchemy-2"
     },
     {
         "name": "Smash Karts",
         "description": "A multiplayer kart racing game with weapons.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/smashkarts.png",
         "url": "https://smashkartsunblocked.github.io/"
     },
     {
@@ -291,7 +291,7 @@ const gamesData = [
     {
         "name": "Crossy Road",
         "description": "An arcade game where you help a character cross roads and avoid obstacles.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/crossyroad.png",
         "url": "https://webglmath.github.io/eggy-car/"
     },
     {
@@ -303,13 +303,13 @@ const gamesData = [
     {
         "name": "Minesweeper",
         "description": "The classic puzzle game where you clear a minefield.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/minesweeper.png",
         "url": "https://minesweeper.github.io/"
     },
     {
         "name": "Drift boss",
         "description": "A drifting game where you navigate through various tracks.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/driftboss.png",
         "url": "https://drift-boss.gitlab.io/file/"
     },
     {
@@ -333,7 +333,7 @@ const gamesData = [
     {
         "name": "Happy Wheels",
         "description": "A ragdoll physics-based platformer with various levels.",
-        "image": "neonwave-load.png",
+        "image": "img/thumbnails/happywheels.png",
         "url": "https://sreekar617.github.io/hw/index.html"
     }
 ];
