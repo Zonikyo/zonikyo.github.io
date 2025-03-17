@@ -62,40 +62,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize Firebase with your config
 const firebaseConfig = {
-  apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
-  authDomain: "neonwave-arcade.firebaseapp.com",
-  projectId: "neonwave-arcade",
-  storageBucket: "neonwave-arcade.firebasestorage.app",
-  messagingSenderId: "430507600648",
-  appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
-  measurementId: "G-RY4QR9LLKW"
+    apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
+    authDomain: "neonwave-arcade.firebaseapp.com",
+    projectId: "neonwave-arcade",
+    storageBucket: "neonwave-arcade.firebaseapp.com",
+    messagingSenderId: "430507600648",
+    appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
+    measurementId: "G-RY4QR9LLKW"
 };
 firebase.initializeApp(firebaseConfig);
 
-// Get DOM elements
-const email = document.getElementById('email');
-const password = document.getElementById('password');
-const registerBtn = document.getElementById('register');
-const loginBtn = document.getElementById('login');
+// Function to handle sign-in with Google
+function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            console.log('User signed in:', result.user);
+        })
+        .catch((error) => {
+            console.error('Error during sign-in:', error.message);
+        });
+}
 
-// Register a new user
-registerBtn.addEventListener('click', () => {
-  firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
-    .then((userCredential) => {
-      console.log('User registered:', userCredential.user);
-    })
-    .catch((error) => {
-      console.error('Error:', error.message);
-    });
-});
+// Function to handle passwordless sign-in
+function sendSignInLinkToEmail(email) {
+    const actionCodeSettings = {
+        url: 'https://zonikyo.github.io',
+        handleCodeInApp: true
+    };
+    firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+        .then(() => {
+            window.localStorage.setItem('emailForSignIn', email);
+            alert('Sign-in link sent to your email.');
+        })
+        .catch((error) => {
+            console.error('Error during sending sign-in link:', error.message);
+        });
+}
 
-// Log in an existing user
-loginBtn.addEventListener('click', () => {
-  firebase.auth().signInWithEmailAndPassword(email.value, password.value)
-    .then((userCredential) => {
-      console.log('User logged in:', userCredential.user);
-    })
-    .catch((error) => {
-      console.error('Error:', error.message);
+// Function to check sign-in status
+function checkSignInStatus() {
+    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+            email = window.prompt('Please provide your email for confirmation');
+        }
+        firebase.auth().signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                window.localStorage.removeItem('emailForSignIn');
+                console.log('User signed in:', result.user);
+            })
+            .catch((error) => {
+                console.error('Error during sign-in:', error.message);
+            });
+    }
+}
+
+// Add event listeners to buttons
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sign-in-btn').addEventListener('click', () => {
+        const email = window.prompt('Enter your email for passwordless sign-in');
+        sendSignInLinkToEmail(email);
     });
+
+    document.getElementById('sign-up-btn').addEventListener('click', signInWithGoogle);
+    checkSignInStatus();
 });
