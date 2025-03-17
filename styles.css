@@ -246,7 +246,7 @@ li a:hover {
 
 .image-item img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     border-radius: 15px;
 }
