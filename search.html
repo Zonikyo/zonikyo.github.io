@@ -73,11 +73,26 @@
     <iframe id="result-frame"></iframe>
 
     <script>
-        function loadURL() {
+        async function loadURL() {
             const urlInput = document.getElementById('url-input').value;
             const iframe = document.getElementById('result-frame');
             if (urlInput) {
-                iframe.src = urlInput;
+                try {
+                    const response = await fetch('/.netlify/functions/proxy', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pageURL: urlInput })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        iframe.srcdoc = data.htmlContent;
+                    } else {
+                        alert('Failed to load the requested URL.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing your request.');
+                }
             } else {
                 alert('Please enter a valid URL.');
             }
