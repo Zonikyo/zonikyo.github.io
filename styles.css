@@ -83,9 +83,9 @@
 }
 
 .ad-section, .welcome-msg, .google_translate {
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
@@ -158,9 +158,9 @@ body {
 .top-ad {
     text-align: center;
     margin: 10px 10px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
@@ -169,9 +169,9 @@ body {
     width: 150px;
     height: 3000px; /* Updated to 2000px */
     margin-top: 0px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
@@ -283,9 +283,9 @@ li a:hover {
     margin: 10px;
     margin-top: 75px;
     padding: 10px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
@@ -474,19 +474,18 @@ li a:hover {
     border: none;
     border-radius: 10px; /* Matches .ad-section, ul, .welcome-msg */
     color: #fff;
-    transition: background 0.3s ease; /* Smooth background transition */
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 #search-bar:focus {
     outline: 1px solid #00fbff;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(3px) saturate(127%);
+    -webkit-backdrop-filter: blur(3px) saturate(127%);
+    background-color: rgba(17, 25, 40, 0.67);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
