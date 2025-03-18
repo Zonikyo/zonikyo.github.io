@@ -119,27 +119,37 @@
     <script src="/scripts/home.js"></script>
     <script>
         const updateTime = () => {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            const currentTimeElement = document.getElementById('current-time');
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
 
-            // Add animation class
-            currentTimeElement.classList.add('clock-animate');
+        const timeDigits = [
+            { id: 'hour1', value: hours[0] },
+            { id: 'hour2', value: hours[1] },
+            { id: 'minute1', value: minutes[0] },
+            { id: 'minute2', value: minutes[1] },
+            { id: 'second1', value: seconds[0] },
+            { id: 'second2', value: seconds[1] }
+        ];
 
-            // Update time
-            currentTimeElement.innerText = timeString;
+        timeDigits.forEach(digit => {
+            const element = document.getElementById(digit.id);
+            if (element.innerText !== digit.value) {
+                // Add animation class
+                element.classList.add('digit-animate');
+                // Update digit
+                element.innerText = digit.value;
+                // Remove animation class after animation ends
+                setTimeout(() => {
+                    element.classList.remove('digit-animate');
+                }, 600); // Duration of the combined animations
+            }
+        });
+    };
 
-            // Remove animation class after animation ends
-            setTimeout(() => {
-                currentTimeElement.classList.remove('clock-animate');
-            }, 600); // Duration of the combined animations
-        };
-
-        setInterval(updateTime, 1000);
-        updateTime();
+    setInterval(updateTime, 1000);
+    updateTime();
     </script>
 </body>
 </html>
