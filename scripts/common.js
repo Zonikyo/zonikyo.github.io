@@ -153,3 +153,32 @@ loginBtn.addEventListener('click', () => {
       console.error('Error:', error.message);
     });
 });
+
+// Settings modal logic
+document.addEventListener('DOMContentLoaded', () => {
+    const settingsBtn = document.getElementById('settings-btn');
+    const modal = document.getElementById('settings-modal');
+    const closeBtn = modal.querySelector('.close');
+    const cursorOptions = document.querySelectorAll('input[name="cursor"]');
+
+    settingsBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    cursorOptions.forEach(option => {
+        option.addEventListener('change', (event) => {
+            const cursorValue = event.target.value;
+            document.body.style.cursor = cursorValue === 'default' ? 'default' : `url('path/to/${cursorValue}.png'), auto`;
+        });
+    });
+});
