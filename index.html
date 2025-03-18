@@ -52,6 +52,25 @@
         <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="4715332132"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+
+    <!-- Cookie Notice -->
+    <div id="cookie-notice-container"></div>
+
+    <script>
+        // Dynamically load the cookie.html content into the page
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/cookie.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('cookie-notice-container').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading cookie notice:', error));
+        });
+    </script>
+
+    <!-- Include the cookie-notice.js script -->
+    <script src="/scripts/cookie-notice.js"></script>
+
     <div id="settings-modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -125,48 +144,6 @@
 
     setInterval(updateTime, 1000);
     updateTime();
-
-        document.addEventListener('DOMContentLoaded', () => {
-        const cookieNotice = document.querySelector('.card');
-        const acceptButton = document.querySelector('.acceptButton');
-        const declineButton = document.querySelector('.declineButton');
-    
-        // Function to set a cookie
-        const setCookie = (name, value, days) => {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = `${name}=${value};${expires};path=/`;
-        };
-    
-        // Function to get a cookie
-        const getCookie = (name) => {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    return cookie.substring(name.length + 1);
-                }
-            }
-            return null;
-        };
-    
-        // Check if the cookie notice has already been accepted
-        if (!getCookie('cookiesAccepted')) {
-            cookieNotice.style.display = 'block'; // Show the cookie notice
-        }
-    
-        // Handle the "Accept" button click
-        acceptButton.addEventListener('click', () => {
-            setCookie('cookiesAccepted', 'true', 365); // Set a cookie valid for 1 year
-            cookieNotice.style.display = 'none'; // Hide the cookie notice
-        });
-    
-        // Handle the "Decline" button click
-        declineButton.addEventListener('click', () => {
-            location.reload(); // Reload the page
-        });
-    });
     </script>
 </body>
 </html>
