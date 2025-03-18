@@ -42,14 +42,7 @@
     <div class="welcome-msg">
         <h1 class="welcome-msg-text">
             <span id="welcome-message"></span>
-            <span id="current-time" style="float: right;">
-                <span class="digit" id="hour1"></span>
-                <span class="digit" id="hour2"></span>:
-                <span class="digit" id="minute1"></span>
-                <span class="digit" id="minute2"></span>:
-                <span class="digit" id="second1"></span>
-                <span class="digit" id="second2"></span>
-            </span>
+            <span id="current-time" style="float: right;"></span>
         </h1>
         <p style="color:bright-red" >NeonWave is in very early beta. This means that critical features might not work as expected.</p>
     </div>
@@ -120,32 +113,15 @@
     <script>
         const updateTime = () => {
         const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
+        const hours = now.getHours();
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('current-time').innerText = timeString;
 
-        const timeDigits = [
-            { id: 'hour1', value: hours[0] },
-            { id: 'hour2', value: hours[1] },
-            { id: 'minute1', value: minutes[0] },
-            { id: 'minute2', value: minutes[1] },
-            { id: 'second1', value: seconds[0] },
-            { id: 'second2', value: seconds[1] }
-        ];
-
-        timeDigits.forEach(digit => {
-            const element = document.getElementById(digit.id);
-            if (element.innerText !== digit.value) {
-                // Add animation class
-                element.classList.add('digit-animate');
-                // Update digit
-                element.innerText = digit.value;
-                // Remove animation class after animation ends
-                setTimeout(() => {
-                    element.classList.remove('digit-animate');
-                }, 600); // Duration of the combined animations
-            }
-        });
+        const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
+        const welcomeElement = document.getElementById('welcome-message');
+        welcomeElement.innerText = welcomeMessage;
     };
 
     setInterval(updateTime, 1000);
