@@ -239,11 +239,14 @@ ul {
     padding-top: 6px;
     border-radius: 0px;
     overflow: hidden;
-    background-color: #333;
     position: fixed;        /* Changed from sticky to fixed */
     top: 0;
     width: 100%;          /* Add this to span full width */
     z-index: 1000;
+    backdrop-filter: blur(9px) saturate(100%);
+    -webkit-backdrop-filter: blur(9px) saturate(100%);
+    background-color: rgba(28, 28, 28, 0);
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 li {
