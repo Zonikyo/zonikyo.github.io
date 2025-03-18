@@ -112,20 +112,27 @@
     <script src="/scripts/home.js"></script>
     <script>
         const updateTime = () => {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        const timeString = `${hours}:${minutes}:${seconds}`;
-        document.getElementById('current-time').innerText = timeString;
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            const currentTimeElement = document.getElementById('current-time');
 
-        const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
-        const welcomeElement = document.getElementById('welcome-message');
-        welcomeElement.innerText = welcomeMessage;
-    };
+            // Add animation class
+            currentTimeElement.classList.add('clock-animate');
 
-    setInterval(updateTime, 1000);
-    updateTime();
+            // Update time
+            currentTimeElement.innerText = timeString;
+
+            // Remove animation class after animation ends
+            setTimeout(() => {
+                currentTimeElement.classList.remove('clock-animate');
+            }, 600); // Duration of the combined animations
+        };
+
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
 </body>
 </html>
