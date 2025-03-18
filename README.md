@@ -2,7 +2,7 @@
   <head>
   </head>
   <body align="center">
-    <img align="center" style="height: 20px;" src="/img/neonwave-logo.png">
+    <img align="center" style="height: 60px;" src="/img/neonwave-logo.png">
     <h1 align="center">NeonWave Arcade Official Repository</h1>
     <p align="center">An advanced unblocked video gaming library allowing fun everywhere in the world!</p>
     <br>
