@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a3d);
+            color: white;
+        }
+        .navbar {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            max-height: 50px;
+        }
+        .search-container {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .search-bar {
+            width: 80%;
+            max-width: 600px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            outline: none;
+        }
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .search-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .search-button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        iframe {
+            width: 100%;
+            height: calc(100vh - 150px);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html"><img class="logo" src="/img/neonwave-logo.png" alt="Neonwave Logo"></a>
+    </div>
+    <div class="search-container">
+        <input type="text" id="url-input" class="search-bar" placeholder="Enter URL to search">
+        <button class="search-button" onclick="loadURL()">Search</button>
+    </div>
+    <iframe id="result-frame"></iframe>
+
+    <script>
+        function loadURL() {
+            const urlInput = document.getElementById('url-input').value;
+            const iframe = document.getElementById('result-frame');
+            if (urlInput) {
+                iframe.src = urlInput;
+            } else {
+                alert('Please enter a valid URL.');
+            }
+        }
+    </script>
+</body>
+</html>
