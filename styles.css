@@ -83,10 +83,11 @@
 }
 
 .ad-section, .welcome-msg, .google_translate {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 /* Medium devices: 2 images per row */
@@ -157,12 +158,22 @@ body {
 .top-ad {
     text-align: center;
     margin: 10px 10px;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .vertical-ad {
     width: 150px;
     height: 3000px; /* Updated to 2000px */
     margin-top: 0px;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .game-tiles {
@@ -272,6 +283,11 @@ li a:hover {
     margin: 10px;
     margin-top: 75px;
     padding: 10px;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .welcome-msg-text {
@@ -457,14 +473,22 @@ li a:hover {
     font-family: 'Poppins', sans-serif;
     border: none;
     border-radius: 10px; /* Matches .ad-section, ul, .welcome-msg */
-    background: #333;
     color: #fff;
     transition: background 0.3s ease; /* Smooth background transition */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 #search-bar:focus {
-    outline: none;
-    background: #444; /* Slight background change on focus */
+    outline: 1px solid #00fbff;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 #search-bar::placeholder {
@@ -512,3 +536,43 @@ li a:hover {
 #footer a:hover {
     text-decoration: underline;
 }
+
+button {
+    font-size: 1.4em;
+    padding: 0.3em 0.4em;
+    border-radius: 0.5em;
+    border: none;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 2px 2px 3px #000000b4;
+  }
+  
+  .container-button{
+    position: relative;
+    padding: 3px;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    border-radius: 0.9em;
+    transition: all 0.4s ease;
+  }
+  
+  .container-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: 5px;
+    border-radius: 0.9em;
+    z-index: -10;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+  .container-button:hover::before {
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    filter: blur(1.2em);
+  }
+  .container-button:active::before {
+    filter: blur(0.2em);
+  }
+  
+  
