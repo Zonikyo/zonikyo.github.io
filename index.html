@@ -11,28 +11,28 @@
         <img src="/img/neonwave-logo.png" alt="Logo">
     </div>
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-            apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
-            authDomain: "neonwave-arcade.firebaseapp.com",
-            projectId: "neonwave-arcade",
-            storageBucket: "neonwave-arcade.firebasestorage.app",
-            messagingSenderId: "430507600648",
-            appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
-            measurementId: "G-RY4QR9LLKW"
-        };
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
+    authDomain: "neonwave-arcade.firebaseapp.com",
+    projectId: "neonwave-arcade",
+    storageBucket: "neonwave-arcade.firebasestorage.app",
+    messagingSenderId: "430507600648",
+    appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
+    measurementId: "G-RY4QR9LLKW"
+  };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-    </script>
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
     <div id="navbar-placeholder"></div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -53,12 +53,30 @@
         <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="4715332132"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+    <div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Settings</h2>
+        <div class="cursor-settings">
+            <h3>Change Cursor</h3>
+            <label>
+                <input type="radio" name="cursor" value="default" checked> Default
+            </label>
+            <label>
+                <input type="radio" name="cursor" value="cursor1"> Cursor 1
+            </label>
+            <label>
+                <input type="radio" name="cursor" value="cursor2"> Cursor 2
+            </label>
+        </div>
+    </div>
+</div>
     <!-- Search Bar -->
     <div class="search-container">
         <input type="text" id="search-bar" placeholder="Search games by title or description...">
         <div class="search-icon">
             <svg viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7[...]
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
             </svg>
         </div>
     </div>
@@ -86,33 +104,28 @@
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             <ins class="adsbygoogle" style="display:inline-block;width:130px;height:500px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="2138675228"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            <ins class="adsbygoogle" style="display:inline-block;width:130px;height:500px" data-ad-client="ca-pub-2197905823374701" data-ad-slot="2138675228"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
     <script src="/scripts/games-data.js"></script>
     <script src="/scripts/home.js"></script>
     <script>
         const updateTime = () => {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            const currentTimeElement = document.getElementById('current-time');
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('current-time').innerText = timeString;
 
-            // Add animation class
-            currentTimeElement.classList.add('clock-animate');
+        const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
+        const welcomeElement = document.getElementById('welcome-message');
+        welcomeElement.innerText = welcomeMessage;
+    };
 
-            // Update time
-            currentTimeElement.innerText = timeString;
-
-            // Remove animation class after animation ends
-            setTimeout(() => {
-                currentTimeElement.classList.remove('clock-animate');
-            }, 600); // Duration of the combined animations
-        };
-
-        setInterval(updateTime, 1000);
-        updateTime();
+    setInterval(updateTime, 1000);
+    updateTime();
     </script>
 </body>
 </html>
