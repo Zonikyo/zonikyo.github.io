@@ -7,6 +7,7 @@
 }
 
 /* Define keyframes for the blur and zoom-out effect */
+/* Define keyframes for the blur and zoom-out effect */
 @keyframes blurZoomOut {
     0% {
         transform: scale(1);
@@ -38,8 +39,8 @@
     }
 }
 
-/* Apply the animations to the clock element */
-.clock-animate {
+/* Apply the animations to the clock digits */
+.digit-animate {
     animation: blurZoomOut 0.3s ease-in-out, blurZoomIn 0.3s ease-in-out;
 }
 
