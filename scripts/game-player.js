@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameUrl) {
         try {
             new URL(gameUrl);
-            gameIframe.src = gameUrl;
+            gameIframe.src = gameIframe.src = `https://q9shks-8080.csb.app/service/gateway?url=${gameUrl}`;
         } catch (e) {
             console.error('Invalid URL:', gameUrl, e);
             gameIframe.src = 'data:text/html,<h1>Invalid Game URL</h1>';
