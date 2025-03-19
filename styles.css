@@ -343,7 +343,7 @@ li a:hover {
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.3s ease;
-    aspect-ratio: 3/1;
+    aspect-ratio: 3/1.5;
 }
 
 .image-item.visible {
