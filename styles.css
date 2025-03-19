@@ -205,10 +205,11 @@ body {
 
 .fullscreen-btn {
     position: absolute;
-    bottom: 15px;
-    left: 15px;
+    bottom: 5px;
+    left: 5px;
     padding: 10px 20px;
-    background-color: #ff6600;
+    background-color: #333;
+    outline: 2px solid #00fbff;
     color: white;
     border: none;
     border-radius: 15px;
