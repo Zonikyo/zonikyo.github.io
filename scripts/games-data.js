@@ -238,7 +238,7 @@ const gamesData = [
         "name": "Geometry Dash",
         "description": "A rhythm-based platformer with challenging levels.",
         "image": "img/thumbnails/geometrydash.png",
-        "url": "https://geometry-dash.gitlab.io/file/"
+        "url": "https://q9shks-8080.csb.app/service/hvtrs8%2F-ggooevr%7Bgcmg.mre%2Feaoe-ggooevr%7B-faqh%2Flktg%2F/"
     },
     {
         "name": "BulletForce",
@@ -335,7 +335,7 @@ const gamesData = [
         "description": "A ragdoll physics-based platformer with various levels.",
         "image": "img/thumbnails/happywheels.png",
         "url": "https://sreekar617.github.io/hw/index.html"
-    }
+    },
 ];
 
 // Export the data for use in other scripts
