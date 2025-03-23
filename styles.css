@@ -266,6 +266,10 @@ li a:hover {
     background-color: #111;
 }
 
+li img {
+    height: 10px;
+}
+
 .active {
     background-color: #04AA6D;
 }
