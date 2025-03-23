@@ -267,7 +267,8 @@ li a:hover {
 }
 
 li img {
-    height: 10px;
+    height: 60px;
+    padding-right: 5px;
 }
 
 .active {
