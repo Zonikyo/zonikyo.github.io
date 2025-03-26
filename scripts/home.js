@@ -1,4 +1,6 @@
-// filepath: /scripts/home.js
+// Import games data
+import { gamesData } from './games-data.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('image-gallery');
 
@@ -11,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gallery.innerHTML = '';
 
     // Populate the gallery with games
-    games.forEach(game => {
+    gamesData.forEach(game => {
         const gameCard = document.createElement('div');
         gameCard.classList.add('game-card');
 
@@ -83,30 +85,30 @@ window.addEventListener('load', function() {
 });
 
 const updateTime = () => {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        const timeString = `${hours}:${minutes}:${seconds}`;
-        document.getElementById('current-time').innerText = timeString;
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('current-time').innerText = timeString;
 
-        const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
-        const welcomeElement = document.getElementById('welcome-message');
-        welcomeElement.innerText = welcomeMessage;
-    };
+    const welcomeMessage = hours < 12 ? 'Good Morning!' : (hours < 18 ? 'Good Afternoon!' : 'Good Evening!');
+    const welcomeElement = document.getElementById('welcome-message');
+    welcomeElement.innerText = welcomeMessage;
+};
 
-    setInterval(updateTime, 1000);
-    updateTime();
+setInterval(updateTime, 1000);
+updateTime();
 
 // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
     apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
     authDomain: "neonwave-arcade.firebaseapp.com",
     projectId: "neonwave-arcade",
@@ -114,10 +116,8 @@ const updateTime = () => {
     messagingSenderId: "430507600648",
     appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
     measurementId: "G-RY4QR9LLKW"
-  };
+};
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
-
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
