@@ -47,7 +47,10 @@ function createGalleryItem(game) {
 window.addEventListener('load', function() {
     var splashScreen = document.getElementById('splash-screen');
     setTimeout(function() {
-      splashScreen.classList.add('fade-out');
+        splashScreen.classList.add('fade-out');
+        splashScreen.addEventListener('transitionend', function() {
+            splashScreen.remove();
+        });
     }, 1000);
 });
 
