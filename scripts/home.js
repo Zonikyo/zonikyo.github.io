@@ -1,23 +1,51 @@
-// Gallery creation and search logic
-function createGalleryItem(game) {
-    const item = document.createElement('div');
-    item.className = 'image-item';
-    item.innerHTML = `
-      <img src="${game.image}" alt="${game.name}">
-      <div class="overlay">
-        <div class="text">
-          <h3>${game.name}</h3>
-          <p>${game.description}</p>
-        </div>
-      </div>
-    `;
-    item.addEventListener('click', () => {
-      window.location.href = `/game-player.html#${game.url}`;
-    });
-    return item;
-}
+// filepath: /scripts/home.js
+document.addEventListener('DOMContentLoaded', () => {
+    const gallery = document.getElementById('image-gallery');
 
- // Function to populate gallery
+    if (!gallery) {
+        console.error('Image gallery element not found.');
+        return;
+    }
+
+    // Clear the gallery
+    gallery.innerHTML = '';
+
+    // Populate the gallery with games
+    games.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.classList.add('game-card');
+
+        gameCard.innerHTML = `
+            <a href="${game.url}">
+                <img src="${game.image}" alt="${game.title}">
+                <h3>${game.title}</h3>
+                <p>${game.description}</p>
+            </a>
+        `;
+
+        gallery.appendChild(gameCard);
+    });
+
+    // Gallery creation and search logic
+    function createGalleryItem(game) {
+        const item = document.createElement('div');
+        item.className = 'image-item';
+        item.innerHTML = `
+          <img src="${game.image}" alt="${game.name}">
+          <div class="overlay">
+            <div class="text">
+              <h3>${game.name}</h3>
+              <p>${game.description}</p>
+            </div>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          window.location.href = `/game-player.html#${game.url}`;
+        });
+        return item;
+    }
+
+    // Function to populate gallery
     function populateGallery(games) {
         gallery.innerHTML = ''; // Clear gallery
         games.forEach((game, index) => {
