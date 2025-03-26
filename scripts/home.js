@@ -17,11 +17,7 @@ function createGalleryItem(game) {
     return item;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const gallery = document.getElementById('image-gallery');
-    const searchBar = document.getElementById('search-bar');
-
-    // Function to populate gallery
+ // Function to populate gallery
     function populateGallery(games) {
         gallery.innerHTML = ''; // Clear gallery
         games.forEach((game, index) => {
