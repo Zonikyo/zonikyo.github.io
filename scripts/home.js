@@ -1,5 +1,5 @@
 // Import games data
-import { gamesData } from './scripts/games-data.js';
+import { gamesData } from './games-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('image-gallery');
@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         gallery.appendChild(gameCard);
     });
+});
 
     // Gallery creation and search logic
     function createGalleryItem(game) {
