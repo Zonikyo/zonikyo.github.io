@@ -1,78 +1,49 @@
 // Import games data
-import { gamesData } from '/scripts/games-data.js';
+import { gamesData } from './games-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('image-gallery');
 
     if (!gallery) {
-        console.error('Image gallery element not found.');
+        console.error('Error: The "image-gallery" element was not found in the DOM.');
         return;
     }
 
-    // Clear the gallery
+    // Clear the gallery before populating
     gallery.innerHTML = '';
 
-    // Populate the gallery with games
-    gamesData.forEach(game => {
+    // Check if gamesData exists and has content
+    if (!gamesData || gamesData.length === 0) {
+        console.error('Error: No game data found.');
+        gallery.innerHTML = '<p style="color: white;">No games available at the moment.</p>';
+        return;
+    }
+
+    // Populate the gallery with game cards
+    gamesData.forEach((game) => {
+        // Validate game data
+        if (!game.name || !game.image || !game.url) {
+            console.warn('Warning: Missing game data for one of the entries.', game);
+            return;
+        }
+
+        // Create a game card
         const gameCard = document.createElement('div');
         gameCard.classList.add('game-card');
 
         gameCard.innerHTML = `
-            <a href="${game.url}">
-                <img src="${game.image}" alt="${game.title}">
-                <h3>${game.title}</h3>
-                <p>${game.description}</p>
+            <a href="${game.url}" target="_blank" rel="noopener noreferrer">
+                <img src="${game.image}" alt="${game.name}">
+                <h3>${game.name}</h3>
+                <p>${game.description || 'No description available.'}</p>
             </a>
         `;
 
+        // Append the game card to the gallery
         gallery.appendChild(gameCard);
     });
-});
 
-    // Gallery creation and search logic
-    function createGalleryItem(game) {
-        const item = document.createElement('div');
-        item.className = 'image-item';
-        item.innerHTML = `
-          <img src="${game.image}" alt="${game.name}">
-          <div class="overlay">
-            <div class="text">
-              <h3>${game.name}</h3>
-              <p>${game.description}</p>
-            </div>
-          </div>
-        `;
-        item.addEventListener('click', () => {
-          window.location.href = `/game-player.html#${game.url}`;
-        });
-        return item;
-    }
-
-    // Function to populate gallery
-    function populateGallery(games) {
-        gallery.innerHTML = ''; // Clear gallery
-        games.forEach((game, index) => {
-            const item = createGalleryItem(game);
-            gallery.appendChild(item);
-            // Staggered animation on load
-            setTimeout(() => {
-                item.classList.add('visible');
-            }, index * 50);
-        });
-    }
-
-    // Load all games initially using global gamesData
-    populateGallery(gamesData);
-
-    // Search functionality
-    searchBar.addEventListener('input', (e) => {
-        const searchTerm = e.target.value;
-        const filteredGames = gamesData.filter(game => 
-            game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            game.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        populateGallery(filteredGames);
-    });
+    console.log('Games loaded successfully.');
 });
 
 window.addEventListener('load', function() {
