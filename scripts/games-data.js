@@ -1,5 +1,5 @@
 // scripts/games-data.js
-export const gamesData = [
+const gamesData = [
     {
         "name": "Eaglercraft 1.5.2 (Eagtek)",
         "description": "A version of Minecraft 1.5.2 tailored for browser play, offering the classic survival and creative modes.",
