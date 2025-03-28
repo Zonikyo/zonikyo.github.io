@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <div id="head-placeholder"></div>
+    <script src="/scripts/common.js"></script>
+    <meta name="google-site-verification" content="te_ugt0CHl8_0lbyOKXHDcvg1NeeK8pCCa6h-TNH2vc" />
+</head>
+<body>
+    <div id="splash-screen">
+        <img src="/img/neonwave-logo.png" alt="Logo">
+        <div class="network-text">part of the zonikyo network</div>
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBinlRoWNVyqsTgc75HiARRdPBtrcnlaY4",
+            authDomain: "neonwave-arcade.firebaseapp.com",
+            projectId: "neonwave-arcade",
+            storageBucket: "neonwave-arcade.firebasestorage.app",
+            messagingSenderId: "430507600648",
+            appId: "1:430507600648:web:9c9e1bfd57ad5344e79abd",
+            measurementId: "G-RY4QR9LLKW"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+    <div id="navbar-placeholder"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('nav-home').classList.add('active');
+        });
+    </script>
+    <div class="welcome-msg">
+        <h1 class="welcome-msg-text">
+            <span id="welcome-message"></span>
+            <span id="current-time" style="float: right;"></span>
+        </h1>
+    </div>
+    <div class="content">
+        <h1>NeonWave: The Unblocked Game Paradise of 2025 (and Beyond!)</h1>
+        <p>Let's face it, the internet can be a real buzzkill sometimes. You're ready to unleash your inner gaming champion, and bam! You're met with a dreaded "blocked" message. It's enough to make you want to throw your keyboard (or maybe just your phone) across the room. But fear not, fellow gamers, because NeonWave is here to save the day!</p>
+        
+        <h2>The Simple Life: A UI That Doesn't Make You Want to Scream</h2>
+        <p>NeonWave knows that you're not here for fancy graphics or complicated menus. You want to jump right into the action, and that's exactly what NeonWave delivers. Their user interface is so simple, it's practically begging you to play. No confusing menus, no endless scrolling, just a clean, easy-to-navigate layout that lets you find your favorite games in seconds. It's like the gaming equivalent of a well-organized closet – you know exactly where everything is, and it's all ready to go when you need it.</p>
+        
+        <h2>Unblocked Games? NeonWave Has Got You Covered</h2>
+        <p>Other websites might promise unblocked games, but NeonWave actually delivers. Their sophisticated proxy software works like magic, bypassing those pesky firewalls and letting you play your favorite games from anywhere, anytime. It's like having a secret tunnel that leads you straight to the gaming wonderland. So, whether you're at school, work, or just trying to escape the real world for a few minutes, NeonWave has your back.</p>
+        
+        <h2>The Competition? Let's Just Say They're Not Quite "NeonWave"</h2>
+        <p>Let's be honest, the other unblocked game websites out there are just...well, they're not NeonWave. Some of them are clunky, some are riddled with ads, and some are just plain boring. But NeonWave? NeonWave is like a breath of fresh air in a world of stale gaming experiences. It's the perfect blend of simplicity, accessibility, and pure, unadulterated gaming fun.</p>
+        
+        <h2>NeonWave: The Future of Unblocked Gaming</h2>
+        <p>So, if you're tired of being blocked from your favorite games, NeonWave is the answer. It's the ultimate destination for anyone who wants to play games without any hassle. It's simple, it's effective, and it's guaranteed to make your gaming experience a whole lot more fun. So, what are you waiting for? Head over to NeonWave and start playing!</p>
+        
+        <p>Just remember, NeonWave is not responsible for any lost productivity or procrastination that may occur while using their website.</p>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/navbar.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('navbar-placeholder').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading navbar:', error));
+
+            fetch('/footer.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('footer-placeholder').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading footer:', error));
+        });
+    </script>
+</body>
+</html>
