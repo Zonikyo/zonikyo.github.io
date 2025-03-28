@@ -267,7 +267,15 @@ li a:hover {
 }
 
 li img {
-    height: 10px;
+    height: 30px;
+    width: auto;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    display: inline;
+    position: center;
+    float: left;
 }
 
 .active {
