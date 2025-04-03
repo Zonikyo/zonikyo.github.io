@@ -10,22 +10,17 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow-y: hidden; /* Hide scrollbar */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
+            overflow-y: scroll; /* Allow scrolling */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        body::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for WebKit browsers */
         }
         .game-container {
             display: grid; /* Use grid layout for precise control */
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Increase minimum size of tiles */
             gap: 30px; /* Slightly larger gap between tiles */
             padding: 20px; /* Larger padding around the edge */
-            width: 90%; /* Fixed width for the container */
-            height: 80%; /* Fixed height for the container */
-            overflow: hidden;
         }
         .game-tile {
             position: relative;
@@ -106,9 +101,20 @@
         <button id="nextButton">Next</button>
     </div>
     <script>
-        const ITEMS_PER_PAGE = 12; // Number of tiles per page
         let currentPage = 1;
         let gamesData = [];
+        let itemsPerPage;
+
+        function calculateItemsPerPage() {
+            const container = document.getElementById('gameContainer');
+            const tileHeight = 250; // Approximate height of a game tile including gaps
+            const tileWidth = 250; // Approximate width of a game tile including gaps
+            const containerWidth = container.offsetWidth;
+            const containerHeight = window.innerHeight - 100; // Account for pagination buttons
+            const columns = Math.floor(containerWidth / tileWidth);
+            const rows = Math.floor(containerHeight / tileHeight);
+            return columns * rows;
+        }
 
         async function fetchGames() {
             try {
@@ -118,6 +124,7 @@
                 }
                 const scriptText = await response.text();
                 gamesData = new Function(`${scriptText}; return gamesData;`)();
+                itemsPerPage = calculateItemsPerPage();
                 renderPage();
             } catch (error) {
                 console.error('Failed to fetch or process games data:', error);
@@ -129,8 +136,8 @@
         function renderPage() {
             const container = document.getElementById('gameContainer');
             container.innerHTML = ''; // Clear the container
-            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
             const pageItems = gamesData.slice(startIndex, endIndex);
 
             pageItems.forEach(game => {
@@ -167,7 +174,7 @@
             const prevButton = document.getElementById('prevButton');
             const nextButton = document.getElementById('nextButton');
             prevButton.disabled = currentPage === 1;
-            nextButton.disabled = currentPage * ITEMS_PER_PAGE >= gamesData.length;
+            nextButton.disabled = currentPage * itemsPerPage >= gamesData.length;
         }
 
         document.getElementById('prevButton').addEventListener('click', () => {
@@ -178,10 +185,15 @@
         });
 
         document.getElementById('nextButton').addEventListener('click', () => {
-            if (currentPage * ITEMS_PER_PAGE < gamesData.length) {
+            if (currentPage * itemsPerPage < gamesData.length) {
                 currentPage++;
                 renderPage();
             }
+        });
+
+        window.addEventListener('resize', () => {
+            itemsPerPage = calculateItemsPerPage();
+            renderPage();
         });
 
         fetchGames();
