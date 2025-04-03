@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+        /* Dark-themed styling */
+        .greeting-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #232323; /* Slightly lighter than #1c1c1c */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            font-family: 'Poppins', sans-serif;
+            color: #f0f0f0;
+        }
+        .greeting-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .current-time {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+        }
+        body {
+            background-color: #1c1c1c;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="greeting-container">
+        <div class="greeting-text" id="greeting">Good day!</div>
+        <div class="current-time" id="current-time">00:00:00</div>
+    </div>
+    <script>
+        function updateGreetingAndTime() {
+            const greetingElement = document.getElementById('greeting');
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            // Determine time of day
+            let timeOfDay = 'day';
+            if (hours < 12) timeOfDay = 'morning';
+            else if (hours < 18) timeOfDay = 'afternoon';
+            else timeOfDay = 'evening';
+
+            // Update greeting and time
+            greetingElement.textContent = `Good ${timeOfDay}!`;
+            timeElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        }
+
+        // Update every second
+        setInterval(updateGreetingAndTime, 1000);
+        updateGreetingAndTime(); // Initial call
+    </script>
+</body>
+</html>
