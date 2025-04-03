@@ -2,33 +2,39 @@
 <html lang="en">
 <head>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); /* Import Poppins font */
+
         body {
             background-color: #1c1c1c;
             color: white;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: 0; /* Ensure no margin around the body */
+            padding: 0; /* Ensure no padding around the body */
+            overflow-y: scroll; /* Allow scrolling */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        body::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for WebKit browsers */
         }
         .game-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            padding: 20px;
+            display: grid; /* Use grid layout for precise control */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Increase minimum size of tiles */
+            gap: 20px; /* Add gaps between tiles */
+            padding: 10px; /* Add padding around the edge to fit gradient outline */
+            margin: 0; /* Remove margin completely */
         }
         .game-tile {
             position: relative;
-            width: 100%; /* Adjust width dynamically */
-            max-width: 300px; /* Optional: Limit max width */
+            width: 100%; /* Ensure tiles fill their grid cells */
             aspect-ratio: 16 / 9; /* Enforce 16:9 aspect ratio */
             background-color: #333;
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: box-shadow 0.4s ease; /* Smooth transition for the outline */
         }
         .game-tile:hover {
-            transform: scale(1.05);
+            box-shadow: 0 0 10px 4px rgba(0, 255, 255, 0.8), 0 0 20px 8px rgba(0, 255, 0, 0.8); /* Green-to-blue gradient outline */
         }
         .game-tile img {
             width: 100%;
@@ -37,24 +43,29 @@
         }
         .game-info {
             position: absolute;
-            bottom: 0;
+            bottom: -50px; /* Start below the tile */
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 10px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(20px); /* Start slightly offset */
+            transition: opacity 0.4s ease, transform 0.4s ease; /* Smooth animation */
         }
         .game-tile:hover .game-info {
-            opacity: 1;
+            opacity: 1; /* Fade in */
+            transform: translateY(0); /* Slide into view */
+            bottom: 0; /* Align to the bottom */
         }
         .game-title {
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
             font-size: 18px;
             font-weight: bold;
             margin: 0;
         }
         .game-description {
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
             font-size: 14px;
             margin: 5px 0 0;
         }
