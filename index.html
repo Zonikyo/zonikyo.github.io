@@ -847,6 +847,10 @@
                 <label for="setting-user-name">Your Name:</label>
                 <input type="text" id="setting-user-name" placeholder="Enter name for greeting">
             </div>
+            <div class="setting-item">
+                <label for="volume-slider">Volume:</label>
+                <input type="range" id="volume-slider" min="0" max="100" step="1" value="100">
+            </div>
         </div>
         <div class="modal-buttons">
              <button id="settings-close-button" class="modal-button">Close</button>
@@ -1834,6 +1838,56 @@
                 targetElement.appendChild(card);
             });
         }
+
+        // Select the volume slider
+        const volumeSlider = document.getElementById('volume-slider');
+        
+        // Load saved volume from localStorage or set default to 100
+        const savedVolume = localStorage.getItem('iframeVolume') || 100;
+        volumeSlider.value = savedVolume;
+        
+        // Function to update iframe volume
+        function updateIframeVolume(volume) {
+          const iframes = document.querySelectorAll('iframe');
+          iframes.forEach(iframe => {
+            try {
+              // Attempt to access and control iframe content
+              const iframeDoc = iframe.contentWindow || iframe.contentDocument;
+              if (iframeDoc) {
+                const audios = iframeDoc.document.querySelectorAll('audio, video');
+                audios.forEach(audio => {
+                  audio.volume = volume / 100; // Scale volume to 0-1
+                });
+              }
+            } catch (error) {
+              console.warn('Unable to control volume for iframe:', iframe.src, error);
+            }
+          });
+        }
+        
+        // Apply saved volume on page load
+        updateIframeVolume(savedVolume);
+        
+        // Listen for changes to the slider
+        volumeSlider.addEventListener('input', (event) => {
+          const volume = event.target.value;
+          localStorage.setItem('iframeVolume', volume); // Save preference
+          updateIframeVolume(volume); // Update volume
+        });
+
+        // Send volume adjustment to iframe
+        iframe.contentWindow.postMessage({ type: 'setVolume', volume }, '*');
+        
+        // Inside iframe (if you control the iframe's content)
+        window.addEventListener('message', (event) => {
+          if (event.data.type === 'setVolume') {
+            const volume = event.data.volume;
+            const audios = document.querySelectorAll('audio, video');
+            audios.forEach(audio => {
+              audio.volume = volume / 100;
+            });
+          }
+        });
 
         function getTagIconHtml(tag) {
             let iconSvg = '';
