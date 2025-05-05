@@ -5,77 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeonWave Arcade</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #111827; /* Dark blue-grey */
-            color: #e5e7eb; /* Light grey text */
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            display: flex; /* Use flexbox for sticky footer */
-            flex-direction: column; /* Stack elements vertically */
-            min-height: 100vh; /* Ensure body takes full viewport height */
+            font-family: 'Baloo 2', cursive;
+            background-color: #111827;
+            color: #e5e7eb;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         main {
-             flex-grow: 1; /* Allow main content to grow and push footer down */
+             flex-grow: 1;
+             position: relative;
+             width: 100%;
         }
 
-        /* --- Page Loader --- */
+        #home-view, #game-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+             opacity: 1;
+             transition: opacity 0.5s ease-out;
+        }
+         #home-view.hidden, #game-view.hidden {
+             opacity: 0;
+             pointer-events: none;
+             z-index: -1;
+         }
+        #home-view:not(.hidden), #game-view:not(.hidden) {
+            position: relative;
+             z-index: 1;
+        }
+
+
         #page-loader {
             position: fixed; inset: 0; background-color: #111827; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 1; transition: opacity 0.5s ease-out; pointer-events: auto;
         }
         #page-loader.hidden { opacity: 0; pointer-events: none; }
         #page-loader img { height: 48px; margin-bottom: 2rem; }
         .loader-animation { display: flex; gap: 0.5rem; }
-        .loader-dot { width: 12px; height: 12px; border-radius: 50%; background-color: #a3e635; /* Neon lime */ animation: wave 1.4s linear infinite; }
-        .loader-dot:nth-child(2) { animation-delay: -1.2s; background-color: #22d3ee; /* Neon cyan */ }
-        .loader-dot:nth-child(3) { animation-delay: -1.0s; background-color: #ec4899; /* Neon pink */ }
+        .loader-dot { width: 12px; height: 12px; border-radius: 50%; background-color: #a3e635; animation: wave 1.4s linear infinite; }
+        .loader-dot:nth-child(2) { animation-delay: -1.2s; background-color: #22d3ee; }
+        .loader-dot:nth-child(3) { animation-delay: -1.0s; background-color: #ec4899; }
         @keyframes wave { 0%, 60%, 100% { transform: initial; } 30% { transform: translateY(-15px); box-shadow: 0 10px 15px rgba(0, 255, 255, 0.2); } }
-        /* --- End Page Loader --- */
 
         .game-card {
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-            background-color: #1f2937; /* Darker card background */
-            border: 1px solid #374151; /* Subtle border */
+            background-color: #1f2937;
+            border: 1px solid #374151;
             position: relative;
             overflow: hidden;
-            border-radius: 0.75rem; /* Rounded corners */
+            border-radius: 0.75rem;
+            cursor: pointer;
         }
         .game-card:hover {
-            transform: translateY(-5px) scale(1.03); /* Lift and scale effect */
-            box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3); /* Neon cyan glow */
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
         }
         .thumbnail-container {
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
             overflow: hidden;
-            background-color: #374151; /* Placeholder background */
+            background-color: #374151;
         }
         .thumbnail-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cover aspect ratio */
+            object-fit: cover;
             display: block;
         }
 
-        /* --- Tag Icon Styling --- */
         .tags-icon-container {
             position: absolute;
             top: 0.5rem;
             left: 0.5rem;
             z-index: 5;
             display: flex;
-            flex-direction: row; /* Horizontal layout */
+            flex-direction: row;
             gap: 0.4rem;
             align-items: flex-start;
         }
         .tag-icon-wrapper {
-            background-image: linear-gradient(to right, #22d3ee, #a3e635); /* Cyan to Lime gradient */
-            color: #0f172a; /* Dark text on gradient */
+            background-image: linear-gradient(to right, #22d3ee, #a3e635);
+            color: #0f172a;
             padding: 0.3rem;
             border-radius: 50%;
             display: inline-flex;
@@ -83,16 +103,16 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
             transition: all 0.3s ease-in-out;
             overflow: hidden;
-            width: 1.75rem; /* Fixed width for icon only */
-            height: 1.75rem; /* Fixed height */
+            width: 1.75rem;
+            height: 1.75rem;
             cursor: help;
-            flex-shrink: 0; /* Prevent shrinking */
+            flex-shrink: 0;
         }
         .tag-icon-wrapper .tag-icon {
             width: 1rem;
             height: 1rem;
             flex-shrink: 0;
-            margin: auto; /* Center icon */
+            margin: auto;
             transition: margin 0.3s ease-in-out;
         }
         .tag-icon-wrapper .tag-text {
@@ -105,65 +125,62 @@
             transition: opacity 0.2s ease-in-out 0.1s, max-width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
         }
         .tag-icon-wrapper:hover {
-            width: auto; /* Expand width on hover */
-            border-radius: 9999px; /* Pill shape on hover */
+            width: auto;
+            border-radius: 9999px;
             padding-left: 0.4rem;
             padding-right: 0.6rem;
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5); /* Cyan glow on hover */
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
         }
         .tag-icon-wrapper:hover .tag-icon {
-             margin: 0; /* Align icon to left */
+             margin: 0;
         }
         .tag-icon-wrapper:hover .tag-text {
             opacity: 1;
-            max-width: 100px; /* Allow text to appear */
-            margin-left: 0.3rem; /* Space between icon and text */
+            max-width: 100px;
+            margin-left: 0.3rem;
         }
-        /* --- End Tag Icon Styling --- */
 
         .title-overlay {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(to top, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0)); /* Gradient overlay */
+            background: linear-gradient(to top, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0));
             padding: 1rem 0.75rem 0.5rem 0.75rem;
-            opacity: 0; /* Hidden by default */
-            transform: translateY(100%); /* Start below card */
+            opacity: 0;
+            transform: translateY(100%);
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
             z-index: 5;
-            pointer-events: none; /* Allow clicks through */
+            pointer-events: none;
         }
         .game-card:hover .title-overlay {
-            opacity: 1; /* Show on hover */
-            transform: translateY(0); /* Slide up */
+            opacity: 1;
+            transform: translateY(0);
         }
-        .title-overlay h3 { color: #ffffff; /* White title text */ }
+        .title-overlay h3 { color: #ffffff; }
 
-        /* Hide scrollbar */
         body::-webkit-scrollbar { display: none; }
         body { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Custom scrollbar for game description */
         .game-description-scroll::-webkit-scrollbar { width: 8px; }
         .game-description-scroll::-webkit-scrollbar-track { background: #374151; border-radius: 10px; }
         .game-description-scroll::-webkit-scrollbar-thumb { background: #6b7280; border-radius: 10px; }
         .game-description-scroll::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        /* Fullscreen Button Styling */
         .fullscreen-icon-button {
-            background-color: #1f2937; /* Dark background */
-            color: #a5b4fc; /* Indigo text/icon */
+            background-color: #1f2937;
+            color: #a5b4fc;
             padding: 0.5rem;
-            border-radius: 9999px; /* Pill shape */
+            border-radius: 9999px;
             transition: all 0.3s ease-in-out;
-            border: 1px solid #4f46e5; /* Indigo border */
+            border: 1px solid #4f46e5;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             display: inline-flex;
             align-items: center;
-            overflow: hidden; /* Hide text initially */
+            overflow: hidden;
             white-space: nowrap;
-            width: 2.5rem; /* Icon size */
-            height: 2.5rem; /* Icon size */
+            width: 2.5rem;
+            height: 2.5rem;
             justify-content: center;
+            cursor: pointer;
         }
         .fullscreen-icon-button .icon { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
         .fullscreen-icon-button .text {
@@ -177,25 +194,24 @@
             vertical-align: middle;
         }
         .fullscreen-icon-button:hover {
-            background-color: #374151; /* Lighter background on hover */
-            color: #c7d2fe; /* Lighter indigo on hover */
-            transform: scale(1.05); /* Scale up */
-            box-shadow: 0 0 15px rgba(165, 180, 252, 0.4); /* Indigo glow */
-            width: 9rem; /* Expand width */
+            background-color: #374151;
+            color: #c7d2fe;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(165, 180, 252, 0.4);
+            width: 9rem;
             padding-left: 0.75rem;
             padding-right: 1rem;
-            justify-content: flex-start; /* Align content left */
+            justify-content: flex-start;
         }
         .fullscreen-icon-button:hover .text {
-            opacity: 1; /* Show text */
-            margin-left: 0.5rem; /* Space between icon and text */
-            max-width: 100px; /* Allow text to appear */
+            opacity: 1;
+            margin-left: 0.5rem;
+            max-width: 100px;
         }
 
-        /* Back Button Styling */
         .back-button {
-            background-image: linear-gradient(to right, #0ea5e9, #22d3ee); /* Sky to Cyan gradient */
-            color: #111827; /* Dark text */
+            background-image: linear-gradient(to right, #0ea5e9, #22d3ee);
+            color: #111827;
             padding: 0.5rem 1rem;
             border-radius: 9999px;
             font-weight: 600;
@@ -204,11 +220,12 @@
             display: inline-flex;
             align-items: center;
             text-shadow: 1px 1px 1px rgba(255,255,255,0.1);
-            box-shadow: 0 4px 8px rgba(34, 211, 238, 0.3); /* Cyan shadow */
+            box-shadow: 0 4px 8px rgba(34, 211, 238, 0.3);
+            cursor: pointer;
         }
         .back-button:hover {
-            transform: translateY(-2px) scale(1.05); /* Lift and scale */
-            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4); /* Sky shadow */
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
         }
         .back-button svg {
             width: 1.25rem; height: 1.25rem;
@@ -216,37 +233,35 @@
             transition: transform 0.2s ease;
         }
         .back-button:hover svg {
-            transform: translateX(-2px); /* Move arrow slightly */
+            transform: translateX(-2px);
         }
 
-        /* Header/Navbar Styling */
         .header-container {
             display: flex; align-items: center; justify-content: space-between;
-            max-width: 1280px; /* Max width */
+            max-width: 1280px;
             margin-left: auto; margin-right: auto;
-            padding-left: 1rem; padding-right: 1rem; /* Container padding */
+            padding-left: 1rem; padding-right: 1rem;
         }
         #main-header {
-            background-image: linear-gradient(to right, #7e22ce, #a21caf, #db2777); /* Purple -> Fuchsia -> Pink gradient */
-            color: #f3f4f6; /* Light text */
-            padding: 0.75rem 0; /* Vertical padding */
-            flex-shrink: 0; /* Prevent header from shrinking */
+            background-image: linear-gradient(to right, #7e22ce, #a21caf, #db2777);
+            color: #f3f4f6;
+            padding: 0.75rem 0;
+            flex-shrink: 0;
         }
         #logo-container { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
         #logo-image { height: 32px; width: auto; }
         #beta-tag {
-            background-color: #a3e635; /* Neon lime */
-            color: #3f3f46; /* Dark grey text */
+            background-color: #a3e635;
+            color: #3f3f46;
             font-size: 0.75rem; font-weight: 700;
             padding: 0.15rem 0.5rem; border-radius: 0.375rem;
             text-transform: uppercase; letter-spacing: 0.05em; line-height: 1;
-            box-shadow: 0 0 8px rgba(163, 230, 53, 0.5); /* Lime glow */
+            box-shadow: 0 0 8px rgba(163, 230, 53, 0.5);
             animation: pulse-beta 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         #navbar-right-section { display: flex; align-items: center; gap: 0.75rem; }
         #navbar-clock { font-size: 0.875rem; font-weight: 600; color: #f3f4f6; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
 
-        /* Animations */
         @keyframes pulse-beta { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .8; transform: scale(1.05); } }
         @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.05); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes bounceOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } 100% { transform: scale(0.8); opacity: 0; } }
@@ -255,26 +270,23 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* View Transition Classes */
         .view-enter-active { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .view-exit-active { animation: bounceOut 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards; }
 
-        /* Game View Specific Styles */
         .iframe-wrapper { width: 100%; margin-bottom: 1rem; position: relative; }
         .iframe-container {
             margin-left: auto; margin-right: auto;
             transition: max-width 0.3s ease, aspect-ratio 0.3s ease;
             border-radius: 0.5rem; overflow: hidden;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
-            border: 4px solid #7e22ce; /* Purple border */
-            background-color: #111827; /* Match body background */
-            position: relative; /* For loader positioning */
+            border: 4px solid #7e22ce;
+            background-color: #111827;
+            position: relative;
         }
         .aspect-16-9 { aspect-ratio: 16 / 9; max-width: 98%; }
         .aspect-4-3 { aspect-ratio: 4 / 3; max-width: 85%; }
         .aspect-1-1 { aspect-ratio: 1 / 1; max-width: 70%; }
 
-        /* Aspect Ratio Dropdown */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-button {
             background-color: #1f2937; color: #9ca3af;
@@ -296,7 +308,7 @@
             padding: 0.5rem 0; margin-top: 0.25rem;
             animation: slideDownFade 0.2s ease-out forwards;
             border: 1px solid #4b5563;
-            bottom: 100%; /* Position above button */
+            bottom: 100%;
             margin-bottom: 0.25rem;
         }
         .dropdown-content button {
@@ -306,15 +318,14 @@
         }
         .dropdown-content button:hover { background-color: #374151; color: #ffffff; }
         .dropdown-content button.active {
-            background-image: linear-gradient(to right, #22d3ee, #a3e635); /* Cyan to Lime */
-            color: #1e293b; /* Dark text for contrast */
+            background-image: linear-gradient(to right, #22d3ee, #a3e635);
+            color: #1e293b;
             font-weight: 600;
         }
         .dropdown.open .dropdown-content { display: block; }
 
-        /* Game View Layout Controls */
         .game-view-controls-container {
-            max-width: 98%; /* Align with iframe max-width */
+            max-width: 98%;
             margin-left: auto; margin-right: auto;
         }
         .iframe-top-controls {
@@ -322,8 +333,8 @@
             margin-bottom: 1rem;
         }
         .iframe-top-controls h2 {
-            color: #f472b6; /* Neon pink */
-            font-size: 2.25rem; /* Larger title */
+            color: #f472b6;
+            font-size: 2.25rem;
             font-weight: 700; margin: 0; line-height: 1.2;
             flex-grow: 1; margin-right: 1rem;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
@@ -333,128 +344,123 @@
             margin-top: 1rem; margin-bottom: 1.5rem;
         }
         .about-game-section {
-            max-width: 98%; /* Align with iframe max-width */
+            max-width: 98%;
             margin-left: auto; margin-right: auto;
-            background-color: #1f2937; /* Match card background */
-            border-color: #374151; /* Match card border */
+            background-color: #1f2937;
+            border-color: #374151;
         }
-        .about-game-section h3 { color: #67e8f9; /* Light cyan */ }
+        .about-game-section h3 { color: #67e8f9; }
         .about-game-section p { color: #d1d5db; }
 
-        /* Iframe Loader */
         .iframe-loader {
             position: absolute; inset: 0;
-            background-color: rgba(17, 24, 39, 0.9); /* Semi-transparent dark */
+            background-color: rgba(17, 24, 39, 0.9);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 5; border-radius: 0.5rem; /* Match iframe container */
+            z-index: 5; border-radius: 0.5rem;
             transition: opacity 0.5s ease-out;
         }
         .iframe-loader.hidden { opacity: 0; pointer-events: none; }
         .loader-spinner {
-            border: 4px solid #374151; /* Grey track */
-            border-top: 4px solid #a3e635; /* Neon lime spinner */
+            border: 4px solid #374151;
+            border-top: 4px solid #a3e635;
             border-radius: 50%; width: 40px; height: 40px;
             animation: spin 1s linear infinite; margin-bottom: 1rem;
         }
-        .loader-text { font-weight: 600; color: #a3e635; /* Neon lime */ }
+        .loader-text { font-weight: 600; color: #a3e635; }
 
-        /* Search Bar Styling */
         .search-input-container {
-            margin-bottom: 0.5rem; /* Space below input */
+            margin-bottom: 0.5rem;
             display: flex; justify-content: center; width: 100%;
         }
         .search-input {
             background-color: #374151; border: 1px solid #4b5563; color: #e5e7eb;
-            padding: 0.5rem 1rem; border-radius: 9999px; /* Pill shape */
-            width: 100%; max-width: 400px; /* Default width */
+            padding: 0.5rem 1rem; border-radius: 9999px;
+            width: 100%; max-width: 400px;
             transition: max-width 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s ease;
-            margin-left: auto; margin-right: auto; /* Center it */
+            margin-left: auto; margin-right: auto;
         }
         .search-input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px #7e22ce; /* Purple focus ring */
+            box-shadow: 0 0 0 2px #7e22ce;
             border-color: #7e22ce;
-            max-width: 600px; /* Expand width on focus */
+            max-width: 600px;
         }
         .search-input::placeholder { color: #9ca3af; }
 
-        /* Search Tags Styling */
         .search-tags-wrapper {
             display: flex; align-items: center; justify-content: center;
-            width: 100%; max-width: 650px; /* Slightly wider than focused search */
+            width: 100%; max-width: 650px;
             margin-left: auto; margin-right: auto;
             overflow: hidden;
-            max-height: 0; /* Hidden by default */
+            max-height: 0;
             opacity: 0;
             transform: translateY(-10px);
             transition: max-height 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
                         opacity 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
                         transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
                         margin-bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            margin-bottom: 0; /* No margin when hidden */
+            margin-bottom: 0;
         }
         .search-tags-wrapper.visible {
-            max-height: 60px; /* Allow space for tags */
+            max-height: 60px;
             opacity: 1;
             transform: translateY(0);
-            margin-bottom: 1.5rem; /* Add space below tags when visible */
+            margin-bottom: 1.5rem;
         }
         .search-tags-container {
             display: flex; overflow-x: auto; white-space: nowrap;
-            padding: 0.5rem 0; /* Vertical padding for tags */
-            scrollbar-width: none; -ms-overflow-style: none; /* Hide scrollbar */
-            flex-grow: 1; /* Take available space */
-            scroll-behavior: smooth; /* Smooth scrolling */
+            padding: 0.5rem 0;
+            scrollbar-width: none; -ms-overflow-style: none;
+            flex-grow: 1;
+            scroll-behavior: smooth;
         }
-        .search-tags-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
+        .search-tags-container::-webkit-scrollbar { display: none; }
         .search-tag-button {
-            background-image: linear-gradient(to right, #14b8a6, #22d3ee); /* Teal to Cyan gradient */
-            color: #1f2937; /* Dark text */
+            background-image: linear-gradient(to right, #14b8a6, #22d3ee);
+            color: #1f2937;
             border: none; padding: 0.4rem 1rem; margin: 0 0.25rem;
             border-radius: 9999px; font-size: 0.875rem; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease;
-            flex-shrink: 0; /* Prevent shrinking */
+            flex-shrink: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .search-tag-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5); /* Cyan glow */
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
         }
         .tag-scroll-button {
             background-color: #374151; color: #9ca3af; border: none;
             width: 2rem; height: 2rem; border-radius: 50%;
             cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease;
             flex-shrink: 0; margin: 0 0.25rem;
-            display: none; /* Hidden by default */
+            display: none;
             align-items: center; justify-content: center;
         }
-        .search-tags-wrapper.visible .tag-scroll-button { display: inline-flex; } /* Show when tags are visible */
+        .search-tags-wrapper.visible .tag-scroll-button { display: inline-flex; }
         .tag-scroll-button:hover { background-color: #4b5563; color: #e5e7eb; }
         .tag-scroll-button svg { width: 1rem; height: 1rem; }
 
-        /* Adjust grid margin when tags are visible */
-        #game-grid { transition: margin-top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); margin-top: 1.5rem; } /* Bouncy margin shift */
-        #search-results-grid { transition: margin-top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); margin-top: 0; } /* Bouncy margin shift */
-        #game-grid.shifted-down, #search-results-grid.shifted-down { margin-top: 4rem; } /* Pushed down by tags */
+        #game-grid { transition: margin-top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); margin-top: 1.5rem; }
+        #search-results-grid { transition: margin-top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); margin-top: 0; }
+        #game-grid.shifted-down, #search-results-grid.shifted-down { margin-top: 4rem; }
 
-        /* Navbar Icon Button Base Style */
         .navbar-icon-button {
             background: none; border: none; color: #f3f4f6;
             padding: 0.5rem; border-radius: 50%;
             transition: background-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
         }
         .navbar-icon-button:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Subtle hover */
+            background-color: rgba(255, 255, 255, 0.1);
             transform: scale(1.1);
         }
 
-        /* Search Overlay */
         .search-overlay {
             position: fixed; inset: 0;
-            background-color: rgba(17, 24, 39, 0.95); /* Slightly more opaque background */
+            background-color: rgba(17, 24, 39, 0.95);
             z-index: 50; padding: 2rem;
             display: flex; flex-direction: column; align-items: center;
-            opacity: 0; pointer-events: none; /* Hidden by default */
+            opacity: 0; pointer-events: none;
             transition: opacity 0.3s ease-out;
         }
         .search-overlay.visible {
@@ -466,50 +472,48 @@
             background: none; border: none; color: #9ca3af;
             padding: 0.5rem; border-radius: 50%;
             transition: color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
         }
         .search-overlay-close-button:hover {
             color: #ffffff;
-            transform: scale(1.2) rotate(90deg); /* Rotate X effect */
+            transform: scale(1.2) rotate(90deg);
         }
         .search-overlay-input {
             background-color: #1f2937; border: 1px solid #4b5563; color: #e5e7eb;
             padding: 0.75rem 1.5rem; border-radius: 9999px;
-            width: 100%; max-width: 600px; /* Wider input */
-            font-size: 1.125rem; margin-bottom: 0.5rem; /* Space before tags */
+            width: 100%; max-width: 600px;
+            font-size: 1.125rem; margin-bottom: 0.5rem;
             transition: max-width 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s ease;
         }
         .search-overlay-input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px #a3e635; /* Lime focus ring */
+            box-shadow: 0 0 0 2px #a3e635;
             border-color: #a3e635;
-            max-width: 700px; /* Expand more */
+            max-width: 700px;
         }
         .search-overlay-results {
-            width: 100%; max-width: 1000px; /* Max width for results grid */
-            overflow-y: auto; /* Scroll if needed */
-            flex-grow: 1; /* Take remaining space */
+            width: 100%; max-width: 1000px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
-        /* Custom scrollbar for overlay results */
         .search-overlay-results::-webkit-scrollbar { width: 10px; }
         .search-overlay-results::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; }
         .search-overlay-results::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
         .search-overlay-results::-webkit-scrollbar-thumb:hover { background: #6b7280; }
 
-        /* --- Footer Styling --- */
         #main-footer {
             opacity: 1;
-            transition: opacity 0.3s ease-in-out; /* Smooth fade in/out */
+            transition: opacity 0.3s ease-in-out;
             position: relative;
             z-index: 10;
-            flex-shrink: 0; /* Prevent footer from shrinking */
+            flex-shrink: 0;
         }
 
-        /* --- Base Modal Styling --- */
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background-color: rgba(17, 24, 39, 0.8); /* Semi-transparent dark backdrop */
-            z-index: 60; /* Above other content but below modal */
+            background-color: rgba(17, 24, 39, 0.8);
+            z-index: 60;
             opacity: 0;
             transition: opacity 0.3s ease-out;
             pointer-events: none;
@@ -522,30 +526,30 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.95); /* Start slightly smaller */
-            background-color: #1f2937; /* Dark background */
+            transform: translate(-50%, -50%) scale(0.95);
+            background-color: #1f2937;
             color: #e5e7eb;
             padding: 1.5rem 2rem;
             border-radius: 0.75rem;
             border: 1px solid #4b5563;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            z-index: 70; /* Above backdrop */
-            max-width: 450px; /* Slightly wider for settings */
+            z-index: 70;
+            max-width: 450px;
             width: 90%;
             opacity: 0;
-            transition: opacity 0.3s ease-out, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy scale */
+            transition: opacity 0.3s ease-out, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
         }
         .modal.visible {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1); /* Scale to full size */
+            transform: translate(-50%, -50%) scale(1);
             pointer-events: auto;
         }
         .modal h3 {
-            color: #f472b6; /* Neon pink */
+            color: #f472b6;
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 1rem; /* Increased bottom margin */
+            margin-bottom: 1rem;
             text-align: center;
         }
         .modal p {
@@ -556,9 +560,9 @@
         }
         .modal-buttons {
             display: flex;
-            justify-content: flex-end; /* Align buttons right for settings */
-            gap: 0.75rem; /* Space between buttons */
-            margin-top: 1.5rem; /* Space above buttons */
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
         .modal-button {
             padding: 0.6rem 1.2rem;
@@ -570,15 +574,14 @@
             text-align: center;
         }
 
-        /* --- Back Button Warning Modal Specifics --- */
         #warning-modal .modal-buttons {
-             justify-content: space-around; /* Space out buttons */
+             justify-content: space-around;
         }
         #warning-modal .modal-button {
-             flex-grow: 1; /* Make buttons take equal space */
+             flex-grow: 1;
         }
         #modal-leave-button {
-            background-image: linear-gradient(to right, #ef4444, #f472b6); /* Red to Pink */
+            background-image: linear-gradient(to right, #ef4444, #f472b6);
             color: #ffffff;
             box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
         }
@@ -598,11 +601,10 @@
             box-shadow: 0 0 10px rgba(107, 114, 128, 0.3);
         }
 
-        /* --- Settings Modal Specifics --- */
         #settings-modal .modal-content {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem; /* Space between settings */
+            gap: 1.25rem;
         }
         .setting-item {
             display: flex;
@@ -621,19 +623,18 @@
              color: #e5e7eb;
              padding: 0.4rem 0.8rem;
              border-radius: 0.375rem;
-             width: 100%; /* Take available width */
+             width: 100%;
         }
          #setting-user-name:focus {
              outline: none;
-             box-shadow: 0 0 0 2px #a3e635; /* Lime focus */
+             box-shadow: 0 0 0 2px #a3e635;
              border-color: #a3e635;
          }
-        /* Toggle Switch Styling */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 44px; /* Width of the switch */
-            height: 24px; /* Height of the switch */
+            width: 44px;
+            height: 24px;
             flex-shrink: 0;
         }
         .toggle-switch input {
@@ -648,33 +649,32 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #4b5563; /* Off state background */
-            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            background-color: #4b5563;
+            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-radius: 34px;
         }
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 18px; /* Size of the circle */
+            height: 18px;
             width: 18px;
-            left: 3px; /* Position from left */
-            bottom: 3px; /* Position from bottom */
+            left: 3px;
+            bottom: 3px;
             background-color: white;
-            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-radius: 50%;
         }
         input:checked + .toggle-slider {
-            background-image: linear-gradient(to right, #a3e635, #22d3ee); /* On state gradient */
+            background-image: linear-gradient(to right, #a3e635, #22d3ee);
         }
         input:focus + .toggle-slider {
-            box-shadow: 0 0 1px #a3e635; /* Focus indicator */
+            box-shadow: 0 0 1px #a3e635;
         }
         input:checked + .toggle-slider:before {
-            transform: translateX(20px); /* Move circle to the right */
+            transform: translateX(20px);
         }
-        /* Save Button Styling */
         #settings-save-button {
-             background-image: linear-gradient(to right, #a3e635, #22d3ee); /* Lime to Cyan */
+             background-image: linear-gradient(to right, #a3e635, #22d3ee);
              color: #1f2937;
              box-shadow: 0 4px 8px rgba(163, 230, 53, 0.3);
         }
@@ -728,8 +728,8 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4 md:p-8 relative">
-        <section id="home-view" class="absolute top-0 left-0 w-full p-4 md:p-8">
+    <main class="container mx-auto p-4 md:p-8">
+        <section id="home-view" class="w-full p-4 md:p-8">
             <h2 id="homepage-greeting" class="text-3xl font-semibold mb-4 text-center text-cyan-300">Choose Your Adventure!</h2>
             <div class="search-input-container">
                 <input type="search" id="homepage-search-input" placeholder="Search games by title or tag..." class="search-input">
@@ -748,7 +748,7 @@
             </div>
         </section>
 
-        <section id="game-view" class="absolute top-0 left-0 w-full p-4 md:p-8 hidden">
+        <section id="game-view" class="w-full p-4 md:p-8 hidden">
              <div class="game-view-controls-container iframe-top-controls">
                  <h2 id="game-title"></h2>
                  <button id="back-button" class="back-button flex-shrink-0">
@@ -844,9 +844,16 @@
                 </label>
             </div>
             <div class="setting-item">
-                <label for="setting-user-name">Your Name:</label>
-                <input type="text" id="setting-user-name" placeholder="Enter name for greeting">
+                <label for="setting-sound-effects">Enable Sound Effects:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="setting-sound-effects">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
+             <div class="setting-item">
+                 <label for="setting-user-name">Your Name:</label>
+                 <input type="text" id="setting-user-name" placeholder="Enter name for greeting">
+             </div>
         </div>
         <div class="modal-buttons">
              <button id="settings-close-button" class="modal-button">Close</button>
@@ -860,640 +867,65 @@
     </footer>
 
     <script>
-        // --- Game Data ---
         const games = [
-  {
-    "id": "eaglercraft-1.5.2-game",
-    "title": "Eaglercraft 1.5.2 (Eagtek)",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/eaglercraft1.5.2.png",
-    "tags": [
-      "Classic",
-      "Minecraft"
-    ],
-    "description": "A version of Minecraft 1.5.2 tailored for browser play, offering the classic survival and creative modes.",
-    "iframeUrl": "https://eaglercraftgame.github.io/go/minecraft-1.5.2/"
-  },
-  {
-    "id": "eaglercraft-x-1.8-game",
-    "title": "Eaglercraft X 1.8 (Astraclient)",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/eaglercraft1.8.png",
-    "tags": [
-      "Minecraft"
-    ],
-    "description": "An enhanced version of Minecraft 1.8 for browsers, featuring additional client-side improvements and tweaks.",
-    "iframeUrl": "https://astraclientorg.github.io/"
-  },
-  {
-    "id": "minecraft-classic-game",
-    "title": "Minecraft Classic (Mojang Studios)",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/Survival-games-Minecraft-3852067660.jpg",
-    "tags": [
-      "Classic",
-      "Minecraft"
-    ],
-    "description": "The original Minecraft experience, playable in a web browser, offering the iconic sandbox gameplay.",
-    "iframeUrl": "https://minecraftunblocked.gitlab.io/go/minecraft-beta/"
-  },
-  {
-    "id": "slope-game",
-    "title": "Slope",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/slope.png",
-    "tags": [
-      "3D",
-      "Endless Runner",
-      "Running"
-    ],
-    "description": "A fast-paced 3D running game where you navigate a ball down a steep, endless slope.",
-    "iframeUrl": "https://theslope.github.io/games/slope/index.html"
-  },
-  {
-    "id": "slope-2-game",
-    "title": "Slope 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/slope2.png",
-    "tags": [
-      "3D",
-      "Endless Runner",
-      "Running"
-    ],
-    "description": "The sequel to Slope, featuring more challenging levels and enhanced graphics.",
-    "iframeUrl": "https://slope-2.gitlab.io/file/"
-  },
-  {
-    "id": "slope-multiplayer-game",
-    "title": "Slope Multiplayer",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/slope-multiplayer-646454450.jpg",
-    "tags": [
-      "3D",
-      "Endless Runner",
-      "Multiplayer",
-      "Running"
-    ],
-    "description": "A multiplayer version of Slope where you can compete against other players.",
-    "iframeUrl": "https://education76.github.io/g7/slope-2-multiplayer/"
-  },
-  {
-    "id": "1v1-lol-game",
-    "title": "1v1 lol",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/1v1-lol-Unblocked-Game-2936374542.jpg",
-    "tags": [
-      "Building",
-      "Multiplayer",
-      "Shooter"
-    ],
-    "description": "A competitive building and shooting game where players can challenge each other in 1v1 battles.",
-    "iframeUrl": "https://1vl.school/"
-  },
-  {
-    "id": "drive-mad-game",
-    "title": "Drive Mad",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/drive-mad-1427835126.jpg",
-    "tags": [
-      "Driving",
-      "Stunts"
-    ],
-    "description": "A driving game focused on performing stunts and overcoming various obstacles.",
-    "iframeUrl": "https://drive-madgame.github.io/file/"
-  },
-  {
-    "id": "run-game",
-    "title": "Run",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/Run_OG-logo-1274939593.jpg",
-    "tags": [
-      "Classic",
-      "Platformer",
-      "Running"
-    ],
-    "description": "A classic platformer where you run and jump through a series of challenging levels.",
-    "iframeUrl": "https://dnrweqffuwjtx.cloudfront.net/games/2024/flash/run-1/index.html"
-  },
-  {
-    "id": "run-2-game",
-    "title": "Run 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/run2-1880122649.webp",
-    "tags": [
-      "Platformer",
-      "Running"
-    ],
-    "description": "The sequel to Run with more complex levels and new characters.",
-    "iframeUrl": "https://ubg89.github.io/Run2/"
-  },
-  {
-    "id": "run-3-game",
-    "title": "Run 3",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/Run3_OG-logo-542179002.jpg",
-    "tags": [
-      "Platformer",
-      "Running"
-    ],
-    "description": "The third installment in the Run series, featuring new levels and gameplay mechanics.",
-    "iframeUrl": "https://lekug.github.io/tn6pS9dCf37xAhkJv/"
-  },
-  {
-    "id": "flappy-bird-game",
-    "title": "Flappy Bird",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/flappy-bird-screenshot-1296977527.jpg",
-    "tags": [
-      "Arcade"
-    ],
-    "description": "A simple yet addictive arcade game where you navigate a bird through pipes.",
-    "iframeUrl": "https://ccported.github.io/fb/"
-  },
-  {
-    "id": "moto-x3m-game",
-    "title": "Moto X3M",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/motox3m.png",
-    "tags": [
-      "Driving",
-      "Racing"
-    ],
-    "description": "A motocross racing game with challenging tracks and obstacles.",
-    "iframeUrl": "https://motox3m.gitlab.io/game/moto-x3m/"
-  },
-  {
-    "id": "moto-x3m-extended-game",
-    "title": "Moto X3M Extended",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/motox3mextended.png",
-    "tags": [
-      "Driving",
-      "Racing"
-    ],
-    "description": "An extended version of Moto X3M with additional levels.",
-    "iframeUrl": "https://motox3m.gitlab.io/x3m-1.20.1p/"
-  },
-  {
-    "id": "moto-x3m-pool-party-game",
-    "title": "Moto X3M Pool Party",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/moto-x3m-pool-party-1092271902.jpg",
-    "tags": [
-      "Driving",
-      "Pool",
-      "Racing"
-    ],
-    "description": "A summer-themed version of Moto X3M.",
-    "iframeUrl": "https://education76.github.io/g/moto-x3m-pool-party/"
-  },
-  {
-    "id": "moto-x3m-winter-game",
-    "title": "Moto X3M Winter",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/moto-x3m-winter-1546391187.jpg",
-    "tags": [
-      "Driving",
-      "Racing"
-    ],
-    "description": "A winter-themed version of Moto X3M.",
-    "iframeUrl": "https://motox3munblocked.github.io/4-winter/"
-  },
-  {
-    "id": "duck-life-game",
-    "title": "Duck Life",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/DuckLife_OG-logo-2499380549.jpg",
-    "tags": [
-      "Racing",
-      "Simulation"
-    ],
-    "description": "A game where you raise and train a duck to compete in races.",
-    "iframeUrl": "https://ducklifegame.github.io/file/"
-  },
-  {
-    "id": "duck-life-2-game",
-    "title": "Duck Life 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/ducklife2.png",
-    "tags": [
-      "Racing",
-      "Simulation"
-    ],
-    "description": "The sequel to Duck Life with more features and challenges.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Duck-Life-2/"
-  },
-  {
-    "id": "duck-life-3-game",
-    "title": "Duck Life 3",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/ducklife3.png",
-    "tags": [
-      "Racing",
-      "Simulation"
-    ],
-    "description": "Another sequel in the Duck Life series with enhanced gameplay.",
-    "iframeUrl": "https://unblockedgames911.gitlab.io/duck-life-3/"
-  },
-  {
-    "id": "duck-life-4-game",
-    "title": "Duck Life 4",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/ducklife4.png",
-    "tags": [
-      "Racing",
-      "Simulation"
-    ],
-    "description": "The fourth installment in the Duck Life series.",
-    "iframeUrl": "https://htmlxm.github.io/h/duck-life-4"
-  },
-  {
-    "id": "stunt-master-city-game",
-    "title": "Stunt Master City",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/citycarstuntdriver.png",
-    "tags": [
-      "Driving",
-      "Stunts"
-    ],
-    "description": "A stunt driving game set in a city environment.",
-    "iframeUrl": "https://ubg77.github.io/edit/city-car-driving-stunt-master/"
-  },
-  {
-    "id": "sky-car-stunt-3d-game",
-    "title": "Sky Car Stunt 3D",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sky-car-stunt-3d-racing-games-screenshot-3772473604.jpg",
-    "tags": [
-      "3D",
-      "Driving",
-      "Racing",
-      "Stunts"
-    ],
-    "description": "A 3D car stunt game with challenging tracks.",
-    "iframeUrl": "https://ubg77.github.io/edit/city-car-driving-stunt-master/"
-  },
-  {
-    "id": "time-shooter-2-game",
-    "title": "Time Shooter 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/time-shooter-2-3430007738.jpg",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "A shooting game where time moves only when you move.",
-    "iframeUrl": "https://gnhustgames.github.io/timeshooter2/"
-  },
-  {
-    "id": "2048-game",
-    "title": "2048",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/2048.png",
-    "tags": [
-      "Logic",
-      "Puzzle"
-    ],
-    "description": "A sliding puzzle game where you combine tiles to reach the number 2048.",
-    "iframeUrl": "https://ovolve.github.io/2048-AI/"
-  },
-  {
-    "id": "sniper-assassin-game",
-    "title": "Sniper Assassin",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sniperassasin.png",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "A shooting game where you play as a sniper completing various missions.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Sniper-Assassin/"
-  },
-  {
-    "id": "sniper-assassin-2-game",
-    "title": "Sniper Assassin 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sniper-assassin-2-3470249355.jpg",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "The sequel to Sniper Assassin with new missions.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-2/"
-  },
-  {
-    "id": "sniper-assassin-3-game",
-    "title": "Sniper Assassin 3",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sniperassasin3.png",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "The third installment in the Sniper Assassin series.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-3/"
-  },
-  {
-    "id": "sniper-assassin-4-game",
-    "title": "Sniper Assassin 4",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sniperassasin4.png",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "Another sequel in the Sniper Assassin series.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-4/"
-  },
-  {
-    "id": "sniper-assassin-5-game",
-    "title": "Sniper Assassin 5",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/sniperassasinfinal.png",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "The fifth installment in the Sniper Assassin series.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Sniper-Assassin-5/"
-  },
-  {
-    "id": "tactical-assassin-game",
-    "title": "Tactical Assassin",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/tacticalassasin2.png",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "A tactical shooting game with various missions.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Tactical-Assassin/"
-  },
-  {
-    "id": "tactical-assassin-2-game",
-    "title": "Tactical Assassin 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/tactical-assassin-android-001-3883766304.webp",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "The sequel to Tactical Assassin with new missions.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Tactical-Assassin-2/"
-  },
-  {
-    "id": "tactical-assassin-3-game",
-    "title": "Tactical Assassin 3",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/tactical.assassin3-1026657409.jpg",
-    "tags": [
-      "Action",
-      "Shooter"
-    ],
-    "description": "Another sequel in the Tactical Assassin series.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/Tactical-Assassin-3/"
-  },
-  {
-    "id": "five-nights-at-freddys-game",
-    "title": "Five Nights at Freddy\u2019s",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/Five-Nights-at-Freddys-f01-res-3753001984.jpg",
-    "tags": [
-      "Horror"
-    ],
-    "description": "A horror game where you survive nights in a haunted pizzeria.",
-    "iframeUrl": "https://fivenightsatfreddysonline.github.io/file/"
-  },
-  {
-    "id": "backrooms-game",
-    "title": "Backrooms",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/the-backrooms-lcwz7av7xsd9fl5l-993472238.jpg",
-    "tags": [
-      "Horror"
-    ],
-    "description": "An exploration game set in the eerie and endless backrooms.",
-    "iframeUrl": "https://unblockeds-games.github.io/iframe/backrooms/"
-  },
-  {
-    "id": "quake-game",
-    "title": "Quake",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/EGS_Quake_idSoftwareNightdiveStudios_S1_2560x1440-b31ed6ea4d89261b0556846ffd842d67-553107640.jpg",
-    "tags": [
-      "Action",
-      "Classic",
-      "Shooter"
-    ],
-    "description": "A classic first-person shooter game.",
-    "iframeUrl": "https://gnhustgames.github.io/quake/wwwwsadwsw"
-  },
-  {
-    "id": "townscaper-game",
-    "title": "Townscaper",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/EGS_Townscaper_OskarStlberg_S3_2560x1440-558540cb0b62cb5520f1f9e5b4c7a204-2698187929.jpg",
-    "tags": [
-      "Building",
-      "Simulation"
-    ],
-    "description": "A city-building game with a focus on creativity and aesthetics.",
-    "iframeUrl": "https://manscod.github.io/other/townscaper/"
-  },
-  {
-    "id": "parking-fury-game",
-    "title": "Parking Fury",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/parking-fury-1290644957.png",
-    "tags": [
-      "Driving",
-      "Simulation"
-    ],
-    "description": "A parking simulation game with various challenges.",
-    "iframeUrl": "https://parking-fury.gitlab.io/file/"
-  },
-  {
-    "id": "parking-fury-2-game",
-    "title": "Parking Fury 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/parkingfury2new-641888004.jpg",
-    "tags": [
-      "Driving",
-      "Simulation"
-    ],
-    "description": "The sequel to Parking Fury with new levels.",
-    "iframeUrl": "https://gnhustgames.github.io/parking-fury-2/"
-  },
-  {
-    "id": "parking-fury-3-game",
-    "title": "Parking Fury 3",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/ParkingFury3_OG-logo-2904042009.jpg",
-    "tags": [
-      "Driving",
-      "Simulation"
-    ],
-    "description": "Another sequel in the Parking Fury series.",
-    "iframeUrl": "https://parkingfury3.github.io/gamefle/parking-fury-3/"
-  },
-  {
-    "id": "geometry-dash-game",
-    "title": "Geometry Dash",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/geometrydash.png",
-    "tags": [
-      "Platformer",
-      "Rhythm"
-    ],
-    "description": "A rhythm-based platformer with challenging levels.",
-    "iframeUrl": "https://q9shks-8080.csb.app/service/hvtrs8%2F-ggooevr%7Bgcmg.mre%2Feaoe-ggooevr%7B-faqh%2Flktg%2F/"
-  },
-  {
-    "id": "bulletforce-game",
-    "title": "BulletForce",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/bulletforce.png",
-    "tags": [
-      "Action",
-      "Multiplayer",
-      "Shooter"
-    ],
-    "description": "A first-person shooter game with various multiplayer modes.",
-    "iframeUrl": "https://ubg44.github.io/BulletForce/"
-  },
-  {
-    "id": "cookie-clicker-game",
-    "title": "Cookie Clicker",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/cookieclicker.png",
-    "tags": [
-      "Clicker",
-      "Incremental"
-    ],
-    "description": "An incremental game where you click to produce cookies.",
-    "iframeUrl": "https://ozh.github.io/cookieclicker/"
-  },
-  {
-    "id": "fallboys-game",
-    "title": "Fallboys",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/fall-boys-unblocked-1054828642.jpg",
-    "tags": [
-      "Multiplayer",
-      "Party"
-    ],
-    "description": "A multiplayer party game with various mini-games.",
-    "iframeUrl": "https://gnhustgames.github.io/fallboys/"
-  },
-  {
-    "id": "little-alchemy-2-game",
-    "title": "Little Alchemy 2",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/littlealchemy2.png",
-    "tags": [
-      "Logic",
-      "Puzzle"
-    ],
-    "description": "A puzzle game where you combine elements to create new items.",
-    "iframeUrl": "https://classroom15x.com/coolmath/LittleAlchemy2/?gd_sdk_referrer_url=https://classroom15x.com/play/little-alchemy-2"
-  },
-  {
-    "id": "smash-karts-game",
-    "title": "Smash Karts",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/smashkarts.png",
-    "tags": [
-      "Multiplayer",
-      "Party",
-      "Racing"
-    ],
-    "description": "A multiplayer kart racing game with weapons.",
-    "iframeUrl": "https://smashkartsunblocked.github.io/"
-  },
-  {
-    "id": "subway-surfers-game",
-    "title": "Subway Surfers",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/subway-surfers-desktop-hero-2020-final-1505522840.jpg",
-    "tags": [
-      "Arcade",
-      "Endless Runner"
-    ],
-    "description": "An endless runner game where you dodge obstacles and collect coins.",
-    "iframeUrl": "https://subway-surfers.gitlab.io/file/"
-  },
-  {
-    "id": "monkey-mart-game",
-    "title": "Monkey Mart",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/monkeymart-half-2564318793.png",
-    "tags": [
-      "Management",
-      "Simulation"
-    ],
-    "description": "A management game where you run a monkey-themed grocery store.",
-    "iframeUrl": "https://monkeymartonline.github.io/file/"
-  },
-  {
-    "id": "eggy-car-game",
-    "title": "Eggy Car",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/eggy-car-1413036222.webp",
-    "tags": [
-      "Driving",
-      "Physics"
-    ],
-    "description": "A driving game where you balance an egg on a car.",
-    "iframeUrl": "https://webglmath.github.io/eggy-car/"
-  },
-  {
-    "id": "crossy-road-game",
-    "title": "Crossy Road",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/crossyroad.png",
-    "tags": [
-      "Arcade",
-      "Endless Runner"
-    ],
-    "description": "An arcade game where you help a character cross roads and avoid obstacles.",
-    "iframeUrl": "https://webglmath.github.io/eggy-car/"
-  },
-  {
-    "id": "8-ball-pool-game",
-    "title": "8 ball pool",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/Miniclip-8-Ball-Pool-4.6.2-594489945.jpg",
-    "tags": [
-      "Classic",
-      "Pool",
-      "Sports"
-    ],
-    "description": "A classic pool game playable in a browser.",
-    "iframeUrl": "https://8-ball-pool-online.github.io/file/"
-  },
-  {
-    "id": "minesweeper-game",
-    "title": "Minesweeper",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/minesweeper.png",
-    "tags": [
-      "Classic",
-      "Logic",
-      "Puzzle"
-    ],
-    "description": "The classic puzzle game where you clear a minefield.",
-    "iframeUrl": "https://minesweeper.github.io/"
-  },
-  {
-    "id": "drift-boss-game",
-    "title": "Drift boss",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/driftboss.png",
-    "tags": [
-      "Driving"
-    ],
-    "description": "A drifting game where you navigate through various tracks.",
-    "iframeUrl": "https://drift-boss.gitlab.io/file/"
-  },
-  {
-    "id": "solitare-game",
-    "title": "Solitare",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/2x1_NSwitchDS_SolitaireClassicCardGame_image1600w-751113320.jpg",
-    "tags": [
-      "Card Game",
-      "Classic",
-      "Logic",
-      "Puzzle"
-    ],
-    "description": "The classic card game, Solitaire.",
-    "iframeUrl": "https://www.google.com/logos/fnbx/solitaire/standalone.html"
-  },
-  {
-    "id": "tunnel-rush-game",
-    "title": "Tunnel Rush",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/tunnel-rush-3219939059.png",
-    "tags": [
-      "Endless Runner",
-      "Racing"
-    ],
-    "description": "A fast-paced tunnel racing game.",
-    "iframeUrl": "https://liminthoi.github.io/games/tunnel-rush/index.html"
-  },
-  {
-    "id": "mad-gunz-game",
-    "title": "Mad Gunz",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/mad-gunz-3016738451.png",
-    "tags": [
-      "Action",
-      "Multiplayer",
-      "Shooter"
-    ],
-    "description": "A multiplayer first-person shooter game.",
-    "iframeUrl": "https://ubgwtf.gitlab.io/mad-gunz/"
-  },
-  {
-    "id": "happy-wheels-game",
-    "title": "Happy Wheels",
-    "thumbnail": "https://zonikyo.github.io/img/thumbnails/happywheels.png",
-    "tags": [
-      "Physics",
-      "Platformer"
-    ],
-    "description": "A ragdoll physics-based platformer with various levels.",
-    "iframeUrl": "https://sreekar617.github.io/hw/index.html"
-  }
-]
+            { id: 'eaglercraft-1.5.2-game', title: 'Eaglercraft 1.5.2 (Eagtek)', thumbnail: 'https://zonikyo.github.io/img/thumbnails/eaglercraft1.5.2.png', tags: ['Classic', 'Minecraft'], description: 'A version of Minecraft 1.5.2 tailored for browser play, offering the classic survival and creative modes.', iframeUrl: 'https://eaglercraftgame.github.io/go/minecraft-1.5.2/' },
+            { id: 'eaglercraft-x-1.8-game', title: 'Eaglercraft X 1.8 (Astraclient)', thumbnail: 'https://zonikyo.github.io/img/thumbnails/eaglercraft1.8.png', tags: ['Minecraft'], description: 'An enhanced version of Minecraft 1.8 for browsers, featuring additional client-side improvements and tweaks.', iframeUrl: 'https://astraclientorg.github.io/' },
+            { id: 'minecraft-classic-game', title: 'Minecraft Classic (Mojang Studios)', thumbnail: 'https://zonikyo.github.io/img/thumbnails/Survival-games-Minecraft-3852067660.jpg', tags: ['Classic', 'Minecraft'], description: 'The original Minecraft experience, playable in a web browser, offering the iconic sandbox gameplay.', iframeUrl: 'https://minecraftunblocked.gitlab.io/go/minecraft-beta/' },
+            { id: 'slope-game', title: 'Slope', thumbnail: 'https://zonikyo.github.io/img/thumbnails/slope.png', tags: ['3D', 'Endless Runner', 'Running'], description: 'A fast-paced 3D running game where you navigate a ball down a steep, endless slope.', iframeUrl: 'https://theslope.github.io/games/slope/index.html' },
+            { id: 'slope-2-game', title: 'Slope 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/slope2.png', tags: ['3D', 'Endless Runner', 'Running'], description: 'The sequel to Slope, featuring more challenging levels and enhanced graphics.', iframeUrl: 'https://slope-2.gitlab.io/file/' },
+            { id: 'slope-multiplayer-game', title: 'Slope Multiplayer', thumbnail: 'https://zonikyo.github.io/img/thumbnails/slope-multiplayer-646454450.jpg', tags: ['3D', 'Endless Runner', 'Multiplayer', 'Running'], description: 'A multiplayer version of Slope where you can compete against other players.', iframeUrl: 'https://education76.github.io/g7/slope-2-multiplayer/' },
+            { id: '1v1-lol-game', title: '1v1 lol', thumbnail: 'https://zonikyo.github.io/img/thumbnails/1v1-lol-Unblocked-Game-2936374542.jpg', tags: ['Building', 'Multiplayer', 'Shooter'], description: 'A competitive building and shooting game where players can challenge each other in 1v1 battles.', iframeUrl: 'https://1vl.school/' },
+            { id: 'drive-mad-game', title: 'Drive Mad', thumbnail: 'https://zonikyo.github.io/img/thumbnails/drive-mad-1427835126.jpg', tags: ['Driving', 'Stunts'], description: 'A driving game focused on performing stunts and overcoming various obstacles.', iframeUrl: 'https://drive-madgame.github.io/file/' },
+            { id: 'run-game', title: 'Run', thumbnail: 'https://zonikyo.github.io/img/thumbnails/Run_OG-logo-1274939593.jpg', tags: ['Classic', 'Platformer', 'Running'], description: 'A classic platformer where you run and jump through a series of challenging levels.', iframeUrl: 'https://dnrweqffuwjtx.cloudfront.net/games/2024/flash/run-1/index.html' },
+            { id: 'run-2-game', title: 'Run 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/run2-1880122649.webp', tags: ['Platformer', 'Running'], description: 'The sequel to Run with more complex levels and new characters.', iframeUrl: 'https://ubg89.github.io/Run2/' },
+            { id: 'run-3-game', title: 'Run 3', thumbnail: 'https://zonikyo.github.io/img/thumbnails/Run3_OG-logo-542179002.jpg', tags: ['Platformer', 'Running'], description: 'The third installment in the Run series, featuring new levels and gameplay mechanics.', iframeUrl: 'https://lekug.github.io/tn6pS9dCf37xAhkJv/' },
+            { id: 'flappy-bird-game', title: 'Flappy Bird', thumbnail: 'https://zonikyo.github.io/img/thumbnails/flappy-bird-screenshot-1296977527.jpg', tags: ['Arcade'], description: 'A simple yet addictive arcade game where you navigate a bird through pipes.', iframeUrl: 'https://ccported.github.io/fb/' },
+            { id: 'moto-x3m-game', title: 'Moto X3M', thumbnail: 'https://zonikyo.github.io/img/thumbnails/motox3m.png', tags: ['Driving', 'Racing'], description: 'A motocross racing game with challenging tracks and obstacles.', iframeUrl: 'https://motox3m.gitlab.io/game/moto-x3m/' },
+            { id: 'moto-x3m-extended-game', title: 'Moto X3M Extended', thumbnail: 'https://zonikyo.github.io/img/thumbnails/motox3mextended.png', tags: ['Driving', 'Racing'], description: 'An extended version of Moto X3M with additional levels.', iframeUrl: 'https://motox3m.gitlab.io/x3m-1.20.1p/' },
+            { id: 'moto-x3m-pool-party-game', title: 'Moto X3M Pool Party', thumbnail: 'https://zonikyo.github.io/img/thumbnails/moto-x3m-pool-party-1092271902.jpg', tags: ['Driving', 'Pool', 'Racing'], description: 'A summer-themed version of Moto X3M.', iframeUrl: 'https://education76.github.io/g/moto-x3m-pool-party/' },
+            { id: 'moto-x3m-winter-game', title: 'Moto X3M Winter', thumbnail: 'https://zonikyo.github.io/img/thumbnails/moto-x3m-winter-1546391187.jpg', tags: ['Driving', 'Racing'], description: 'A winter-themed version of Moto X3M.', iframeUrl: 'https://motox3munblocked.github.io/4-winter/' },
+            { id: 'duck-life-game', title: 'Duck Life', thumbnail: 'https://zonikyo.github.io/img/thumbnails/DuckLife_OG-logo-2499380549.jpg', tags: ['Racing', 'Simulation'], description: 'A game where you raise and train a duck to compete in races.', iframeUrl: 'https://ducklifegame.github.io/file/' },
+            { id: 'duck-life-2-game', title: 'Duck Life 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/ducklife2.png', tags: ['Racing', 'Simulation'], description: 'The sequel to Duck Life with more features and challenges.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Duck-Life-2/' },
+            { id: 'duck-life-3-game', title: 'Duck Life 3', thumbnail: 'https://zonikyo.github.io/img/thumbnails/ducklife3.png', tags: ['Racing', 'Simulation'], description: 'Another sequel in the Duck Life series with enhanced gameplay.', iframeUrl: 'https://unblockedgames911.gitlab.io/duck-life-3/' },
+            { id: 'duck-life-4-game', title: 'Duck Life 4', thumbnail: 'https://zonikyo.github.io/img/thumbnails/ducklife4.png', tags: ['Racing', 'Simulation'], description: 'The fourth installment in the Duck Life series.', iframeUrl: 'https://htmlxm.github.io/h/duck-life-4' },
+            { id: 'stunt-master-city-game', title: 'Stunt Master City', thumbnail: 'https://zonikyo.github.io/img/thumbnails/citycarstuntdriver.png', tags: ['Driving', 'Stunts'], description: 'A stunt driving game set in a city environment.', iframeUrl: 'https://ubg77.github.io/edit/city-car-driving-stunt-master/' },
+            { id: 'sky-car-stunt-3d-game', title: 'Sky Car Stunt 3D', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sky-car-stunt-3d-racing-games-screenshot-3772473604.jpg', tags: ['3D', 'Driving', 'Racing', 'Stunts'], description: 'A 3D car stunt game with challenging tracks.', iframeUrl: 'https://ubg77.github.io/edit/city-car-driving-stunt-master/' },
+            { id: 'time-shooter-2-game', title: 'Time Shooter 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/time-shooter-2-3430007738.jpg', tags: ['Action', 'Shooter'], description: 'A shooting game where time moves only when you move.', iframeUrl: 'https://gnhustgames.github.io/timeshooter2/' },
+            { id: '2048-game', title: '2048', thumbnail: 'https://zonikyo.github.io/img/thumbnails/2048.png', tags: ['Logic', 'Puzzle'], description: 'A sliding puzzle game where you combine tiles to reach the number 2048.', iframeUrl: 'https://ovolve.github.io/2048-AI/' },
+            { id: 'sniper-assassin-game', title: 'Sniper Assassin', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sniperassasin.png', tags: ['Action', 'Shooter'], description: 'A shooting game where you play as a sniper completing various missions.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Sniper-Assassin/' },
+            { id: 'sniper-assassin-2-game', title: 'Sniper Assassin 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sniper-assassin-2-3470249355.jpg', tags: ['Action', 'Shooter'], description: 'The sequel to Sniper Assassin with new missions.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Sniper-Assassin-2/' },
+            { id: 'sniper-assassin-3-game', title: 'Sniper Assassin 3', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sniperassasin3.png', tags: ['Action', 'Shooter'], description: 'The third installment in the Sniper Assassin series.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Sniper-Assassin-3/' },
+            { id: 'sniper-assassin-4-game', title: 'Sniper Assassin 4', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sniperassasin4.png', tags: ['Action', 'Shooter'], description: 'Another sequel in the Sniper Assassin series.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Sniper-Assassin-4/' },
+            { id: 'sniper-assassin-5-game', title: 'Sniper Assassin 5', thumbnail: 'https://zonikyo.github.io/img/thumbnails/sniperassasinfinal.png', tags: ['Action', 'Shooter'], description: 'The fifth installment in the Sniper Assassin series.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Sniper-Assassin-5/' },
+            { id: 'tactical-assassin-game', title: 'Tactical Assassin', thumbnail: 'https://zonikyo.github.io/img/thumbnails/tacticalassasin2.png', tags: ['Action', 'Shooter'], description: 'A tactical shooting game with various missions.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Tactical-Assassin/' },
+            { id: 'tactical-assassin-2-game', title: 'Tactical Assassin 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/tactical-assassin-android-001-3883766304.webp', tags: ['Action', 'Shooter'], description: 'The sequel to Tactical Assassin with new missions.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Tactical-Assassin-2/' },
+            { id: 'tactical-assassin-3-game', title: 'Tactical Assassin 3', thumbnail: 'https://zonikyo.github.io/img/thumbnails/tactical.assassin3-1026657409.jpg', tags: ['Action', 'Shooter'], description: 'Another sequel in the Tactical Assassin series.', iframeUrl: 'https://unblockeds-games.github.io/iframe/Tactical-Assassin-3/' },
+            { id: 'five-nights-at-freddys-game', title: 'Five Nights at Freddy\u2019s', thumbnail: 'https://zonikyo.github.io/img/thumbnails/Five-Nights-at-Freddys-f01-res-3753001984.jpg', tags: ['Horror'], description: 'A horror game where you survive nights in a haunted pizzeria.', iframeUrl: 'https://fivenightsatfreddysonline.github.io/file/' },
+            { id: 'backrooms-game', title: 'Backrooms', thumbnail: 'https://zonikyo.github.io/img/thumbnails/the-backrooms-lcwz7av7xsd9fl5l-993472238.jpg', tags: ['Horror'], description: 'An exploration game set in the eerie and endless backrooms.', iframeUrl: 'https://unblockeds-games.github.io/iframe/backrooms/' },
+            { id: 'quake-game', title: 'Quake', thumbnail: 'https://zonikyo.github.io/img/thumbnails/EGS_Quake_idSoftwareNightdiveStudios_S1_2560x1440-b31ed6ea4d89261b0556846ffd842d67-553107640.jpg', tags: ['Action', 'Classic', 'Shooter'], description: 'A classic first-person shooter game.', iframeUrl: 'https://gnhustgames.github.io/quake/wwwwsadwsw' },
+            { id: 'townscaper-game', title: 'Townscaper', thumbnail: 'https://zonikyo.github.io/img/thumbnails/EGS_Townscaper_OskarStlberg_S3_2560x1440-558540cb0b62cb5520f1f9e5b4c7a204-2698187929.jpg', tags: ['Building', 'Simulation'], description: 'A city-building game with a focus on creativity and aesthetics.', iframeUrl: 'https://manscod.github.io/other/townscaper/' },
+            { id: 'parking-fury-game', title: 'Parking Fury', thumbnail: 'https://zonikyo.github.io/img/thumbnails/parking-fury-1290644957.png', tags: ['Driving', 'Simulation'], description: 'A parking simulation game with various challenges.', iframeUrl: 'https://parking-fury.gitlab.io/file/' },
+            { id: 'parking-fury-2-game', title: 'Parking Fury 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/parkingfury2new-641888004.jpg', tags: ['Driving', 'Simulation'], description: 'The sequel to Parking Fury with new levels.', iframeUrl: 'https://gnhustgames.github.io/parking-fury-2/' },
+            { id: 'parking-fury-3-game', title: 'Parking Fury 3', thumbnail: 'https://zonikyo.github.io/img/thumbnails/ParkingFury3_OG-logo-2904042009.jpg', tags: ['Driving', 'Simulation'], description: 'Another sequel in the Parking Fury series.', iframeUrl: 'https://parkingfury3.github.io/gamefle/parking-fury-3/' },
+            { id: 'geometry-dash-game', title: 'Geometry Dash', thumbnail: 'https://zonikyo.github.io/img/thumbnails/geometrydash.png', tags: ['Platformer', 'Rhythm'], description: 'A rhythm-based platformer with challenging levels.', iframeUrl: 'https://q9shks-8080.csb.app/service/hvtrs8%2F-ggooevr%7Bgcmg.mre%2Feaoe-ggooevr%7B-faqh%2Flktg%2F/' },
+            { id: 'bulletforce-game', title: 'BulletForce', thumbnail: 'https://zonikyo.github.io/img/thumbnails/bulletforce.png', tags: ['Action', 'Multiplayer', 'Shooter'], description: 'A first-person shooter game with various multiplayer modes.', iframeUrl: 'https://ubg44.github.io/BulletForce/' },
+            { id: 'cookie-clicker-game', title: 'Cookie Clicker', thumbnail: 'https://zonikyo.github.io/img/thumbnails/cookieclicker.png', tags: ['Clicker', 'Incremental'], description: 'An incremental game where you click to produce cookies.', iframeUrl: 'https://ozh.github.io/cookieclicker/' },
+            { id: 'fallboys-game', title: 'Fallboys', thumbnail: 'https://zonikyo.github.io/img/thumbnails/fall-boys-unblocked-1054828642.jpg', tags: ['Multiplayer', 'Party'], description: 'A multiplayer party game with various mini-games.', iframeUrl: 'https://gnhustgames.github.io/fallboys/' },
+            { id: 'little-alchemy-2-game', title: 'Little Alchemy 2', thumbnail: 'https://zonikyo.github.io/img/thumbnails/littlealchemy2.png', tags: ['Logic', 'Puzzle'], description: 'A puzzle game where you combine elements to create new items.', iframeUrl: 'https://classroom15x.com/coolmath/LittleAlchemy2/?gd_sdk_referrer_url=https://classroom15x.com/play/little-alchemy-2' },
+            { id: 'smash-karts-game', title: 'Smash Karts', thumbnail: 'https://zonikyo.github.io/img/thumbnails/smashkarts.png', tags: ['Multiplayer', 'Party', 'Racing'], description: 'A multiplayer kart racing game with weapons.', iframeUrl: 'https://smashkartsunblocked.github.io/' },
+            { id: 'subway-surfers-game', title: 'Subway Surfers', thumbnail: 'https://zonikyo.github.io/img/thumbnails/subway-surfers-desktop-hero-2020-final-1505522840.jpg', tags: ['Arcade', 'Endless Runner'], description: 'An endless runner game where you dodge obstacles and collect coins.', iframeUrl: 'https://subway-surfers.gitlab.io/file/' },
+            { id: 'monkey-mart-game', title: 'Monkey Mart', thumbnail: 'https://zonikyo.github.io/img/thumbnails/monkeymart-half-2564318793.png', tags: ['Management', 'Simulation'], description: 'A management game where you run a monkey-themed grocery store.', iframeUrl: 'https://monkeymartonline.github.io/file/' },
+            { id: 'eggy-car-game', title: 'Eggy Car', thumbnail: 'https://zonikyo.github.io/img/thumbnails/eggy-car-1413036222.webp', tags: ['Driving', 'Physics'], description: 'A driving game where you balance an egg on a car.', iframeUrl: 'https://webglmath.github.io/eggy-car/' },
+            { id: 'crossy-road-game', title: 'Crossy Road', thumbnail: 'https://zonikyo.github.io/img/thumbnails/crossyroad.png', tags: ['Arcade', 'Endless Runner'], description: 'An arcade game where you help a character cross roads and avoid obstacles.', iframeUrl: 'https://webglmath.github.io/eggy-car/' },
+            { id: '8-ball-pool-game', title: '8 ball pool', thumbnail: 'https://zonikyo.github.io/img/thumbnails/Miniclip-8-Ball-Pool-4.6.2-594489945.jpg', tags: ['Classic', 'Pool', 'Sports'], description: 'A classic pool game playable in a browser.', iframeUrl: 'https://8-ball-pool-online.github.io/file/' },
+            { id: 'minesweeper-game', title: 'Minesweeper', thumbnail: 'https://zonikyo.github.io/img/thumbnails/minesweeper.png', tags: ['Classic', 'Logic', 'Puzzle'], description: 'The classic puzzle game where you clear a minefield.', iframeUrl: 'https://minesweeper.github.io/' },
+            { id: 'drift-boss-game', title: 'Drift boss', thumbnail: 'https://zonikyo.github.io/img/thumbnails/driftboss.png', tags: ['Driving'], description: 'A drifting game where you navigate through various tracks.', iframeUrl: 'https://drift-boss.gitlab.io/file/' },
+            { id: 'solitare-game', title: 'Solitare', thumbnail: 'https://zonikyo.github.io/img/thumbnails/2x1_NSwitchDS_SolitaireClassicCardGame_image1600w-751113320.jpg', tags: ['Card Game', 'Classic', 'Logic', 'Puzzle'], description: 'The classic card game, Solitaire.', iframeUrl: 'https://www.google.com/logos/fnbx/solitaire/standalone.html' },
+            { id: 'tunnel-rush-game', title: 'Tunnel Rush', thumbnail: 'https://zonikyo.github.io/img/thumbnails/tunnel-rush-3219939059.png', tags: ['Endless Runner', 'Racing'], description: 'A fast-paced tunnel racing game.', iframeUrl: 'https://liminthoi.github.io/games/tunnel-rush/index.html' },
+            { id: 'mad-gunz-game', title: 'Mad Gunz', thumbnail: 'https://zonikyo.github.io/img/thumbnails/mad-gunz-3016738451.png', tags: ['Action', 'Multiplayer', 'Shooter'], description: 'A multiplayer first-person shooter game.', iframeUrl: 'https://ubgwtf.gitlab.io/mad-gunz/' },
+            { id: 'happy-wheels-game', title: 'Happy Wheels', thumbnail: 'https://zonikyo.github.io/img/thumbnails/happywheels.png', tags: ['Physics', 'Platformer'], description: 'A ragdoll physics-based platformer with various levels.', iframeUrl: 'https://sreekar617.github.io/hw/index.html' }
+        ];
 
-
-        // --- DOM Elements ---
         const pageLoader = document.getElementById('page-loader');
         const homeView = document.getElementById('home-view');
         const gameView = document.getElementById('game-view');
@@ -1520,7 +952,7 @@
         const logoLink = document.getElementById('logo-link');
         const navbarClock = document.getElementById('navbar-clock');
         const navbarSearchButton = document.getElementById('navbar-search-button');
-        const navbarSettingsButton = document.getElementById('navbar-settings-button'); // Settings button
+        const navbarSettingsButton = document.getElementById('navbar-settings-button');
         const searchOverlay = document.getElementById('search-overlay');
         const searchOverlayCloseButton = document.getElementById('search-overlay-close-button');
         const searchOverlayInput = document.getElementById('search-overlay-input');
@@ -1534,15 +966,14 @@
         const warningModal = document.getElementById('warning-modal');
         const modalStayButton = document.getElementById('modal-stay-button');
         const modalLeaveButton = document.getElementById('modal-leave-button');
-        const settingsModalBackdrop = document.getElementById('settings-modal-backdrop'); // Settings modal elements
+        const settingsModalBackdrop = document.getElementById('settings-modal-backdrop');
         const settingsModal = document.getElementById('settings-modal');
         const settingBackWarningInput = document.getElementById('setting-back-warning');
+        const settingSoundEffectsInput = document.getElementById('setting-sound-effects');
         const settingUserNameInput = document.getElementById('setting-user-name');
         const settingsCloseButton = document.getElementById('settings-close-button');
         const settingsSaveButton = document.getElementById('settings-save-button');
 
-
-        // --- State Variables ---
         let isTransitioning = false;
         let iframeLoadTimeout = null;
         let iframeHasLoaded = false;
@@ -1555,15 +986,63 @@
         let gameViewStartTime = null;
         let warningTimeout = null;
         const WARNING_DELAY = 10000;
-        let settings = { // Object to hold settings
+        let settings = {
             showBackButtonWarning: true,
+            soundEffectsEnabled: true,
             userName: ''
         };
+        let synths = {};
+        let toneStarted = false;
 
         const aspectClasses = ['aspect-16-9', 'aspect-4-3', 'aspect-1-1'];
         const PAGE_LOAD_MIN_TIME = 3000;
 
-        // --- Functions ---
+        function initTone() {
+            if (toneStarted) return;
+            Tone.start();
+            toneStarted = true;
+
+            synths.click = new Tone.Synth({
+                oscillator: { type: 'triangle' },
+                envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 },
+                volume: -15
+            }).toDestination();
+
+            synths.hover = new Tone.Synth({
+                oscillator: { type: 'sine' },
+                envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 },
+                volume: -25
+            }).toDestination();
+
+            synths.load = new Tone.PolySynth(Tone.Synth, {
+                 oscillator: { type: 'fatsawtooth' },
+                 envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.3 },
+                 volume: -12
+            }).toDestination();
+        }
+
+        function playSound(type) {
+            if (!settings.soundEffectsEnabled || !toneStarted || !synths[type]) return;
+
+            const now = Tone.now();
+            try {
+                switch (type) {
+                    case 'click':
+                        synths.click.triggerAttackRelease('C5', '16n', now);
+                        break;
+                    case 'hover':
+                         synths.hover.triggerAttackRelease('A5', '32n', now);
+                        break;
+                    case 'load':
+                        synths.load.triggerAttackRelease(['C4', 'E4', 'G4'], '8n', now);
+                        synths.load.triggerAttackRelease(['E4', 'G4', 'C5'], '8n', now + 0.15);
+                        break;
+                }
+            } catch (error) {
+                console.error("Tone.js error playing sound:", error);
+            }
+        }
+
 
         function adjustMainHeight(elementToShow) {
              const wasHidden = elementToShow.classList.contains('hidden');
@@ -1590,7 +1069,6 @@
         }
 
         function handleIframeLoad() {
-            console.log("Iframe loaded.");
             iframeHasLoaded = true;
             hideLoader();
         }
@@ -1630,7 +1108,6 @@
         }
 
         function updateGameViewContent(game) {
-            console.log("Updating game view content for:", game.title);
             gameTitle.textContent = game.title;
             gameDescription.textContent = game.description;
             iframeContainer.classList.remove(...aspectClasses);
@@ -1680,7 +1157,7 @@
                 homepageSearchInput.value = '';
                 renderGameGrid(games, gameGrid);
                 hideSearchTags(homepageSearchTagsWrapper, gameGrid);
-                updateHomepageGreeting(); // Use function to set greeting based on settings
+                updateHomepageGreeting();
                  adjustMainHeight(homeView);
             }
         }
@@ -1690,7 +1167,6 @@
 
             if (!gameView.classList.contains('hidden')) {
                 const timeElapsed = Date.now() - gameViewStartTime;
-                // Check setting AND time elapsed
                 if (settings.showBackButtonWarning && timeElapsed > WARNING_DELAY) {
                     showWarningModal();
                 } else {
@@ -1702,14 +1178,12 @@
         }
 
         function showGameView(game) {
-            console.log("Showing game view for:", game.title);
             updateGameViewContent(game);
             switchView(gameView, homeView);
             gameViewStartTime = Date.now();
             clearTimeout(warningTimeout);
         }
 
-        // --- Warning Modal Functions ---
         function showWarningModal() {
             if (warningModal && warningModalBackdrop) {
                 warningModalBackdrop.classList.add('visible');
@@ -1723,13 +1197,11 @@
                 warningModal.classList.remove('visible');
             }
         }
-        // --- End Warning Modal Functions ---
 
-        // --- Settings Modal Functions ---
         function openSettingsModal() {
              if (settingsModal && settingsModalBackdrop) {
-                 // Load current settings into the modal inputs
                  settingBackWarningInput.checked = settings.showBackButtonWarning;
+                 settingSoundEffectsInput.checked = settings.soundEffectsEnabled;
                  settingUserNameInput.value = settings.userName;
 
                  settingsModalBackdrop.classList.add('visible');
@@ -1746,16 +1218,16 @@
 
         function saveSettings() {
             const newWarningSetting = settingBackWarningInput.checked;
+            const newSoundSetting = settingSoundEffectsInput.checked;
             const newUserName = settingUserNameInput.value.trim();
 
             settings.showBackButtonWarning = newWarningSetting;
+            settings.soundEffectsEnabled = newSoundSetting;
             settings.userName = newUserName;
 
-            // Save to localStorage
             localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
 
-            console.log("Settings saved:", settings);
-            updateHomepageGreeting(); // Update greeting immediately
+            updateHomepageGreeting();
             closeSettingsModal();
         }
 
@@ -1764,22 +1236,21 @@
             if (savedSettings) {
                 try {
                     const parsedSettings = JSON.parse(savedSettings);
-                    // Ensure default values if parsing fails or keys are missing
                     settings.showBackButtonWarning = typeof parsedSettings.showBackButtonWarning === 'boolean' ? parsedSettings.showBackButtonWarning : true;
+                    settings.soundEffectsEnabled = typeof parsedSettings.soundEffectsEnabled === 'boolean' ? parsedSettings.soundEffectsEnabled : true;
                     settings.userName = typeof parsedSettings.userName === 'string' ? parsedSettings.userName : '';
                 } catch (e) {
                     console.error("Error parsing saved settings:", e);
-                    // Use defaults if parsing fails
                     settings.showBackButtonWarning = true;
+                    settings.soundEffectsEnabled = true;
                     settings.userName = '';
                 }
             } else {
-                 // Use defaults if nothing is saved
                  settings.showBackButtonWarning = true;
+                 settings.soundEffectsEnabled = true;
                  settings.userName = '';
             }
-            console.log("Settings loaded:", settings);
-            updateHomepageGreeting(); // Apply loaded settings to greeting
+            updateHomepageGreeting();
         }
 
         function updateHomepageGreeting() {
@@ -1791,8 +1262,6 @@
                  }
              }
         }
-        // --- End Settings Modal Functions ---
-
 
         function renderGameGrid(gamesToRender, targetElement) {
             targetElement.innerHTML = '';
@@ -1802,7 +1271,7 @@
             }
             gamesToRender.forEach(game => {
                 const card = document.createElement('div');
-                card.className = 'game-card rounded-lg shadow-lg cursor-pointer border border-gray-700';
+                card.className = 'game-card rounded-lg shadow-lg border border-gray-700';
                 card.dataset.gameId = game.id;
                 const placeholderUrl = `https://placehold.co/640x360/374151/9ca3af?text=Error`;
                 card.innerHTML = `
@@ -1817,6 +1286,7 @@
                     </div>
                 `;
                 card.addEventListener('click', () => {
+                    playSound('click');
                     const selectedGame = games.find(g => g.id === card.dataset.gameId);
                     if (selectedGame) {
                         const isOverlayOpen = searchOverlay.classList.contains('visible');
@@ -1825,12 +1295,13 @@
                         }
                         if (!gameView.classList.contains('hidden')) {
                              updateGameViewContent(selectedGame);
-                             gameViewStartTime = Date.now(); // Reset timer if changing game from game view
+                             gameViewStartTime = Date.now();
                         } else {
                             setTimeout(() => showGameView(selectedGame), isOverlayOpen ? 50 : 0);
                         }
                     }
                 });
+                 card.addEventListener('mouseenter', () => playSound('hover'));
                 targetElement.appendChild(card);
             });
         }
@@ -2023,72 +1494,87 @@
 
         function hidePageLoader() {
             if (pageLoadMinTimePassed && pageContentLoaded) {
-                 pageLoader.classList.add('hidden');
+                 if (!pageLoader.classList.contains('hidden')) {
+                     pageLoader.classList.add('hidden');
+                     playSound('load');
+                 }
             }
         }
 
-        // --- Event Listeners ---
+        function setupEventListeners() {
+            if (fullscreenButton) fullscreenButton.addEventListener('click', () => { playSound('click'); goFullscreen(); });
+            if (backButton) backButton.addEventListener('click', (e) => { playSound('click'); showHomeView(e); });
+            if (dropdownButton) dropdownButton.addEventListener('click', () => { playSound('click'); toggleDropdown(); });
+            if (dropdownContent) dropdownContent.addEventListener('click', (e) => { playSound('click'); handleAspectRatioChange(e); });
+            if (logoLink) logoLink.addEventListener('click', (e) => { playSound('click'); navigateHome(e); });
+            if (navbarSearchButton) navbarSearchButton.addEventListener('click', () => { playSound('click'); openSearchOverlay(); });
+            if (navbarSettingsButton) navbarSettingsButton.addEventListener('click', () => { playSound('click'); openSettingsModal(); });
+            if (homepageSearchInput) homepageSearchInput.addEventListener('input', handleHomepageSearch);
+            if (searchOverlayCloseButton) searchOverlayCloseButton.addEventListener('click', () => { playSound('click'); closeSearchOverlay(); });
+            if (searchOverlayInput) searchOverlayInput.addEventListener('input', handleOverlaySearch);
+            document.addEventListener('keydown', handleKeyboardShortcut);
+            if (searchTagsContainer) searchTagsContainer.addEventListener('click', (e) => { playSound('click'); handleTagClick(e, homepageSearchInput, gameGrid, homepageSearchTagsWrapper); });
+            if (scrollTagsLeftHomeBtn) scrollTagsLeftHomeBtn.addEventListener('click', () => { playSound('click'); scrollTags(searchTagsContainer, 'left'); });
+            if (scrollTagsRightHomeBtn) scrollTagsRightHomeBtn.addEventListener('click', () => { playSound('click'); scrollTags(searchTagsContainer, 'right'); });
+            if (homepageSearchInput) {
+                homepageSearchInput.addEventListener('focus', () => { clearTimeout(blurTimeoutHome); showSearchTags(homepageSearchTagsWrapper, gameGrid); });
+                homepageSearchInput.addEventListener('blur', () => { blurTimeoutHome = setTimeout(() => { if (!homepageSearchTagsWrapper.contains(document.activeElement)) { hideSearchTags(homepageSearchTagsWrapper, gameGrid); } }, 150); });
+                [scrollTagsLeftHomeBtn, scrollTagsRightHomeBtn, searchTagsContainer].forEach(el => {
+                    if(el) el.addEventListener('mousedown', (e) => { e.preventDefault(); clearTimeout(blurTimeoutHome); });
+                });
+            }
+            if (searchOverlayTagsContainer) searchOverlayTagsContainer.addEventListener('click', (e) => { playSound('click'); handleTagClick(e, searchOverlayInput, searchResultsGrid, overlaySearchTagsWrapper); });
+            if (scrollTagsLeftOverlayBtn) scrollTagsLeftOverlayBtn.addEventListener('click', () => { playSound('click'); scrollTags(searchOverlayTagsContainer, 'left'); });
+            if (scrollTagsRightOverlayBtn) scrollTagsRightOverlayBtn.addEventListener('click', () => { playSound('click'); scrollTags(searchOverlayTagsContainer, 'right'); });
+             if (searchOverlayInput) {
+                 searchOverlayInput.addEventListener('focus', () => { clearTimeout(blurTimeoutOverlay); showSearchTags(overlaySearchTagsWrapper, searchResultsGrid); });
+                 searchOverlayInput.addEventListener('blur', () => { blurTimeoutOverlay = setTimeout(() => { if (!overlaySearchTagsWrapper.contains(document.activeElement)) { hideSearchTags(overlaySearchTagsWrapper, searchResultsGrid); } }, 150); });
+                 [scrollTagsLeftOverlayBtn, scrollTagsRightOverlayBtn, searchOverlayTagsContainer].forEach(el => {
+                     if(el) el.addEventListener('mousedown', (e) => { e.preventDefault(); clearTimeout(blurTimeoutOverlay); });
+                 });
+             }
+            document.addEventListener('click', (event) => {
+                if (aspectRatioDropdown && !aspectRatioDropdown.contains(event.target)) {
+                    aspectRatioDropdown.classList.remove('open');
+                }
+                if (warningModalBackdrop && event.target === warningModalBackdrop) {
+                    playSound('click');
+                    hideWarningModal();
+                }
+                if (settingsModalBackdrop && event.target === settingsModalBackdrop) {
+                     playSound('click');
+                     closeSettingsModal();
+                }
+            });
 
-        if (fullscreenButton) fullscreenButton.addEventListener('click', goFullscreen);
-        if (backButton) backButton.addEventListener('click', showHomeView);
-        if (dropdownButton) dropdownButton.addEventListener('click', toggleDropdown);
-        if (dropdownContent) dropdownContent.addEventListener('click', handleAspectRatioChange);
-        if (logoLink) logoLink.addEventListener('click', navigateHome); // Logo always goes home directly
-        if (navbarSearchButton) navbarSearchButton.addEventListener('click', openSearchOverlay);
-        if (navbarSettingsButton) navbarSettingsButton.addEventListener('click', openSettingsModal); // Open settings
-        if (homepageSearchInput) homepageSearchInput.addEventListener('input', handleHomepageSearch);
-        if (searchOverlayCloseButton) searchOverlayCloseButton.addEventListener('click', closeSearchOverlay);
-        if (searchOverlayInput) searchOverlayInput.addEventListener('input', handleOverlaySearch);
-        document.addEventListener('keydown', handleKeyboardShortcut);
-        if (searchTagsContainer) searchTagsContainer.addEventListener('click', (e) => handleTagClick(e, homepageSearchInput, gameGrid, homepageSearchTagsWrapper));
-        if (scrollTagsLeftHomeBtn) scrollTagsLeftHomeBtn.addEventListener('click', () => scrollTags(searchTagsContainer, 'left'));
-        if (scrollTagsRightHomeBtn) scrollTagsRightHomeBtn.addEventListener('click', () => scrollTags(searchTagsContainer, 'right'));
-        if (homepageSearchInput) {
-            homepageSearchInput.addEventListener('focus', () => { clearTimeout(blurTimeoutHome); showSearchTags(homepageSearchTagsWrapper, gameGrid); });
-            homepageSearchInput.addEventListener('blur', () => { blurTimeoutHome = setTimeout(() => { if (!homepageSearchTagsWrapper.contains(document.activeElement)) { hideSearchTags(homepageSearchTagsWrapper, gameGrid); } }, 150); });
-            [scrollTagsLeftHomeBtn, scrollTagsRightHomeBtn, searchTagsContainer].forEach(el => {
-                if(el) el.addEventListener('mousedown', (e) => { e.preventDefault(); clearTimeout(blurTimeoutHome); });
+            if (modalStayButton) modalStayButton.addEventListener('click', () => { playSound('click'); hideWarningModal(); });
+            if (modalLeaveButton) modalLeaveButton.addEventListener('click', () => {
+                playSound('click');
+                hideWarningModal();
+                navigateHome();
+            });
+
+            if (settingsCloseButton) settingsCloseButton.addEventListener('click', () => { playSound('click'); closeSettingsModal(); });
+            if (settingsSaveButton) settingsSaveButton.addEventListener('click', () => { playSound('click'); saveSettings(); });
+
+            document.body.addEventListener('mouseover', (event) => {
+                 const hoverTarget = event.target.closest('button, a, .game-card, .tag-icon-wrapper');
+                 if (hoverTarget) {
+                     playSound('hover');
+                 }
+            });
+
+            document.body.addEventListener('click', (event) => {
+                 const clickTarget = event.target.closest('button, a, .game-card, .tag-icon-wrapper');
+                 if (clickTarget && !event.target.closest('.game-card')) {
+                     playSound('click');
+                 }
             });
         }
-        if (searchOverlayTagsContainer) searchOverlayTagsContainer.addEventListener('click', (e) => handleTagClick(e, searchOverlayInput, searchResultsGrid, overlaySearchTagsWrapper));
-        if (scrollTagsLeftOverlayBtn) scrollTagsLeftOverlayBtn.addEventListener('click', () => scrollTags(searchOverlayTagsContainer, 'left'));
-        if (scrollTagsRightOverlayBtn) scrollTagsRightOverlayBtn.addEventListener('click', () => scrollTags(searchOverlayTagsContainer, 'right'));
-         if (searchOverlayInput) {
-             searchOverlayInput.addEventListener('focus', () => { clearTimeout(blurTimeoutOverlay); showSearchTags(overlaySearchTagsWrapper, searchResultsGrid); });
-             searchOverlayInput.addEventListener('blur', () => { blurTimeoutOverlay = setTimeout(() => { if (!overlaySearchTagsWrapper.contains(document.activeElement)) { hideSearchTags(overlaySearchTagsWrapper, searchResultsGrid); } }, 150); });
-             [scrollTagsLeftOverlayBtn, scrollTagsRightOverlayBtn, searchOverlayTagsContainer].forEach(el => {
-                 if(el) el.addEventListener('mousedown', (e) => { e.preventDefault(); clearTimeout(blurTimeoutOverlay); });
-             });
-         }
-        document.addEventListener('click', (event) => {
-            if (aspectRatioDropdown && !aspectRatioDropdown.contains(event.target)) {
-                aspectRatioDropdown.classList.remove('open');
-            }
-            if (warningModalBackdrop && event.target === warningModalBackdrop) {
-                hideWarningModal();
-            }
-            if (settingsModalBackdrop && event.target === settingsModalBackdrop) {
-                 closeSettingsModal();
-            }
-        });
 
-        // Warning Modal Button Listeners
-        if (modalStayButton) modalStayButton.addEventListener('click', hideWarningModal);
-        if (modalLeaveButton) modalLeaveButton.addEventListener('click', () => {
-            hideWarningModal();
-            navigateHome();
-        });
-
-        // Settings Modal Button Listeners
-        if (settingsCloseButton) settingsCloseButton.addEventListener('click', closeSettingsModal);
-        if (settingsSaveButton) settingsSaveButton.addEventListener('click', saveSettings);
-
-
-        // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM Content Loaded");
-
-            loadSettings(); // Load settings from localStorage first
+            loadSettings();
+            initTone();
 
             setTimeout(() => {
                 pageLoadMinTimePassed = true;
@@ -2103,7 +1589,9 @@
             if (gameView) gameView.classList.add('hidden');
             updateClock();
             setInterval(updateClock, 1000);
-            // Greeting is set by loadSettings -> updateHomepageGreeting
+
+            setupEventListeners();
+
             pageContentLoaded = true;
             hidePageLoader();
         });
