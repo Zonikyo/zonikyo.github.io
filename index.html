@@ -617,6 +617,11 @@
             color: #d1d5db;
             flex-shrink: 0;
         }
+        .setting-item .beta-note {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-left: 0.5rem;
+        }
         #setting-user-name {
              background-color: #374151;
              border: 1px solid #4b5563;
@@ -850,6 +855,15 @@
                     <span class="toggle-slider"></span>
                 </label>
             </div>
+            <div class="setting-item">
+                <label for="setting-proxy-mode">
+                    Proxy Mode <span class="beta-note">(Beta)</span>:
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="setting-proxy-mode">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
              <div class="setting-item">
                  <label for="setting-user-name">Your Name:</label>
                  <input type="text" id="setting-user-name" placeholder="Enter name for greeting">
@@ -970,6 +984,7 @@
         const settingsModal = document.getElementById('settings-modal');
         const settingBackWarningInput = document.getElementById('setting-back-warning');
         const settingSoundEffectsInput = document.getElementById('setting-sound-effects');
+        const settingProxyModeInput = document.getElementById('setting-proxy-mode'); // New setting input
         const settingUserNameInput = document.getElementById('setting-user-name');
         const settingsCloseButton = document.getElementById('settings-close-button');
         const settingsSaveButton = document.getElementById('settings-save-button');
@@ -986,9 +1001,11 @@
         let gameViewStartTime = null;
         let warningTimeout = null;
         const WARNING_DELAY = 10000;
+        const PROXY_URL_PREFIX = 'https://neonwave-proxy-service.thebestmate100.workers.dev/?q=';
         let settings = {
             showBackButtonWarning: true,
             soundEffectsEnabled: true,
+            proxyModeEnabled: false, // Default to off
             userName: ''
         };
         let synths = {};
@@ -1107,6 +1124,10 @@
             }, { once: true });
         }
 
+        function getGameUrl(originalUrl) {
+            return settings.proxyModeEnabled ? PROXY_URL_PREFIX + originalUrl : originalUrl;
+        }
+
         function updateGameViewContent(game) {
             gameTitle.textContent = game.title;
             gameDescription.textContent = game.description;
@@ -1122,9 +1143,9 @@
             iframeLoader.classList.remove('hidden');
             gameIframe.removeEventListener('load', handleIframeLoad);
             gameIframe.addEventListener('load', handleIframeLoad, { once: true });
-            gameIframe.src = 'about:blank';
+            gameIframe.src = 'about:blank'; // Clear first
             setTimeout(() => {
-                gameIframe.src = game.iframeUrl;
+                gameIframe.src = getGameUrl(game.iframeUrl); // Use proxied or original URL
             }, 10);
             clearTimeout(iframeLoadTimeout);
             iframeLoadTimeout = setTimeout(() => {
@@ -1178,7 +1199,7 @@
         }
 
         function showGameView(game) {
-            updateGameViewContent(game);
+            updateGameViewContent(game); // This now handles proxy logic
             switchView(gameView, homeView);
             gameViewStartTime = Date.now();
             clearTimeout(warningTimeout);
@@ -1202,6 +1223,7 @@
              if (settingsModal && settingsModalBackdrop) {
                  settingBackWarningInput.checked = settings.showBackButtonWarning;
                  settingSoundEffectsInput.checked = settings.soundEffectsEnabled;
+                 settingProxyModeInput.checked = settings.proxyModeEnabled; // Set proxy toggle state
                  settingUserNameInput.value = settings.userName;
 
                  settingsModalBackdrop.classList.add('visible');
@@ -1219,10 +1241,12 @@
         function saveSettings() {
             const newWarningSetting = settingBackWarningInput.checked;
             const newSoundSetting = settingSoundEffectsInput.checked;
+            const newProxySetting = settingProxyModeInput.checked; // Get proxy setting
             const newUserName = settingUserNameInput.value.trim();
 
             settings.showBackButtonWarning = newWarningSetting;
             settings.soundEffectsEnabled = newSoundSetting;
+            settings.proxyModeEnabled = newProxySetting; // Save proxy setting
             settings.userName = newUserName;
 
             localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
@@ -1236,18 +1260,24 @@
             if (savedSettings) {
                 try {
                     const parsedSettings = JSON.parse(savedSettings);
+                    // Provide defaults if a setting is missing from saved data
                     settings.showBackButtonWarning = typeof parsedSettings.showBackButtonWarning === 'boolean' ? parsedSettings.showBackButtonWarning : true;
                     settings.soundEffectsEnabled = typeof parsedSettings.soundEffectsEnabled === 'boolean' ? parsedSettings.soundEffectsEnabled : true;
+                    settings.proxyModeEnabled = typeof parsedSettings.proxyModeEnabled === 'boolean' ? parsedSettings.proxyModeEnabled : false; // Default false
                     settings.userName = typeof parsedSettings.userName === 'string' ? parsedSettings.userName : '';
                 } catch (e) {
                     console.error("Error parsing saved settings:", e);
+                    // Reset to defaults on error
                     settings.showBackButtonWarning = true;
                     settings.soundEffectsEnabled = true;
+                    settings.proxyModeEnabled = false;
                     settings.userName = '';
                 }
             } else {
+                 // Defaults for first time load
                  settings.showBackButtonWarning = true;
                  settings.soundEffectsEnabled = true;
+                 settings.proxyModeEnabled = false;
                  settings.userName = '';
             }
             updateHomepageGreeting();
