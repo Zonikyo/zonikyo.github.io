@@ -1047,3 +1047,123 @@ input:checked + .toggle-slider:before {
     .setting-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .setting-item label:not(.toggle-switch) { margin-bottom: 0.25rem; }
 }
+
+/* --- Onboarding Modal Styles --- */
+.onboarding-modal {
+    max-width: 600px; /* Wider for more content */
+    text-align: center;
+}
+
+.onboarding-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.onboarding-step h3 {
+    font-family: var(--font-display);
+    color: var(--primary-glow); /* Use primary glow for titles */
+    font-size: 2rem; /* Larger title */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.onboarding-step p {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem; /* Slightly larger paragraph text */
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 90%; /* Prevent text from stretching too wide */
+}
+
+.onboarding-step ul {
+    color: var(--text-secondary);
+    text-align: left;
+    padding-left: 1.5rem; /* Indent list */
+    margin-bottom: 1.5rem;
+}
+
+.onboarding-step ul li {
+    margin-bottom: 0.75rem; /* Space out list items */
+}
+
+.onboarding-step ul strong {
+    font-weight: 700;
+    color: var(--text-primary); /* Make strong text stand out more */
+}
+
+#onboarding-name-input {
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 350px; /* Limit width of name input */
+    text-align: center;
+}
+
+.onboarding-nav {
+    display: flex;
+    justify-content: space-between; /* Space out Prev/Next */
+    gap: 1rem;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.onboarding-nav .modal-button {
+    flex-grow: 1; /* Make buttons take available space */
+}
+
+/* Style for the "Next" button on the first step if it's the only button */
+#onboarding-step-1 .onboarding-nav {
+    justify-content: center;
+}
+
+
+.onboarding-username-placeholder {
+    font-weight: 700;
+    color: var(--secondary-glow); /* Highlight username */
+}
+
+.onboarding-skip-button {
+    background: transparent;
+    border: 2px solid var(--light-bg);
+    color: var(--text-secondary);
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    margin-top: 1.5rem;
+    /* Position it a bit differently if needed, e.g. bottom right of modal */
+    /* position: absolute; bottom: 1.5rem; right: 1.5rem; */ /* Example positioning */
+}
+
+.onboarding-skip-button:hover {
+    border-color: var(--primary-glow);
+    color: var(--primary-glow);
+    background-color: rgba(34, 211, 238, 0.1); /* Subtle glow background */
+}
+
+.replay-onboarding-button {
+    width: 100%; /* Make it full width within the setting item */
+    justify-content: flex-start; /* Align icon and text to the left */
+    background-image: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
+    color: var(--dark-bg);
+    box-shadow: 0 3px 10px rgba(34,211,238,0.18);
+}
+
+.replay-onboarding-button:hover {
+    transform: scale(1.03) translateX(3px);
+    box-shadow: 0 0 18px 4px rgba(34,211,238,0.4), 0 0 10px var(--secondary-glow) inset;
+    filter: brightness(1.05);
+}
+
+.replay-onboarding-button svg {
+    transition: transform 0.25s var(--bounce-curve);
+}
+
+.replay-onboarding-button:hover svg {
+    transform: rotate(-15deg) scale(1.1);
+}
+
+/* Ensure hidden class works as expected */
+.hidden {
+    display: none !important;
+}
+
