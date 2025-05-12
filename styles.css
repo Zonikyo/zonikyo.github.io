@@ -1167,3 +1167,117 @@ input:checked + .toggle-slider:before {
     display: none !important;
 }
 
+/* --- Onboarding Cutscene Styles --- */
+#onboarding-cutscene-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: var(--dark-bg); /* Solid dark background */
+    z-index: 2000; /* Highest z-index to cover everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#onboarding-cutscene-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#cutscene-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative; /* For scanline positioning */
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Keep scanline within bounds */
+}
+
+#cutscene-logo {
+    width: 120px; /* Adjust size as needed */
+    height: 120px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: scale(0.5);
+    filter: drop-shadow(0 0 15px var(--primary-glow));
+    animation: cutsceneLogoAppear 1.5s var(--pop-curve) 0.5s forwards;
+}
+
+@keyframes cutsceneLogoAppear {
+    0% { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+    60% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.cutscene-text {
+    font-family: var(--font-display);
+    font-size: 1.8rem; /* Adjust size */
+    color: var(--primary-glow);
+    text-shadow: 0 0 8px var(--primary-glow), 0 0 15px var(--primary-glow);
+    margin-bottom: 1rem;
+    opacity: 0;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+}
+
+#cutscene-text-1 {
+    animation: cutsceneTextFadeIn 1.2s ease-out 2s forwards;
+}
+
+#cutscene-text-2 {
+    font-size: 2.5rem; /* Larger for more impact */
+    color: var(--secondary-glow);
+    text-shadow: 0 0 10px var(--secondary-glow), 0 0 20px var(--secondary-glow);
+    animation: cutsceneTextFadeIn 1.2s ease-out 3.5s forwards, pulseGlow 2s infinite 4.7s;
+}
+
+@keyframes cutsceneTextFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { text-shadow: 0 0 10px var(--secondary-glow), 0 0 20px var(--secondary-glow); filter: brightness(1); }
+    50% { text-shadow: 0 0 15px var(--secondary-glow), 0 0 30px var(--secondary-glow), 0 0 5px #fff; filter: brightness(1.3); }
+}
+
+#cutscene-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Thickness of the scanline */
+    background: rgba(var(--primary-glow-rgb, 34, 211, 238), 0.3); /* Use RGB for opacity */
+    box-shadow: 0 0 10px 1px var(--primary-glow);
+    opacity: 0;
+    animation: scanlineMove 6s linear infinite 0.2s, scanlineAppear 0.5s ease-out 0.2s forwards;
+    will-change: transform; /* Performance hint */
+}
+
+/* Define primary-glow-rgb if not already (needed for rgba) */
+:root {
+    --primary-glow-rgb: 34, 211, 238; /* Corresponds to #22d3ee */
+}
+
+
+@keyframes scanlineAppear {
+    to { opacity: 0.6; }
+}
+
+@keyframes scanlineMove {
+    0% { transform: translateY(-10px); } /* Start off-screen */
+    100% { transform: translateY(100vh); } /* Move past the bottom of the viewport height */
+}
+
+/* Ensure hidden class works as expected for the overlay */
+#onboarding-cutscene-overlay.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
