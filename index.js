@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const onboardingFinishButton = document.getElementById('onboarding-finish');
     const onboardingSkipButton = document.getElementById('onboarding-skip');
     const replayOnboardingButton = document.getElementById('replay-onboarding-button');
+    const onboardingCutsceneOverlay = document.getElementById('onboarding-cutscene-overlay');
+    const cutsceneText1 = document.getElementById('cutscene-text-1');
+    const cutsceneText2 = document.getElementById('cutscene-text-2');
 
     // State Variables
     let isTransitioning = false;
@@ -72,11 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let pageLoadMinTimePassed = false;
     let pageContentLoaded = false;
     let gameViewStartTime = null;
-    let warningTimeout = null; // Added to manage warning timeout for game view
+    let warningTimeout = null;
     const WARNING_DELAY = 10000;
     const PROXY_URL_PREFIX = 'https://neonwave-proxy-service.thebestmate100.workers.dev/?q=';
     let currentOnboardingStep = 0;
     const ONBOARDING_STORAGE_KEY = 'neonWaveOnboardingCompleted';
+    const CUTSCENE_DURATION = 6000; // Total duration for the cutscene in ms
 
     let settings = {
         showBackButtonWarning: true,
@@ -102,10 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             synths.load = new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'fatsawtooth', count: 3, spread: 30 }, envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -15 }).toDestination();
             synths.transition = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.15, sustain: 0, release: 0.1 }, volume: -25 }).toDestination();
             synths.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 }, volume: -15 }).toDestination();
+            synths.cutsceneStart = new Tone.Synth({ oscillator: { type: 'pwm', modulationFrequency: 0.2 }, envelope: { attack: 0.5, decay: 1, sustain: 0.5, release: 1 }, volume: -10 }).toDestination();
+             synths.cutsceneType = new Tone.PluckSynth({ attackNoise: 0.5, dampening: 4000, resonance: 0.7, volume: -12 }).toDestination();
         }).catch(e => console.error("Failed to start Tone.js audio context:", e));
     }
 
-    function playSound(type) {
+    function playSound(type, note) {
         if (!settings.soundEffectsEnabled || !toneStarted || !synths[type] || typeof Tone === 'undefined') return;
         const now = Tone.now();
         try {
@@ -115,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'load': synths.load.triggerAttackRelease(['C3', 'G3', 'C4'], '4n', now); break;
                 case 'transition': synths.transition.triggerAttackRelease('8n', now); break;
                 case 'error': synths.error.triggerAttackRelease('A3', '8n', now); break;
+                case 'cutsceneStart': synths.cutsceneStart.triggerAttackRelease("C2", "2s", now); break;
+                case 'cutsceneType': synths.cutsceneType.triggerAttackRelease(note || "C4", "8n", now + 0.05); break;
             }
         } catch (error) {
             console.error("Tone.js error playing sound:", error);
@@ -336,15 +344,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 settings.userName = typeof parsedSettings.userName === 'string' ? parsedSettings.userName : '';
                 settings.onboardingCompleted = typeof parsedSettings.onboardingCompleted === 'boolean' ? parsedSettings.onboardingCompleted : false;
             } else {
-                settings.onboardingCompleted = false;
+                settings.onboardingCompleted = false; // Default if no settings saved
             }
 
-            if (typeof settings.onboardingCompleted === 'undefined' || settings.onboardingCompleted === false) {
-               const onboardingDone = localStorage.getItem(ONBOARDING_STORAGE_KEY);
-               if (onboardingDone === 'true' && !savedSettings) {
+            // Fallback for older versions that might only have ONBOARDING_STORAGE_KEY
+            if (!settings.onboardingCompleted) {
+               const legacyOnboardingDone = localStorage.getItem(ONBOARDING_STORAGE_KEY);
+               if (legacyOnboardingDone === 'true') {
                    settings.onboardingCompleted = true;
-               } else if (onboardingDone === 'true' && savedSettings && typeof JSON.parse(savedSettings).onboardingCompleted === 'undefined') {
-                   settings.onboardingCompleted = true;
+                   // Optionally save this to the main settings object now
+                   // localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
                }
             }
         } catch (e) {
@@ -379,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (onboardingBackdrop && onboardingModal) {
             onboardingBackdrop.classList.remove('visible');
             onboardingModal.classList.remove('visible');
-            document.body.style.overflow = '';
+            // Body scroll is restored after cutscene or immediately if no cutscene
         }
     }
 
@@ -420,29 +429,94 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function finishOnboarding() {
+    function finishOnboarding(skipped = false) {
         playSound('click');
-        if (currentOnboardingStep === 0 && !settings.userName) {
+        if (currentOnboardingStep === 0 && !settings.userName && !skipped) { // If finishing from step 1 without explicitly clicking next and not skipping
             const name = onboardingNameInput.value.trim();
             settings.userName = name || "Arcade Hero";
+        } else if (skipped && !settings.userName) {
+            settings.userName = "Arcade Hero"; // Default name if skipped from first step
         }
+
         settings.onboardingCompleted = true;
         try {
-            localStorage.setItem(ONBOARDING_STORAGE_KEY, 'true'); // Legacy, can be removed if only neonWaveSettings is used
             localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
         } catch (e) {
             console.error("Error saving onboarding status to localStorage:", e);
         }
         updateHomepageGreeting();
         hideOnboardingModal();
+        playOnboardingCutscene(); // Play cutscene after hiding modal
     }
 
-    function startOnboarding() {
+    function startOnboarding() { // Used for replaying tutorial
         settings.onboardingCompleted = false;
-        // settings.userName = ''; // Decide if username should be cleared on replay
-        if (onboardingNameInput) onboardingNameInput.value = settings.userName; // Pre-fill if keeping name
+        // settings.userName = ''; // Keep username or clear it based on preference
+        if (onboardingNameInput) onboardingNameInput.value = settings.userName; // Pre-fill with current name
         showOnboardingModal();
     }
+
+    // --- Onboarding Cutscene Function ---
+    function playOnboardingCutscene() {
+        if (!onboardingCutsceneOverlay || !cutsceneText1 || !cutsceneText2) return;
+
+        playSound('cutsceneStart');
+        onboardingCutsceneOverlay.classList.remove('hidden');
+        onboardingCutsceneOverlay.classList.add('visible');
+        document.body.style.overflow = 'hidden'; // Ensure body scroll is hidden
+
+        cutsceneText1.textContent = `Welcome, ${settings.userName || 'Hero'}!`;
+        cutsceneText2.textContent = "Get Ready To Play!";
+
+        // Reset animations by removing and re-adding classes if needed, or rely on animation-fill-mode
+        const logo = document.getElementById('cutscene-logo');
+        if (logo) {
+            logo.style.animation = 'none';
+            void logo.offsetWidth; // Trigger reflow
+            logo.style.animation = '';
+        }
+        cutsceneText1.style.animation = 'none'; void cutsceneText1.offsetWidth; cutsceneText1.style.animation = '';
+        cutsceneText2.style.animation = 'none'; void cutsceneText2.offsetWidth; cutsceneText2.style.animation = '';
+
+
+        // Simulate typing for text1 with sound
+        let i = 0;
+        const text1Content = cutsceneText1.textContent;
+        cutsceneText1.textContent = '';
+        const typingInterval1 = setInterval(() => {
+            if (i < text1Content.length) {
+                cutsceneText1.textContent += text1Content.charAt(i);
+                playSound('cutsceneType', i % 2 === 0 ? 'C4' : 'E4');
+                i++;
+            } else {
+                clearInterval(typingInterval1);
+            }
+        }, 100); // Adjust typing speed
+
+        // Simulate typing for text2 after a delay
+        setTimeout(() => {
+            let j = 0;
+            const text2Content = cutsceneText2.textContent;
+            cutsceneText2.textContent = '';
+            const typingInterval2 = setInterval(() => {
+                if (j < text2Content.length) {
+                    cutsceneText2.textContent += text2Content.charAt(j);
+                    playSound('cutsceneType', j % 2 === 0 ? 'G4' : 'B4');
+                    j++;
+                } else {
+                    clearInterval(typingInterval2);
+                }
+            }, 120); // Adjust typing speed
+        }, 2000); // Delay for text2 appearance
+
+
+        setTimeout(() => {
+            onboardingCutsceneOverlay.classList.remove('visible');
+            onboardingCutsceneOverlay.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore body scroll
+        }, CUTSCENE_DURATION);
+    }
+
 
     // --- Game Grid & Search Tags ---
     function renderGameGrid(gamesToRender, targetElement) {
@@ -541,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (aspectRatioDropdown) {
             aspectRatioDropdown.classList.remove('open');
             dropdownButton.setAttribute('aria-expanded', 'false');
-            dropdownMenu.classList.add('hidden');
+            if(dropdownMenu) dropdownMenu.classList.add('hidden');
         }
         if (gameView) adjustMainHeight(gameView);
     }
@@ -682,8 +756,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key === '/') { event.preventDefault(); playSound('click'); searchOverlay && searchOverlay.classList.contains('visible') ? closeSearchOverlay() : openSearchOverlay(); }
             else if (event.key === 'Escape') {
-                if (searchOverlay && searchOverlay.classList.contains('visible')) { playSound('click'); closeSearchOverlay(); }
-                else if (onboardingModal && onboardingModal.classList.contains('visible')) { /* Do nothing, let skip/finish handle */ }
+                if (onboardingModal && onboardingModal.classList.contains('visible') && !onboardingCutsceneOverlay.classList.contains('visible')) { /* Skip onboarding if Esc pressed during modal */ playSound('click'); finishOnboarding(true); }
+                else if (searchOverlay && searchOverlay.classList.contains('visible')) { playSound('click'); closeSearchOverlay(); }
                 else if (warningModal && warningModal.classList.contains('visible')) { playSound('click'); hideWarningModal(); }
                 else if (settingsModal && settingsModal.classList.contains('visible')) { playSound('click'); closeSettingsModal(); }
                 else if (document.fullscreenElement) { playSound('click'); document.exitFullscreen(); }
@@ -702,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (aspectRatioDropdown && !aspectRatioDropdown.contains(event.target) && aspectRatioDropdown.classList.contains('open')) toggleDropdown();
             if (warningModalBackdrop && event.target === warningModalBackdrop) { playSound('click'); hideWarningModal(); }
             if (settingsModalBackdrop && event.target === settingsModalBackdrop) { playSound('click'); closeSettingsModal(); }
-            if (onboardingBackdrop && event.target === onboardingBackdrop && onboardingModal && onboardingModal.classList.contains('visible')) { /* Optionally close onboarding on backdrop click, or do nothing to force interaction */ }
+            // Do not close onboarding on backdrop click to ensure user goes through it or explicitly skips.
         });
         if (modalStayButton) modalStayButton.addEventListener('click', () => { playSound('click'); hideWarningModal(); });
         if (modalLeaveButton) modalLeaveButton.addEventListener('click', () => { playSound('click'); hideWarningModal(); navigateHome(); });
@@ -713,8 +787,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (onboardingNextButtons) onboardingNextButtons.forEach(button => button.addEventListener('click', handleOnboardingNext));
         if (onboardingPrevButtons) onboardingPrevButtons.forEach(button => button.addEventListener('click', handleOnboardingPrev));
-        if (onboardingFinishButton) onboardingFinishButton.addEventListener('click', finishOnboarding);
-        if (onboardingSkipButton) onboardingSkipButton.addEventListener('click', () => { playSound('click'); finishOnboarding(); });
+        if (onboardingFinishButton) onboardingFinishButton.addEventListener('click', () => finishOnboarding(false));
+        if (onboardingSkipButton) onboardingSkipButton.addEventListener('click', () => { playSound('click'); finishOnboarding(true); });
         if (replayOnboardingButton) replayOnboardingButton.addEventListener('click', () => { playSound('click'); closeSettingsModal(); setTimeout(startOnboarding, 150); });
     }
 
@@ -737,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 
     pageContentLoaded = true;
-    hidePageLoader();
+    hidePageLoader(); // Attempt to hide again after setup
 
     window.addEventListener('resize', () => {
         if (homeView && !homeView.classList.contains('hidden')) adjustMainHeight(homeView);
@@ -746,6 +820,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!settings.onboardingCompleted) {
-        setTimeout(showOnboardingModal, 500);
+        setTimeout(showOnboardingModal, 500); // Show onboarding if not completed
+    } else {
+        // If onboarding is already completed, ensure body scroll is not hidden
+        document.body.style.overflow = '';
     }
 });
