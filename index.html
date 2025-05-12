@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
+                :root {
             --primary-glow: #22d3ee;
             --secondary-glow: #a3e635;
             --accent-glow: #ec4899;
@@ -23,6 +23,11 @@
             --text-accent: var(--primary-glow);
             --font-body: 'Inter', sans-serif;
             --font-display: 'Baloo 2', cursive;
+
+            /* Standard bouncy transition curve */
+            --bounce-curve: cubic-bezier(.68,-0.55,.27,1.55);
+            /* View/Module entrance bounce curve */
+            --pop-curve: cubic-bezier(.34,1.56,.64,1);
         }
 
         body {
@@ -50,7 +55,7 @@
             inset: 0;
             width: 100%;
             opacity: 1;
-            transition: opacity 0.6s cubic-bezier(.68,-0.55,.27,1.55), filter 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: opacity 0.6s var(--pop-curve), filter 0.6s var(--pop-curve);
             filter: blur(0px) brightness(1);
             will-change: opacity, filter;
         }
@@ -70,36 +75,36 @@
             position: fixed; inset: 0;
             background: radial-gradient(circle at 50% 50%, var(--medium-bg) 0%, var(--dark-bg) 100%);
             z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 1; transition: opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55) 0.3s;
+            opacity: 1; transition: opacity 0.7s var(--bounce-curve) 0.3s;
             pointer-events: auto;
         }
         #page-loader.hidden { opacity: 0; pointer-events: none; }
         #page-loader img {
             height: 64px;
             margin-bottom: 3rem;
-            animation: pop-in-logo 1.2s cubic-bezier(.68,-0.55,.27,1.55) 1;
+            animation: pop-in-logo 1.2s var(--bounce-curve) 1;
             filter: drop-shadow(0 0 10px var(--primary-glow));
         }
         @keyframes pop-in-logo {
-            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            70% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.5) rotate(-15deg); opacity: 0; filter: blur(10px); } /* Added rotation */
+            70% { transform: scale(1.1) rotate(5deg); opacity: 1; filter: blur(0px); } /* Added rotation */
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         .loader-animation { display: flex; gap: 1rem; }
         .loader-dot {
             width: 18px; height: 18px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--secondary-glow) 30%, var(--primary-glow) 100%);
-            animation: loader-wave 1.6s cubic-bezier(.68,-0.55,.27,1.55) infinite;
+            animation: loader-wave 1.6s var(--bounce-curve) infinite;
             box-shadow: 0 0 15px 0px var(--primary-glow), 0 0 25px 0px var(--secondary-glow) inset;
         }
         .loader-dot:nth-child(2) {
-            animation-delay: -1.05s;
+            animation-delay: -1.05s; /* Adjusted from -1.05s to better sync, original was -1.4s, then -1.05s. Keeping -1.05s */
             background: linear-gradient(135deg, var(--primary-glow) 30%, var(--accent-glow) 100%);
             box-shadow: 0 0 15px 0px var(--accent-glow), 0 0 25px 0px var(--primary-glow) inset;
         }
         .loader-dot:nth-child(3) {
-            animation-delay: -0.55s;
+            animation-delay: -0.55s; /* Adjusted from -0.55s, original was -0.7s, then -0.55s. Keeping -0.55s */
             background: linear-gradient(135deg, var(--accent-glow) 30%, var(--secondary-glow) 100%);
             box-shadow: 0 0 15px 0px var(--secondary-glow), 0 0 25px 0px var(--accent-glow) inset;
         }
@@ -110,9 +115,9 @@
 
         .game-card {
             transition:
-                transform 0.4s cubic-bezier(.34,1.56,.64,1),
-                box-shadow 0.4s cubic-bezier(.34,1.56,.64,1),
-                border-color 0.3s;
+                transform 0.4s var(--pop-curve), /* Using pop-curve for card bounce */
+                box-shadow 0.4s var(--pop-curve),
+                border-color 0.3s ease-out; /* Smoother border color transition */
             background: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
             border: 2px solid transparent;
             position: relative;
@@ -142,8 +147,8 @@
             transition: transform 0.6s cubic-bezier(.25,.46,.45,.94), filter 0.5s, opacity 0.5s;
         }
         .game-card:hover .thumbnail-container img {
-            transform: scale(1.1) rotate(1deg);
-            filter: saturate(1.25) brightness(1.15);
+            transform: scale(1.12) rotate(1.5deg); /* Slightly increased effect */
+            filter: saturate(1.3) brightness(1.2); /* Slightly increased effect */
             opacity: 1;
         }
 
@@ -159,7 +164,7 @@
             border-radius: 50%;
             display: inline-flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 5px var(--primary-glow);
-            transition: all 0.3s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.3s var(--bounce-curve); /* Consistent bounce */
             width: 2.25rem; height: 2.25rem;
             cursor: help;
             flex-shrink: 0;
@@ -167,12 +172,12 @@
         }
         .tag-icon-wrapper .tag-icon {
             width: 1.2rem; height: 1.2rem; flex-shrink: 0; margin: auto;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve), opacity 0.2s ease-out; /* Added opacity transition */
         }
         .tag-icon-wrapper .tag-text {
             opacity: 0; max-width: 0; margin-left: 0; white-space: nowrap;
             font-size: 0.85rem; font-weight: 700;
-            transition: opacity 0.2s, max-width 0.3s, margin-left 0.28s;
+            transition: opacity 0.25s ease-out 0.05s, max-width 0.3s var(--bounce-curve), margin-left 0.28s var(--bounce-curve); /* Staggered opacity */
             color: var(--dark-bg);
             position: absolute;
             left: 50%; top: 50%;
@@ -188,7 +193,7 @@
         }
         .tag-icon-wrapper:hover .tag-icon, .tag-icon-wrapper:focus-visible .tag-icon {
             opacity: 0;
-            transform: scale(0.5);
+            transform: scale(0.5) rotate(45deg); /* Added rotation */
         }
         .tag-icon-wrapper:hover .tag-text, .tag-icon-wrapper:focus-visible .tag-text {
             opacity: 1;
@@ -203,8 +208,9 @@
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: linear-gradient(to top, rgba(15,23,42,1) 20%, rgba(15,23,42,0.01) 100%);
             padding: 2rem 1.25rem 1rem 1.25rem;
-            opacity: 0; transform: translateY(40%);
-            transition: opacity 0.45s cubic-bezier(.25,.46,.45,.94), transform 0.45s cubic-bezier(.25,.46,.45,.94);
+            opacity: 0; transform: translateY(30px); /* Adjusted initial Y */
+            /* Using pop-curve for a bouncier entrance, matching game card */
+            transition: opacity 0.45s var(--pop-curve), transform 0.45s var(--pop-curve);
             z-index: 5; pointer-events: none;
             border-radius: 0 0 calc(1.25rem - 2px) calc(1.25rem - 2px);
         }
@@ -227,19 +233,25 @@
             40% { transform: scale(1.07) translateY(-8px); opacity: 0.7; }
             100% { transform: scale(.8) translateY(35px); opacity: 0; }
         }
-        .view-enter-active { animation: bounceIn 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
-        .view-exit-active { animation: bounceOut 0.5s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .view-enter-active { animation: bounceIn 0.7s var(--pop-curve) forwards; }
+        .view-exit-active { animation: bounceOut 0.5s var(--pop-curve) forwards; }
 
         body::-webkit-scrollbar { width: 10px; }
         body::-webkit-scrollbar-track { background: var(--dark-bg); }
-        body::-webkit-scrollbar-thumb { background: var(--light-bg); border-radius: 10px; border: 2px solid var(--dark-bg); }
+        body::-webkit-scrollbar-thumb {
+            background: var(--light-bg); border-radius: 10px; border: 2px solid var(--dark-bg);
+            transition: background-color 0.3s ease-out; /* Smoother hover transition */
+        }
         body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
+
         .game-description-scroll::-webkit-scrollbar { width: 8px; }
         .game-description-scroll::-webkit-scrollbar-track { background: var(--medium-bg); border-radius: 8px; }
-        .game-description-scroll::-webkit-scrollbar-thumb { background: var(--light-bg); border-radius: 8px; }
+        .game-description-scroll::-webkit-scrollbar-thumb {
+            background: var(--light-bg); border-radius: 8px;
+            transition: background-color 0.3s ease-out; /* Smoother hover transition */
+        }
         .game-description-scroll::-webkit-scrollbar-thumb:hover { background: var(--secondary-glow); }
 
-        /* Base styles that were in .styled-button */
         .base-styled-button-properties {
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
@@ -250,11 +262,13 @@
             align-items: center;
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Removed , 0 0 0px transparent */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve); /* Consistent bounce */
             font-family: var(--font-display);
             letter-spacing: 0.02em;
+            position: relative; /* For potential pseudo-elements or complex animations */
+            overflow: hidden; /* Good for containing effects */
         }
         .base-styled-button-properties:hover {
             transform: translateY(-3px) scale(1.05);
@@ -262,10 +276,10 @@
         .base-styled-button-properties svg {
             width: 1.3rem; height: 1.3rem;
             margin-right: 0.6rem;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve); /* Consistent bounce */
         }
         .base-styled-button-properties:hover svg {
-            transform: translateX(-4px) scale(1.1);
+            transform: translateX(-4px) scale(1.1) rotate(-5deg); /* Added slight rotation */
         }
         
         .back-button {
@@ -280,7 +294,7 @@
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve);
             font-family: var(--font-display);
             letter-spacing: 0.02em;
             /* Specific to .back-button */
@@ -289,17 +303,17 @@
             box-shadow: 0 6px 20px rgba(34,211,238,0.25), 0 0 15px var(--primary-glow);
         }
         .back-button:hover {
-            transform: translateY(-3px) scale(1.05); /* from styled-button:hover */
+            transform: translateY(-3px) scale(1.05); 
             box-shadow: 0 8px 25px rgba(14,165,233,0.4), 0 0 20px var(--primary-glow);
             filter: brightness(1.1);
         }
-         .back-button svg { /* from styled-button svg */
+         .back-button svg { 
             width: 1.3rem; height: 1.3rem;
             margin-right: 0.6rem;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve);
         }
-        .back-button:hover svg { /* from styled-button:hover svg */
-            transform: translateX(-4px) scale(1.1);
+        .back-button:hover svg { 
+            transform: translateX(-4px) scale(1.1) rotate(-5deg);
         }
 
 
@@ -308,7 +322,7 @@
             color: var(--text-primary);
             padding: 0.6rem;
             border-radius: 50%;
-            transition: all 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.35s var(--bounce-curve); /* Consistent bounce */
             border: 2px solid var(--accent-glow);
             box-shadow: 0 3px 10px rgba(126,34,206,0.2), 0 0 8px var(--accent-glow);
             display: inline-flex; align-items: center; overflow: hidden;
@@ -316,12 +330,12 @@
             font-size: 1rem;
             position: relative;
         }
-        .fullscreen-icon-button .icon { width: 1.5rem; height: 1.5rem; flex-shrink: 0; transition: opacity 0.2s, transform 0.2s; }
+        .fullscreen-icon-button .icon { width: 1.5rem; height: 1.5rem; flex-shrink: 0; transition: opacity 0.2s ease-out, transform 0.25s var(--bounce-curve); }
         .fullscreen-icon-button .text {
             opacity: 0;
             position: absolute;
-            left: 50%; transform: translateX(-50%);
-            transition: opacity 0.2s, transform 0.2s;
+            left: 50%; transform: translateX(-50%) scale(0.8); /* Initial smaller scale */
+            transition: opacity 0.25s ease-out 0.1s, transform 0.25s var(--bounce-curve) 0.05s, max-width 0.3s var(--bounce-curve); /* Staggered and bouncy */
             font-weight: 700; font-size: 0.9rem;
             max-width: 0; display: inline-block; vertical-align: middle;
             color: #fff; letter-spacing: 0.01em;
@@ -340,21 +354,28 @@
         .fullscreen-icon-button:hover .icon {
             opacity: 1;
             margin-right: 0.5rem;
+            transform: scale(1.1) rotate(-5deg); /* Icon also animates */
         }
         .fullscreen-icon-button:hover .text {
-            opacity: 1; max-width: 100px; position: relative; transform: none; left: auto;
+            opacity: 1; max-width: 100px; position: relative; transform: translateX(0) scale(1); left: auto; /* Smooth reveal */
         }
 
+        @keyframes mainHeaderPopIn {
+            0% { opacity: 0; transform: translateY(-25px) scale(0.98); }
+            70% { opacity: 1; transform: translateY(5px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
         #main-header {
             background-image: linear-gradient(95deg, var(--accent-glow) 0%, #a21caf 50%, #7e22ce 100%);
             color: #f3f4f6;
             padding: 1.25rem 0;
             flex-shrink: 0;
             box-shadow: 0 6px 30px rgba(126, 34, 206, 0.25), 0 0 15px var(--accent-glow) inset;
-            animation: fadeIn 1s ease-out;
+            animation: mainHeaderPopIn 0.8s var(--pop-curve) forwards; /* More dynamic header entrance */
             position: sticky; top: 0; z-index: 500;
         }
-        @keyframes fadeIn {
+        /* Original fadeIn for other uses if needed, though search-overlay has its own specific one now */
+        @keyframes fadeInGeneric { 
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -364,8 +385,13 @@
             margin-left: auto; margin-right: auto;
             padding-left: 1.5rem; padding-right: 1.5rem;
         }
-        #logo-container { display: flex; align-items: center; gap: 1.2rem; cursor: pointer; transition: transform 0.2s ease-out; }
-        #logo-container:hover { transform: scale(1.03); }
+        #logo-container { 
+            display: flex; align-items: center; gap: 1.2rem; cursor: pointer; 
+            transition: transform 0.3s var(--bounce-curve); /* Bouncier transition */
+        }
+        #logo-container:hover { 
+            transform: scale(1.05) rotate(-3deg); /* More playful hover */
+        }
         #logo-image { height: 42px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
         #beta-tag {
             background-color: var(--secondary-glow);
@@ -388,7 +414,8 @@
             border: 1px solid rgba(255,255,255,0.1);
             color: #e0e7ff;
             padding: 0.6rem; border-radius: 50%;
-            transition: background-color 0.25s, transform 0.25s, box-shadow 0.25s;
+            /* Applying bounce curve for consistency */
+            transition: background-color 0.25s var(--bounce-curve), transform 0.25s var(--bounce-curve), box-shadow 0.25s var(--bounce-curve);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
         }
@@ -402,15 +429,15 @@
         @keyframes slideDownFade {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-10px) scaleY(0.95); /* Added scaleY for more pop */
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scaleY(1);
             }
         }
         .dropdown-content {
-            animation: slideDownFade 0.3s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+            animation: slideDownFade 0.3s var(--bounce-curve) forwards; /* Consistent bounce */
             border: 2px solid var(--light-bg);
             box-shadow: 0 12px 30px 0 rgba(14,165,233,0.2), 0 0 10px var(--primary-glow);
             background: linear-gradient(135deg, var(--medium-bg) 70%, var(--light-bg) 100%);
@@ -418,22 +445,16 @@
             padding: 0.5rem;
         }
         .aspect-ratio-option {
-            /* Copied from .styled-button */
-            /* padding: 0.75rem 1.75rem; -- overridden */
-            /* border-radius: 9999px; -- overridden */
             font-weight: 700;
-            /* font-size: 1rem; -- overridden */
             border: none;
             display: inline-flex;
             align-items: center;
-            /* justify-content: center; -- overridden */
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve); /* Consistent bounce */
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific to .aspect-ratio-option */
             background: transparent;
             color: var(--text-secondary);
             width: 100%;
@@ -443,23 +464,21 @@
             border-radius: 0.5rem;
         }
         .aspect-ratio-option.active, .aspect-ratio-option:hover {
-            /* transform: translateY(-3px) scale(1.05); -- overridden by scale(1.02) */
             background-image: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
             color: var(--dark-bg);
             box-shadow: 0 2px 8px rgba(34,211,238,0.2);
-            transform: scale(1.02);
+            transform: scale(1.03) translateX(3px); /* Adjusted hover effect */
         }
-         .aspect-ratio-option svg { /* from styled-button svg */
+         .aspect-ratio-option svg { 
             width: 1.3rem; height: 1.3rem;
             margin-right: 0.6rem;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve);
         }
-        .aspect-ratio-option:hover svg { /* from styled-button:hover svg */
-            transform: translateX(-4px) scale(1.1);
+        .aspect-ratio-option:hover svg { 
+            transform: translateX(-2px) scale(1.1) rotate(-3deg); /* Adjusted icon animation */
         }
 
         .dropdown-button {
-            /* Copied from .styled-button */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
@@ -470,25 +489,28 @@
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve); /* Consistent bounce */
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific to .dropdown-button */
             background-image: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
             color: var(--text-primary);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .dropdown-button:hover {
-            transform: translateY(-3px) scale(1.05); /* from styled-button:hover */
+            transform: translateY(-3px) scale(1.05); 
             box-shadow: 0 6px 18px rgba(0,0,0,0.3), 0 0 10px var(--primary-glow);
         }
-         .dropdown-button svg { /* from styled-button svg */
-            /* width: 1.3rem; height: 1.3rem; -- overridden by Tailwind in HTML */
-            /* margin-right: 0.6rem; -- overridden by Tailwind in HTML */
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+        .dropdown-button svg { 
+            /* Assuming Tailwind classes handle size/margin, or define here if needed */
+            /* e.g., width: 1.1rem; height: 1.1rem; margin-left: 0.5rem; */
+            transition: transform 0.3s var(--bounce-curve); /* Bouncy transition for chevron */
         }
-        .dropdown-button:hover svg { /* from styled-button:hover svg */
-            /* transform: translateX(-4px) scale(1.1); -- may conflict with other transforms */
+        /* Assumes JS toggles aria-expanded attribute on the button */
+        .dropdown-button[aria-expanded="true"] svg {
+            transform: rotate(180deg) scale(0.95); /* Rotate and slightly shrink when open */
+        }
+        .dropdown-button:not([aria-expanded="true"]):hover svg {
+            transform: scale(1.2) rotate(10deg); /* Playful hover when closed */
         }
 
 
@@ -517,7 +539,7 @@
             max-width: 500px;
             width: 90%;
             opacity: 0;
-            transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.35s ease-out, transform 0.35s var(--pop-curve); /* Pop curve for modal entrance */
             pointer-events: none;
         }
         .modal.visible {
@@ -543,16 +565,14 @@
         }
         .modal-buttons {
             display: flex;
-            justify-content: flex-end; /* Default, overridden to space-around in HTML for warning modal */
+            justify-content: flex-end; 
             gap: 1rem;
             margin-top: 2rem;
         }
         .modal-button {
-            /* Copied from .styled-button */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
-            /* font-size: 1rem; -- overridden */
             border: none;
             display: inline-flex;
             align-items: center;
@@ -560,27 +580,25 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve); /* Consistent bounce */
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific to .modal-button */
             font-size: 1rem;
         }
         .modal-button:hover {
-            transform: translateY(-3px) scale(1.05); /* from styled-button:hover */
+            transform: translateY(-3px) scale(1.05); 
         }
-         .modal-button svg { /* from styled-button svg */
+         .modal-button svg { 
             width: 1.3rem; height: 1.3rem;
             margin-right: 0.6rem;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve);
         }
-        .modal-button:hover svg { /* from styled-button:hover svg */
-            transform: translateX(-4px) scale(1.1);
+        .modal-button:hover svg { 
+            transform: translateX(-4px) scale(1.1) rotate(-5deg);
         }
 
 
         #modal-leave-button {
-            /* Inherits .modal-button styles implicitly as per original intent */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
@@ -591,35 +609,31 @@
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve);
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific styles */
             background-image: linear-gradient(to right, #ef4444, #f472b6, #be185d 100%);
             color: #fff;
             box-shadow: 0 5px 15px rgba(239,68,68,0.3), 0 0 10px #f472b6;
         }
         #modal-leave-button:hover {
-            transform: translateY(-3px) scale(1.07); /* Combines base hover and specific scale */
+            transform: translateY(-3px) scale(1.07); 
             box-shadow: 0 7px 20px rgba(244,114,182,0.4), 0 0 15px #f472b6;
             filter: brightness(1.1);
         }
         #modal-stay-button {
-            /* Inherits .modal-button styles implicitly */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
             font-size: 1rem;
-            /* border: none; -- overridden */
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve);
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific styles */
             background: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
             color: var(--text-primary);
             border: 2px solid var(--light-bg);
@@ -627,13 +641,12 @@
         }
         #modal-stay-button:hover {
             background: linear-gradient(135deg, var(--medium-bg) 0%, var(--light-bg) 100%);
-            transform: translateY(-2px) scale(1.04); /* Combines base hover and specific scale */
+            transform: translateY(-2px) scale(1.04); 
             border-color: var(--secondary-glow);
             box-shadow: 0 0 10px var(--secondary-glow);
         }
 
         #settings-save-button {
-             /* Inherits .modal-button styles implicitly */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
@@ -644,21 +657,19 @@
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve);
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific styles */
             background-image: linear-gradient(to right, var(--secondary-glow) 0%, var(--primary-glow) 100%);
             color: var(--dark-bg);
             box-shadow: 0 5px 15px rgba(163,230,53,0.3), 0 0 10px var(--secondary-glow);
         }
         #settings-save-button:hover {
-            transform: translateY(-3px) scale(1.07) rotate(-1deg); /* Combines base hover and specific scale/rotate */
+            transform: translateY(-3px) scale(1.07) rotate(-1deg); 
             box-shadow: 0 7px 20px rgba(34,211,238,0.35), 0 0 15px var(--secondary-glow);
             filter: brightness(1.1);
         }
         #settings-close-button {
-            /* Copied from #modal-stay-button as per original composes intent */
             padding: 0.75rem 1.75rem;
             border-radius: 9999px;
             font-weight: 700;
@@ -668,7 +679,7 @@
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve);
             font-family: var(--font-display);
             letter-spacing: 0.02em;
             background: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
@@ -677,7 +688,6 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         #settings-close-button:hover {
-             /* Copied from #modal-stay-button:hover */
             background: linear-gradient(135deg, var(--medium-bg) 0%, var(--light-bg) 100%);
             transform: translateY(-2px) scale(1.04);
             border-color: var(--secondary-glow);
@@ -693,7 +703,7 @@
             border-radius: 9999px;
             width: 100%;
             font-size: 1.1rem;
-            transition: all 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.3s var(--bounce-curve); /* Consistent bounce, adjusted duration */
             box-shadow: 0 2px 8px rgba(0,0,0,0.1) inset;
             font-family: var(--font-body);
         }
@@ -702,12 +712,11 @@
             box-shadow: 0 0 0 3.5px var(--secondary-glow), 0 3px 10px rgba(0,0,0,0.1) inset;
             border-color: var(--secondary-glow);
             background: linear-gradient(95deg, var(--medium-bg) 85%, #a3e63533 100%);
+            /* transform: scale(1.01); Optional: slight scale on focus */
         }
         .search-input-container { margin-bottom: 1.5rem; display: flex; justify-content: center;}
         #homepage-search-input { max-width: 550px; }
-        /* .search-input:focus { max-width: 700px; } */ /* This might cause layout shifts, consider if needed */
         .search-overlay-input { margin-bottom: 1.5rem; max-width: 700px; }
-        /* .search-overlay-input:focus { max-width: 800px; } */ /* This might cause layout shifts */
 
 
         .search-tags-wrapper {
@@ -719,11 +728,12 @@
             opacity: 0;
             max-height: 0;
             overflow: hidden;
-            transition: opacity 0.3s ease-in-out, max-height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+            /* Using ease-out for reveal, bounce might be too much for content appearing */
+            transition: opacity 0.3s ease-out, max-height 0.4s ease-out, margin-bottom 0.4s ease-out;
         }
         .search-tags-wrapper.visible {
             opacity: 1;
-            max-height: 100px;
+            max-height: 100px; 
         }
         .game-grid.shifted-down, .search-results-grid.shifted-down {
             margin-top: 1rem;
@@ -745,53 +755,49 @@
             color: var(--text-secondary);
             padding: 0.5rem;
             border-radius: 50%;
-            transition: all 0.2s ease-out;
+            transition: all 0.2s var(--bounce-curve); /* Consistent bounce */
             flex-shrink: 0;
         }
         .tag-scroll-button:hover {
             background: var(--primary-glow);
             color: var(--dark-bg);
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg); /* Added rotation */
         }
         .tag-scroll-button svg { width: 1.25rem; height: 1.25rem; }
 
 
         .search-tag-button {
-            /* Copied from .styled-button */
-            /* padding: 0.75rem 1.75rem; -- overridden */
             border-radius: 9999px;
             font-weight: 700;
-            /* font-size: 1rem; -- overridden */
             border: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: all 0.25s var(--bounce-curve); /* Consistent bounce */
             font-family: var(--font-display);
             letter-spacing: 0.02em;
-            /* Specific to .search-tag-button */
             background-image: linear-gradient(100deg, var(--primary-glow) 0%, var(--secondary-glow) 120%);
             color: var(--dark-bg);
             padding: 0.55rem 1.25rem;
-            margin: 0; /* Gap handled by container */
+            margin: 0; 
             font-size: 0.9rem;
             box-shadow: 0 3px 10px rgba(34,211,238,0.18);
             white-space: nowrap;
         }
         .search-tag-button:hover {
-            transform: scale(1.1) rotate(-2.5deg); /* Combines base hover and specific rotate */
+            transform: scale(1.1) rotate(-2.5deg); 
             box-shadow: 0 0 18px 4px rgba(34,211,238,0.4), 0 0 10px var(--secondary-glow) inset;
             filter: brightness(1.05);
         }
-         .search-tag-button svg { /* from styled-button svg */
+         .search-tag-button svg { 
             width: 1.3rem; height: 1.3rem;
             margin-right: 0.6rem;
-            transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: transform 0.25s var(--bounce-curve);
         }
-        .search-tag-button:hover svg { /* from styled-button:hover svg */
-            transform: translateX(-4px) scale(1.1);
+        .search-tag-button:hover svg { 
+            transform: translateX(-4px) scale(1.1) rotate(-5deg);
         }
 
 
@@ -801,18 +807,18 @@
             z-index: 800; padding: 2rem;
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+            transition: opacity 0.4s var(--bounce-curve); /* Consistent bounce */
             backdrop-filter: blur(5px);
         }
         .search-overlay.visible {
             opacity: 1; pointer-events: auto;
-            animation: fadeIn 0.45s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+            /* animation: fadeIn 0.45s var(--bounce-curve) forwards; -- Using transition directly */
         }
         .search-overlay-close-button {
             position: absolute; top: 2rem; right: 2rem;
             background: none; border: none; color: var(--text-secondary);
             padding: 0.8rem; border-radius: 50%;
-            transition: color 0.25s, transform 0.25s cubic-bezier(.68,-0.55,.27,1.55), background-color 0.25s;
+            transition: color 0.25s ease-out, transform 0.25s var(--bounce-curve), background-color 0.25s ease-out; /* Bounce for transform */
             cursor: pointer;
         }
         .search-overlay-close-button:hover {
@@ -830,23 +836,25 @@
         }
         .search-overlay-results::-webkit-scrollbar { width: 10px; }
         .search-overlay-results::-webkit-scrollbar-track { background: var(--dark-bg); border-radius: 10px; }
-        .search-overlay-results::-webkit-scrollbar-thumb { background: var(--light-bg); border-radius: 10px; border: 2px solid var(--dark-bg); }
+        .search-overlay-results::-webkit-scrollbar-thumb {
+            background: var(--light-bg); border-radius: 10px; border: 2px solid var(--dark-bg);
+            transition: background-color 0.3s ease-out; /* Smoother hover transition */
+        }
         .search-overlay-results::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
 
         :focus-visible:not(:active) {
-            outline: 3px solid var(--secondary-glow) !important; /* Ensure high visibility */
+            outline: 3px solid var(--secondary-glow) !important; 
             outline-offset: 3px;
             z-index: 1000;
             box-shadow: 0 0 15px var(--secondary-glow);
         }
-        /* Specific focus for inputs to avoid double outline if :focus is also styled */
         input:focus-visible:not(:active), textarea:focus-visible:not(:active) {
-             box-shadow: 0 0 0 3.5px var(--secondary-glow), 0 3px 10px rgba(0,0,0,0.1) inset; /* From search input focus */
+             box-shadow: 0 0 0 3.5px var(--secondary-glow), 0 3px 10px rgba(0,0,0,0.1) inset; 
              border-color: var(--secondary-glow) !important;
         }
-         .toggle-slider:focus-visible { /* For toggle switch, handled by its own style */
+         .toggle-slider:focus-visible { 
             box-shadow: 0 0 0 2.5px var(--dark-bg), 0 0 0 4.5px var(--secondary-glow);
-         }
+        }
 
 
         #homepage-greeting {
@@ -857,6 +865,7 @@
             text-align: center;
             color: var(--primary-glow);
             text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow);
+            /* Could add a subtle text animation on load if desired */
         }
 
         .iframe-wrapper {
@@ -891,12 +900,18 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        @keyframes spin-and-pulse { /* Enhanced spinner animation */
+            0% { transform: rotate(0deg); box-shadow: 0 0 3px var(--primary-glow); }
+            50% { transform: rotate(180deg); box-shadow: 0 0 12px 2px var(--primary-glow); }
+            100% { transform: rotate(360deg); box-shadow: 0 0 3px var(--primary-glow); }
+        }
         .loader-spinner {
             width: 60px; height: 60px;
             border: 5px solid var(--light-bg);
-            border-top-color: var(--primary-glow);
+            border-top-color: var(--primary-glow); /* Keeps the distinct top color for spin visual */
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin-and-pulse 1.2s linear infinite; /* Using new animation */
             margin-bottom: 1.5rem;
         }
         .loader-text {
@@ -905,7 +920,7 @@
             color: var(--text-secondary);
             text-shadow: 0 0 5px var(--primary-glow);
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* @keyframes spin { to { transform: rotate(360deg); } } -- Old spin, replaced by spin-and-pulse */
 
         .game-view-controls-container {
             display: flex;
@@ -983,7 +998,7 @@
             padding: 0.6rem 1rem;
             border-radius: 0.5rem;
             width: 100%;
-            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+            transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease-out; /* Smoother transitions */
         }
         #setting-user-name:focus {
             outline: none;
@@ -1003,7 +1018,7 @@
             position: absolute; cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: var(--light-bg);
-            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: .3s var(--bounce-curve); /* Consistent bounce */
             border-radius: 34px;
             border: 1px solid var(--medium-bg);
         }
@@ -1012,7 +1027,7 @@
             height: 20px; width: 20px;
             left: 4px; bottom: 3px;
             background-color: white;
-            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: .3s var(--bounce-curve); /* Consistent bounce */
             border-radius: 50%;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
@@ -1053,7 +1068,8 @@
             .back-button { width: 100%; }
             .iframe-bottom-controls { flex-direction: column; gap: 0.75rem; }
             .fullscreen-icon-button, .dropdown { width: 100%; }
-            .fullscreen-icon-button:hover { width: 100%; }
+            .fullscreen-icon-button:hover { width: 100%; justify-content: center; } /* Ensure text is centered on hover if it shows */
+            .fullscreen-icon-button:hover .icon { margin-right: 0.5rem; } /* Keep icon margin if text shows */
             .search-input, .search-overlay-input { font-size: 1rem; padding: 0.7rem 1.2rem; }
             .header-container { padding-left: 1rem; padding-right: 1rem; }
             #navbar-clock { display: none; }
