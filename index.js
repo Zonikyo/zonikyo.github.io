@@ -81,7 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const PROXY_URL_PREFIX = 'https://neonwave-proxy-service.thebestmate100.workers.dev/?q=';
     let currentOnboardingStep = 0;
     const ONBOARDING_STORAGE_KEY = 'neonWaveOnboardingCompleted';
-    const CUTSCENE_DURATION = 7500; // Adjusted for more animations
+    const CUTSCENE_TOTAL_DURATION = 8500; // Increased duration for more elaborate sequence
+    const CUTSCENE_FLASH_POINT = 6000; // When the white flash happens
+    const CUTSCENE_REVEAL_POINT = 6300; // When the site starts revealing after flash
 
     let settings = {
         showBackButtonWarning: true,
@@ -94,9 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let synths = {};
     let toneStarted = false;
     let scanlineInterval = null;
+    let tileGlowInterval = null;
 
     const aspectClasses = ['aspect-16-9', 'aspect-4-3', 'aspect-1-1'];
-    const PAGE_LOAD_MIN_TIME = 1500; // Slightly faster page load perception
+    const PAGE_LOAD_MIN_TIME = 1500;
 
     // --- Sound Engine (Tone.js) ---
     function initTone() {
@@ -108,10 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
             synths.load = new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'fatsawtooth', count: 3, spread: 30 }, envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -15 }).toDestination();
             synths.transition = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.15, sustain: 0, release: 0.1 }, volume: -25 }).toDestination();
             synths.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 }, volume: -15 }).toDestination();
-            synths.cutsceneBoot = new Tone.NoiseSynth({ noise: { type: "pink", playbackRate: 0.2 }, envelope: { attack: 0.8, decay: 0.5, sustain: 0.1, release: 0.5 }, volume: -12 }).toDestination();
-            synths.cutsceneType = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }, volume: -15 }).toDestination();
-            synths.tileHighlight = new Tone.PluckSynth({ attackNoise: 1, dampening: 6000, resonance: 0.8, volume: -16 }).toDestination();
-            synths.cutsceneEnd = new Tone.Synth({ oscillator: { type: 'sawtooth' }, filter: { type: 'lowpass', Q: 2, frequency: 2000 }, envelope: { attack: 0.01, decay: 1.5, sustain: 0, release: 0.5 }, volume: -10 }).toDestination();
+            synths.cutsceneBoot = new Tone.NoiseSynth({ noise: { type: "pink", playbackRate: 0.1 }, envelope: { attack: 1, decay: 0.8, sustain: 0.2, release: 0.8 }, volume: -10 }).toDestination();
+            synths.cutsceneType = new Tone.MembraneSynth({ pitchDecay: 0.005, octaves: 2.5, envelope: { attack: 0.001, decay: 0.15, sustain: 0 }, volume: -12 }).toDestination();
+            synths.tileGlow = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.1, decay: 0.3, sustain: 0.05, release: 0.5 }, volume: -20 }).toDestination();
+            synths.flash = new Tone.NoiseSynth({ noise: {type: 'white'}, envelope: { attack: 0.01, decay: 0.3, sustain:0, release: 0.1}, volume: -9}).toDestination();
+            synths.slam = new Tone.MetalSynth({frequency: 80, envelope: {attack: 0.001, decay:0.4, release: 0.1}, harmonicity: 3.1, modulationIndex: 16, resonance: 2000, octaves: 0.5, volume: -6}).toDestination();
 
         }).catch(e => console.error("Failed to start Tone.js audio context:", e));
     }
@@ -126,11 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'load': synths.load.triggerAttackRelease(['C3', 'G3', 'C4'], '4n', now); break;
                 case 'transition': synths.transition.triggerAttackRelease('8n', now); break;
                 case 'error': synths.error.triggerAttackRelease('A3', '8n', now); break;
-                case 'cutsceneBoot': synths.cutsceneBoot.triggerAttackRelease("0.8s", now); break;
-                case 'cutsceneType': synths.cutsceneType.triggerAttackRelease(noteOrParams || "C2", "32n", now); break;
-                case 'tileHighlight': synths.tileHighlight.triggerAttackRelease(noteOrParams || "C5", "8n", now); break;
-                case 'cutsceneEnd': synths.cutsceneEnd.triggerAttackRelease("C5", "1.5s", now); synths.cutsceneEnd.filter.frequency.rampTo(50, "1.5s", now); break;
-
+                case 'cutsceneBoot': synths.cutsceneBoot.triggerAttackRelease("1s", now); break;
+                case 'cutsceneType': synths.cutsceneType.triggerAttackRelease(noteOrParams || "C2", "32n", now + Math.random()*0.05); break;
+                case 'tileGlow': synths.tileGlow.triggerAttackRelease(noteOrParams || "A3", "0.5s", now); break;
+                case 'flash': synths.flash.triggerAttackRelease("0.3s", now); break;
+                case 'slam': synths.slam.triggerAttackRelease("8n", now); break;
             }
         } catch (error) {
             console.error("Tone.js error playing sound:", error, type);
@@ -462,84 +466,108 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!onboardingCutsceneOverlay || !cutsceneText1 || !cutsceneText2 || !homeView || !gameGrid) return;
 
         playSound('cutsceneBoot');
-        homeView.classList.add('cutscene-underlay'); // Dim the background
+        homeView.classList.add('cutscene-underlay');
+        const allCards = Array.from(gameGrid.querySelectorAll('.game-card'));
+        allCards.forEach(card => card.classList.add('cutscene-blank-tile'));
+
         onboardingCutsceneOverlay.classList.remove('hidden');
-        requestAnimationFrame(() => { // Ensure 'hidden' is removed before adding 'visible' for transition
+        requestAnimationFrame(() => {
             onboardingCutsceneOverlay.classList.add('visible');
         });
         document.body.style.overflow = 'hidden';
 
-        cutsceneText1.textContent = `INITIALIZING ARCADE INTERFACE...`;
-        cutsceneText2.textContent = `WELCOME, ${settings.userName.toUpperCase() || 'COMMANDER'}!`;
+        cutsceneText1.textContent = ``; // Clear initially
+        cutsceneText2.textContent = ``; // Clear initially
 
         const logo = document.getElementById('cutscene-logo');
-        if (logo) { logo.style.animation = 'none'; void logo.offsetWidth; logo.style.animation = ''; }
-        cutsceneText1.style.animation = 'none'; void cutsceneText1.offsetWidth; cutsceneText1.style.animation = '';
-        cutsceneText2.style.animation = 'none'; void cutsceneText2.offsetWidth; cutsceneText2.style.animation = '';
+        if (logo) { logo.style.animation = 'none'; void logo.offsetWidth; logo.style.animation = ''; logo.style.animation = 'cutsceneLogoPowerUp 2s var(--pop-curve) 0.3s forwards';}
 
-        // Typing effect for text1
-        await typeOutText(cutsceneText1, `SYSTEM ONLINE. WELCOME, ${settings.userName || 'PLAYER'}...`, 80, ['C3', 'D#3', 'F3']);
 
-        // Game tile highlight animation
-        const cards = Array.from(gameGrid.querySelectorAll('.game-card'));
-        if (cards.length > 0) {
-            for (let i = 0; i < Math.min(cards.length, 8); i++) { // Highlight up to 8 cards
-                await new Promise(resolve => setTimeout(resolve, 150 + Math.random() * 100));
-                const cardToHighlight = cards[i % cards.length]; // Cycle through cards if fewer than 8
-                cardToHighlight.classList.add(i % 2 === 0 ? 'cutscene-highlight-strong' : 'cutscene-highlight-medium');
-                playSound('tileHighlight', i % 2 === 0 ? 'E5' : 'G#5');
+        await typeOutText(cutsceneText1, `SYSTEM ONLINE. WELCOME, ${settings.userName || 'PLAYER'}...`, 70, ['C3', 'D#3', 'F3'], 2300);
+
+        // Tile glowing animation
+        clearInterval(tileGlowInterval);
+        let glowIndex = 0;
+        const glowableCards = allCards.filter((_, idx) => idx % 2 === 0); // Select a subset for performance
+
+        tileGlowInterval = setInterval(() => {
+            if (glowIndex < glowableCards.length * 3) { // Loop a few times
+                const cardToGlow = glowableCards[glowIndex % glowableCards.length];
+                cardToGlow.classList.add('cutscene-tile-glowing');
+                playSound('tileGlow', ['A2', 'C3', 'E3', 'G3'][glowIndex % 4]);
                 setTimeout(() => {
-                    cardToHighlight.classList.remove('cutscene-highlight-strong', 'cutscene-highlight-medium');
-                }, 1000); // Duration of highlight
+                    cardToGlow.classList.remove('cutscene-tile-glowing');
+                }, 1500); // Duration of individual glow
+                glowIndex++;
+            } else {
+                clearInterval(tileGlowInterval);
             }
-        }
+        }, 300); // Interval between glows starting
+
+        await new Promise(resolve => setTimeout(resolve, CUTSCENE_FLASH_POINT - 3000)); // Wait until near flash point
+
+        await typeOutText(cutsceneText2, `ARCADE SYSTEMS NOMINAL. ENGAGE!`, 90, ['A4', 'C5', 'E5'], 0);
+
+        // Full screen flash
+        await new Promise(resolve => setTimeout(resolve, CUTSCENE_FLASH_POINT - (Date.now() - onboardingCutsceneOverlay.startTime || 0) )); // Ensure flash happens at right time
         
-        await new Promise(resolve => setTimeout(resolve, 500)); // Pause before final text
+        playSound('flash');
+        onboardingCutsceneOverlay.classList.add('flash-active');
 
-        // Typing effect for text2
-        await typeOutText(cutsceneText2, `ARCADE SYSTEMS NOMINAL. ENGAGE!`, 100, ['A4', 'C5', 'E5']);
-        
-        playSound('cutsceneEnd');
-
-        // Start scanline animation (CSS handles infinite, JS just ensures it's visible)
-        if (cutsceneScanline) {
-            let scanlinePos = 0;
-            clearInterval(scanlineInterval); // Clear any existing interval
-            scanlineInterval = setInterval(() => {
-                scanlinePos = (scanlinePos + 3 + Math.random() * 4) % window.innerHeight; // Randomize movement a bit
-                cutsceneScanline.style.setProperty('--scanline-pos', scanlinePos);
-            }, 50); // Update position frequently for smoother random jitter
-        }
-
-
+        // Reveal website
         setTimeout(() => {
-            onboardingCutsceneOverlay.style.transition = 'opacity 1s cubic-bezier(0.7,0,0.3,1), transform 1s cubic-bezier(0.7,0,0.3,1)'; // Dramatic exit
+            onboardingCutsceneOverlay.classList.remove('flash-active'); // End flash
+            homeView.classList.remove('cutscene-underlay');
+            homeView.style.filter = ''; // Clear filter explicitly
+            homeView.classList.add('revealing'); // Add slam animation class
+            playSound('slam');
+
+            allCards.forEach(card => card.classList.remove('cutscene-blank-tile'));
+            // Optionally re-render grid if blanking caused issues, but class removal should be enough
+            // renderGameGrid(games, gameGrid);
+
+
+            // Fade out cutscene overlay
+            onboardingCutsceneOverlay.style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
             onboardingCutsceneOverlay.style.opacity = '0';
-            onboardingCutsceneOverlay.style.transform = 'scale(1.5) rotate(5deg)'; // Zoom and rotate out
-            
-            homeView.classList.remove('cutscene-underlay'); // Restore home view brightness/clarity
-            homeView.style.filter = ''; // Explicitly clear filter
+            onboardingCutsceneOverlay.style.transform = 'scale(0.7)';
+
 
             setTimeout(() => {
                 onboardingCutsceneOverlay.classList.add('hidden');
                 onboardingCutsceneOverlay.classList.remove('visible');
-                onboardingCutsceneOverlay.style.transform = ''; // Reset transform for next time
+                onboardingCutsceneOverlay.style.transform = ''; // Reset for next time
                 document.body.style.overflow = '';
+                homeView.classList.remove('revealing'); // Clean up animation class
                 clearInterval(scanlineInterval);
-            }, 1000); // Match transition duration
-        }, CUTSCENE_DURATION - 1000); // Start hiding animation 1s before total duration
+                clearInterval(tileGlowInterval);
+            }, 700); // Match fade out duration
+
+        }, CUTSCENE_REVEAL_POINT - CUTSCENE_FLASH_POINT); // Delay between flash and reveal
+
+        // Scanline (visual only, no direct timing impact on core sequence)
+        if (cutsceneScanline) {
+            let scanlinePos = 0;
+            clearInterval(scanlineInterval);
+            scanlineInterval = setInterval(() => {
+                scanlinePos = (scanlinePos + 2 + Math.random() * 3) % window.innerHeight;
+                cutsceneScanline.style.setProperty('--scanline-pos', scanlinePos + 'px');
+            }, 40);
+        }
+        onboardingCutsceneOverlay.startTime = Date.now(); // Mark start time for timing calculations
     }
 
-    async function typeOutText(element, text, speed, notes) {
+    async function typeOutText(element, text, speed, notes, startDelay = 0) {
+        await new Promise(resolve => setTimeout(resolve, startDelay));
         element.textContent = '';
         let noteIndex = 0;
         for (let i = 0; i < text.length; i++) {
             element.textContent += text.charAt(i);
-            if (text.charAt(i) !== ' ') { // Play sound only for non-space characters
+            if (text.charAt(i) !== ' ' && text.charAt(i) !== '.') {
                  playSound('cutsceneType', notes[noteIndex % notes.length]);
                  noteIndex++;
             }
-            await new Promise(resolve => setTimeout(resolve, speed + (Math.random() * (speed / 2) - (speed / 4)))); // Add some randomness to typing
+            await new Promise(resolve => setTimeout(resolve, speed + (Math.random() * (speed / 3)) - (speed / 6) ));
         }
     }
 
@@ -756,6 +784,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pageLoadMinTimePassed && pageContentLoaded && pageLoader && !pageLoader.classList.contains('hidden')) {
             pageLoader.classList.add('hidden'); // CSS transition handles the animation
             playSound('load');
+            // If onboarding is not completed, it will be shown after this.
+            // If onboarding IS completed, normal page flow continues.
+            if (!settings.onboardingCompleted) {
+                 setTimeout(showOnboardingModal, 300); // Delay slightly after loader hides
+            } else {
+                document.body.style.overflow = ''; // Ensure scroll is enabled
+            }
         }
     }
 
@@ -782,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key === '/') { event.preventDefault(); playSound('click'); searchOverlay && searchOverlay.classList.contains('visible') ? closeSearchOverlay() : openSearchOverlay(); }
             else if (event.key === 'Escape') {
-                if (onboardingModal && onboardingModal.classList.contains('visible') && !onboardingCutsceneOverlay.classList.contains('visible')) { playSound('click'); finishOnboarding(true); }
+                if (onboardingModal && onboardingModal.classList.contains('visible') && onboardingCutsceneOverlay && !onboardingCutsceneOverlay.classList.contains('visible')) { playSound('click'); finishOnboarding(true); }
                 else if (searchOverlay && searchOverlay.classList.contains('visible')) { playSound('click'); closeSearchOverlay(); }
                 else if (warningModal && warningModal.classList.contains('visible')) { playSound('click'); hideWarningModal(); }
                 else if (settingsModal && settingsModal.classList.contains('visible')) { playSound('click'); closeSettingsModal(); }
@@ -836,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 
     pageContentLoaded = true;
-    hidePageLoader();
+    hidePageLoader(); // Attempt to hide again
 
     window.addEventListener('resize', () => {
         if (homeView && !homeView.classList.contains('hidden')) adjustMainHeight(homeView);
@@ -844,9 +879,13 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (onboardingModal && onboardingModal.classList.contains('visible') && !onboardingModal.classList.contains('fixed')) adjustMainHeight(onboardingModal);
     });
 
-    if (!settings.onboardingCompleted) {
-        setTimeout(showOnboardingModal, 500);
-    } else {
+    // Initial onboarding check is now handled within hidePageLoader to ensure it runs after loader is gone.
+    if (pageLoadMinTimePassed && pageContentLoaded && !settings.onboardingCompleted) {
+        // If loader is already hidden by the time this check runs, show onboarding.
+        if (pageLoader.classList.contains('hidden')) {
+            setTimeout(showOnboardingModal, 300);
+        }
+    } else if (settings.onboardingCompleted) {
         document.body.style.overflow = ''; // Ensure scroll is enabled if onboarding was completed
     }
 });
