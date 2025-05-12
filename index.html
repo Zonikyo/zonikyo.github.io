@@ -59,13 +59,10 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
                 </button>
                 <div id="search-tags-container" class="search-tags-container">
-                    </div>
-                <button class="tag-scroll-button" id="scroll-tags-right-home" aria-label="Scroll tags right">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-                </button>
+                </div>
             </div>
             <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
-                </div>
+            </div>
         </section>
 
         <section id="game-view" class="w-full p-2 md:p-4 lg:p-6 hidden">
@@ -136,7 +133,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
             </button>
             <div id="search-overlay-tags-container" class="search-tags-container">
-                 </div>
+            </div>
             <button class="tag-scroll-button" id="scroll-tags-right-overlay" aria-label="Scroll tags right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
             </button>
@@ -189,12 +186,85 @@
                     <span class="toggle-slider"></span>
                 </label>
             </div>
+            <div class="setting-item">
+                <button id="replay-onboarding-button" class="modal-button replay-onboarding-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    Replay Tutorial
+                </button>
+            </div>
         </div>
         <div class="modal-buttons">
              <button id="settings-close-button" class="modal-button">Close</button>
              <button id="settings-save-button" class="modal-button">Save Settings</button>
         </div>
     </div>
+
+    <div id="onboarding-backdrop" class="modal-backdrop"></div>
+    <div id="onboarding-modal" class="modal onboarding-modal">
+        <div id="onboarding-step-1" class="onboarding-step">
+            <h3>Welcome to NeonWave!</h3>
+            <p>To personalize your experience, what should we call you?</p>
+            <input type="text" id="onboarding-name-input" class="search-input mt-2 mb-4" placeholder="Arcade Hero">
+            <div class="onboarding-nav">
+                <button id="onboarding-next-1" class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-2" class="onboarding-step hidden">
+            <h3>Navigating the Arcade</h3>
+            <p>Great to meet you, <span class="onboarding-username-placeholder"></span>!</p>
+            <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click the <strong class="text-accent-glow">NeonWave Logo</strong> (top-left) anytime to return to this game library.</li>
+                <li>Use the <strong class="text-accent-glow">Search Icon</strong> (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="inline h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>) in the top-right or press <strong class="text-accent-glow">Ctrl+/</strong> to quickly find games.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-3" class="onboarding-step hidden">
+            <h3>Finding & Launching Games</h3>
+            <p>Browse the grid or use the search bar at the top of the homepage.</p>
+             <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click on any <strong class="text-accent-glow">Game Card</strong> to see its details and launch it.</li>
+                <li>Use the <strong class="text-accent-glow">Search Bar</strong> on the homepage or in the search overlay to find games by title or tag.</li>
+                <li>Click on <strong class="text-accent-glow">Tags</strong> below the search bar to filter games.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-4" class="onboarding-step hidden">
+            <h3>In-Game Controls</h3>
+            <p>Once a game is launched:</p>
+            <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>The <strong class="text-accent-glow">"Back" Button</strong> returns you to the arcade.</li>
+                <li>Adjust the <strong class="text-accent-glow">Aspect Ratio</strong> (e.g., 16:9, 4:3) using the dropdown below the game.</li>
+                <li>Toggle <strong class="text-accent-glow">Fullscreen Mode</strong> with the dedicated button for a more immersive experience.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-5" class="onboarding-step hidden">
+            <h3>Settings & Enjoy!</h3>
+            <p>Customize your arcade experience:</p>
+             <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click the <strong class="text-accent-glow">Settings Icon</strong> (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.43.992a6.759 6.759 0 0 1 0 1.255c-.008.378.137.75.43.99l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-1.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.87l.214-1.281Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>) to change your name, toggle warnings, sounds, and more.</li>
+                <li>You can replay this tutorial from the Settings menu.</li>
+            </ul>
+            <p class="mt-6">That's it! Time to dive in and play some games. Have fun, <span class="onboarding-username-placeholder"></span>!</p>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button id="onboarding-finish" class="modal-button onboarding-finish">Let's Go!</button>
+            </div>
+        </div>
+         <button id="onboarding-skip" class="modal-button onboarding-skip-button">Skip Tutorial</button>
+    </div>
+
 
     <footer id="main-footer">
         © 2025 NeonWave Arcade. Game on! All games are embedded from external sources. <br>This is a fictional, fan-made project.
