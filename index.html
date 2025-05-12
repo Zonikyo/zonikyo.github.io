@@ -1133,12 +1133,54 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
                 </button>
                 <div id="search-tags-container" class="search-tags-container">
+                    <button class="search-tag-button">Action</button>
+                    <button class="search-tag-button">Puzzle</button>
+                    <button class="search-tag-button">Retro</button>
+                    <button class="search-tag-button">Strategy</button>
+                    <button class="search-tag-button">Arcade</button>
+                    <button class="search-tag-button">Multiplayer</button>
                 </div>
                 <button class="tag-scroll-button" id="scroll-tags-right-home" aria-label="Scroll tags right">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                 </button>
             </div>
             <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
+                <div class="game-card" data-game-id="spaceblaster" tabindex="0">
+                    <div class="thumbnail-container">
+                        <img src="https://placehold.co/600x338/1e293b/a3e635?text=Space+Blaster+X" alt="Space Blaster X Thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x338/1e293b/a3e635?text=Game+Art';">
+                        <div class="tags-icon-container">
+                            <div class="tag-icon-wrapper" title="Action">
+                                <svg class="tag-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" /></svg>
+                                <span class="tag-text">Action</span>
+                            </div>
+                            <div class="tag-icon-wrapper" title="Sci-Fi">
+                                 <svg class="tag-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 2A2.5 2.5 0 003 4.5v2.717A2.006 2.006 0 012 9.5v1c0 .63.296 1.196.756 1.544A2.49 2.49 0 003 12.5v2.5A2.5 2.5 0 005.5 18h9a2.5 2.5 0 002.5-2.5V10c0-.093-.005-.184-.015-.274A2.495 2.495 0 0018 9.5v-1a2.495 2.495 0 00-1.015-.274A2.495 2.495 0 0018 7.955V4.5A2.5 2.5 0 0015.5 2h-9zM6 6a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2A.5.5 0 016 6zm0 3a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5A.5.5 0 016 9zm0 3a.5.5 0 01.5-.5h1a.5.5 0 010 1h-1A.5.5 0 016 12zm10-1a1 1 0 100-2 1 1 0 000 2z" /></svg>
+                                <span class="tag-text">Sci-Fi</span>
+                            </div>
+                        </div>
+                        <div class="title-overlay">
+                            <h3>Space Blaster X</h3>
+                        </div>
+                    </div>
+                </div>
+                 <div class="game-card" data-game-id="pixelracer" tabindex="0">
+                    <div class="thumbnail-container">
+                        <img src="https://placehold.co/600x338/1e293b/ec4899?text=Pixel+Racer+Pro" alt="Pixel Racer Pro Thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x338/1e293b/ec4899?text=Game+Art';">
+                        <div class="tags-icon-container">
+                            <div class="tag-icon-wrapper" title="Racing">
+                                <svg class="tag-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.003 8.047a.75.75 0 01.75-.75h.494a.75.75 0 01.75.75v.494a.75.75 0 01-.75.75h-.494a.75.75 0 01-.75-.75v-.494zm2.492 0a.75.75 0 01.75-.75h.494a.75.75 0 01.75.75v.494a.75.75 0 01-.75.75h-.494a.75.75 0 01-.75-.75v-.494zm-2.492 2.492a.75.75 0 01.75-.75h.494a.75.75 0 01.75.75v.494a.75.75 0 01-.75.75h-.494a.75.75 0 01-.75-.75v-.494zm2.492 0a.75.75 0 01.75-.75h.494a.75.75 0 01.75.75v.494a.75.75 0 01-.75.75h-.494a.75.75 0 01-.75-.75v-.494zm-1.246 2.24a.75.75 0 01.75-.75h.494a.75.75 0 01.75.75v.494a.75.75 0 01-.75.75h-.494a.75.75 0 01-.75-.75v-.494z" clip-rule="evenodd" /></svg>
+                                <span class="tag-text">Racing</span>
+                            </div>
+                             <div class="tag-icon-wrapper" title="Retro">
+                                <svg class="tag-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.75a.75.75 0 01.75.75v1.5h1.5a.75.75 0 010 1.5h-1.5v1.5a.75.75 0 01-1.5 0v-1.5h-1.5a.75.75 0 010-1.5h1.5v-1.5a.75.75 0 01.75-.75zM10 8a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M0 10a2 2 0 012-2h16a2 2 0 012 2v2a2 2 0 01-2 2H2a2 2 0 01-2-2v-2zm5 1.25a.75.75 0 01.75-.75h8.5a.75.75 0 010 1.5h-8.5a.75.75 0 01-.75-.75z" clip-rule="evenodd" /></svg>
+                                <span class="tag-text">Retro</span>
+                            </div>
+                        </div>
+                        <div class="title-overlay">
+                            <h3>Pixel Racer Pro</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1165,22 +1207,25 @@
 
             <div class="game-view-controls-container iframe-bottom-controls">
                 <div class="dropdown relative inline-block text-left" id="aspect-ratio-dropdown">
-                    <button type="button" class="dropdown-button" id="dropdown-button">
+                    <button type="button" class="dropdown-button" id="dropdown-button" aria-expanded="false" aria-haspopup="true">
                         <span id="dropdown-label">16:9</span>
                         <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
-                    <div class="dropdown-content origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hidden" id="dropdown-menu">
+                    <div class="dropdown-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hidden" id="dropdown-menu" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
                         <div class="py-1" role="none">
-                            <button class="aspect-ratio-option active w-full text-left px-4 py-2 text-sm" data-aspect="aspect-16-9" data-label="16:9">16:9 (Default)</button>
-                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-4-3" data-label="4:3">4:3 (Retro)</button>
-                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-1-1" data-label="1:1">1:1 (Square)</button>
+                            <button class="aspect-ratio-option active w-full text-left px-4 py-2 text-sm" data-aspect="aspect-16-9" data-label="16:9" role="menuitem">16:9 (Default)</button>
+                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-4-3" data-label="4:3" role="menuitem">4:3 (Retro)</button>
+                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-1-1" data-label="1:1" role="menuitem">1:1 (Square)</button>
                         </div>
                     </div>
                 </div>
 
                 <button id="fullscreen-button" title="Toggle Fullscreen" class="fullscreen-icon-button">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <svg class="icon" id="fullscreen-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                     <svg class="icon hidden" id="fullscreen-icon-exit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
                     </svg>
                     <span class="text">Fullscreen</span>
                 </button>
@@ -1188,7 +1233,7 @@
 
             <div class="about-game-section">
                 <h3>About This Game</h3>
-                <p id="game-description" class="game-description-scroll max-h-40 overflow-y-auto pr-2"></p>
+                <p id="game-description" class="game-description-scroll max-h-40 overflow-y-auto pr-2">This is a placeholder description for the game. It will be filled with exciting details about gameplay, story, and features. Get ready for an amazing adventure that will test your skills and immerse you in a vibrant world! More text to make it scrollable. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             </div>
         </section>
     </main>
@@ -1207,6 +1252,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
             </button>
             <div id="search-overlay-tags-container" class="search-tags-container">
+                 <button class="search-tag-button">Adventure</button>
+                 <button class="search-tag-button">Platformer</button>
+                 <button class="search-tag-button">Indie</button>
             </div>
             <button class="tag-scroll-button" id="scroll-tags-right-overlay" aria-label="Scroll tags right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
@@ -1214,6 +1262,7 @@
         </div>
         <div id="search-overlay-results" class="search-overlay-results">
             <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+                <p class="text-center col-span-full text-gray-400">Start typing to see game results...</p>
             </div>
         </div>
     </div>
@@ -1239,14 +1288,14 @@
             <div class="setting-item">
                 <label for="setting-back-warning">Show 'Leave Game' Warning:</label>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="setting-back-warning">
+                    <input type="checkbox" id="setting-back-warning" checked>
                     <span class="toggle-slider"></span>
                 </label>
             </div>
             <div class="setting-item">
                 <label for="setting-sound-effects">Enable Sound Effects:</label>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="setting-sound-effects">
+                    <input type="checkbox" id="setting-sound-effects" checked>
                     <span class="toggle-slider"></span>
                 </label>
             </div>
@@ -1269,7 +1318,6 @@
     <footer id="main-footer">
         © 2025 NeonWave Arcade. Game on! All games are embedded from external sources. <br>This is a fictional, fan-made project.
     </footer>
-
     <script>
         const games = [
             { id: 'eaglercraft-1.5.2-game', title: 'Eaglercraft 1.5.2 (Eagtek)', thumbnail: 'https://zonikyo.github.io/img/thumbnails/eaglercraft1.5.2.png', tags: ['Classic', 'Minecraft'], description: 'A version of Minecraft 1.5.2 tailored for browser play, offering the classic survival and creative modes.', iframeUrl: 'https://eaglercraftgame.github.io/go/minecraft-1.5.2/' },
