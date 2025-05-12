@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const onboardingCutsceneOverlay = document.getElementById('onboarding-cutscene-overlay');
     const cutsceneText1 = document.getElementById('cutscene-text-1');
     const cutsceneText2 = document.getElementById('cutscene-text-2');
+    const cutsceneScanline = document.getElementById('cutscene-scanline');
 
     // State Variables
     let isTransitioning = false;
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const PROXY_URL_PREFIX = 'https://neonwave-proxy-service.thebestmate100.workers.dev/?q=';
     let currentOnboardingStep = 0;
     const ONBOARDING_STORAGE_KEY = 'neonWaveOnboardingCompleted';
-    const CUTSCENE_DURATION = 6000; // Total duration for the cutscene in ms
+    const CUTSCENE_DURATION = 7500; // Adjusted for more animations
 
     let settings = {
         showBackButtonWarning: true,
@@ -92,9 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let synths = {};
     let toneStarted = false;
+    let scanlineInterval = null;
 
     const aspectClasses = ['aspect-16-9', 'aspect-4-3', 'aspect-1-1'];
-    const PAGE_LOAD_MIN_TIME = 2000;
+    const PAGE_LOAD_MIN_TIME = 1500; // Slightly faster page load perception
 
     // --- Sound Engine (Tone.js) ---
     function initTone() {
@@ -106,12 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
             synths.load = new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'fatsawtooth', count: 3, spread: 30 }, envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -15 }).toDestination();
             synths.transition = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.15, sustain: 0, release: 0.1 }, volume: -25 }).toDestination();
             synths.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 }, volume: -15 }).toDestination();
-            synths.cutsceneStart = new Tone.Synth({ oscillator: { type: 'pwm', modulationFrequency: 0.2 }, envelope: { attack: 0.5, decay: 1, sustain: 0.5, release: 1 }, volume: -10 }).toDestination();
-             synths.cutsceneType = new Tone.PluckSynth({ attackNoise: 0.5, dampening: 4000, resonance: 0.7, volume: -12 }).toDestination();
+            synths.cutsceneBoot = new Tone.NoiseSynth({ noise: { type: "pink", playbackRate: 0.2 }, envelope: { attack: 0.8, decay: 0.5, sustain: 0.1, release: 0.5 }, volume: -12 }).toDestination();
+            synths.cutsceneType = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }, volume: -15 }).toDestination();
+            synths.tileHighlight = new Tone.PluckSynth({ attackNoise: 1, dampening: 6000, resonance: 0.8, volume: -16 }).toDestination();
+            synths.cutsceneEnd = new Tone.Synth({ oscillator: { type: 'sawtooth' }, filter: { type: 'lowpass', Q: 2, frequency: 2000 }, envelope: { attack: 0.01, decay: 1.5, sustain: 0, release: 0.5 }, volume: -10 }).toDestination();
+
         }).catch(e => console.error("Failed to start Tone.js audio context:", e));
     }
 
-    function playSound(type, note) {
+    function playSound(type, noteOrParams) {
         if (!settings.soundEffectsEnabled || !toneStarted || !synths[type] || typeof Tone === 'undefined') return;
         const now = Tone.now();
         try {
@@ -121,11 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 'load': synths.load.triggerAttackRelease(['C3', 'G3', 'C4'], '4n', now); break;
                 case 'transition': synths.transition.triggerAttackRelease('8n', now); break;
                 case 'error': synths.error.triggerAttackRelease('A3', '8n', now); break;
-                case 'cutsceneStart': synths.cutsceneStart.triggerAttackRelease("C2", "2s", now); break;
-                case 'cutsceneType': synths.cutsceneType.triggerAttackRelease(note || "C4", "8n", now + 0.05); break;
+                case 'cutsceneBoot': synths.cutsceneBoot.triggerAttackRelease("0.8s", now); break;
+                case 'cutsceneType': synths.cutsceneType.triggerAttackRelease(noteOrParams || "C2", "32n", now); break;
+                case 'tileHighlight': synths.tileHighlight.triggerAttackRelease(noteOrParams || "C5", "8n", now); break;
+                case 'cutsceneEnd': synths.cutsceneEnd.triggerAttackRelease("C5", "1.5s", now); synths.cutsceneEnd.filter.frequency.rampTo(50, "1.5s", now); break;
+
             }
         } catch (error) {
-            console.error("Tone.js error playing sound:", error);
+            console.error("Tone.js error playing sound:", error, type);
         }
     }
 
@@ -172,14 +180,14 @@ document.addEventListener('DOMContentLoaded', () => {
             viewToHide.removeEventListener('animationend', onHideEnd);
             viewToHide.classList.remove('view-exit-active');
             viewToHide.classList.add('hidden');
-            viewToHide.style.opacity = '';
+            viewToHide.style.opacity = ''; viewToHide.style.transform = '';
             viewToShow.classList.remove('hidden');
             viewToShow.classList.add('view-enter-active');
             window.scrollTo(0, 0);
             viewToShow.addEventListener('animationend', function onShowEnd() {
                 viewToShow.removeEventListener('animationend', onShowEnd);
                 viewToShow.classList.remove('view-enter-active');
-                viewToShow.style.opacity = '';
+                viewToShow.style.opacity = ''; viewToShow.style.transform = '';
                 isTransitioning = false;
                 mainFooter.style.opacity = '1';
                 mainFooter.style.pointerEvents = 'auto';
@@ -344,16 +352,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 settings.userName = typeof parsedSettings.userName === 'string' ? parsedSettings.userName : '';
                 settings.onboardingCompleted = typeof parsedSettings.onboardingCompleted === 'boolean' ? parsedSettings.onboardingCompleted : false;
             } else {
-                settings.onboardingCompleted = false; // Default if no settings saved
+                settings.onboardingCompleted = false;
             }
-
-            // Fallback for older versions that might only have ONBOARDING_STORAGE_KEY
             if (!settings.onboardingCompleted) {
                const legacyOnboardingDone = localStorage.getItem(ONBOARDING_STORAGE_KEY);
                if (legacyOnboardingDone === 'true') {
                    settings.onboardingCompleted = true;
-                   // Optionally save this to the main settings object now
-                   // localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
                }
             }
         } catch (e) {
@@ -388,7 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (onboardingBackdrop && onboardingModal) {
             onboardingBackdrop.classList.remove('visible');
             onboardingModal.classList.remove('visible');
-            // Body scroll is restored after cutscene or immediately if no cutscene
         }
     }
 
@@ -431,13 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishOnboarding(skipped = false) {
         playSound('click');
-        if (currentOnboardingStep === 0 && !settings.userName && !skipped) { // If finishing from step 1 without explicitly clicking next and not skipping
+        if (currentOnboardingStep === 0 && !settings.userName && !skipped) {
             const name = onboardingNameInput.value.trim();
             settings.userName = name || "Arcade Hero";
         } else if (skipped && !settings.userName) {
-            settings.userName = "Arcade Hero"; // Default name if skipped from first step
+            settings.userName = "Arcade Hero";
         }
-
         settings.onboardingCompleted = true;
         try {
             localStorage.setItem('neonWaveSettings', JSON.stringify(settings));
@@ -446,75 +448,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateHomepageGreeting();
         hideOnboardingModal();
-        playOnboardingCutscene(); // Play cutscene after hiding modal
+        playOnboardingCutscene();
     }
 
-    function startOnboarding() { // Used for replaying tutorial
+    function startOnboarding() {
         settings.onboardingCompleted = false;
-        // settings.userName = ''; // Keep username or clear it based on preference
-        if (onboardingNameInput) onboardingNameInput.value = settings.userName; // Pre-fill with current name
+        if (onboardingNameInput) onboardingNameInput.value = settings.userName;
         showOnboardingModal();
     }
 
     // --- Onboarding Cutscene Function ---
-    function playOnboardingCutscene() {
-        if (!onboardingCutsceneOverlay || !cutsceneText1 || !cutsceneText2) return;
+    async function playOnboardingCutscene() {
+        if (!onboardingCutsceneOverlay || !cutsceneText1 || !cutsceneText2 || !homeView || !gameGrid) return;
 
-        playSound('cutsceneStart');
+        playSound('cutsceneBoot');
+        homeView.classList.add('cutscene-underlay'); // Dim the background
         onboardingCutsceneOverlay.classList.remove('hidden');
-        onboardingCutsceneOverlay.classList.add('visible');
-        document.body.style.overflow = 'hidden'; // Ensure body scroll is hidden
+        requestAnimationFrame(() => { // Ensure 'hidden' is removed before adding 'visible' for transition
+            onboardingCutsceneOverlay.classList.add('visible');
+        });
+        document.body.style.overflow = 'hidden';
 
-        cutsceneText1.textContent = `Welcome, ${settings.userName || 'Hero'}!`;
-        cutsceneText2.textContent = "Get Ready To Play!";
+        cutsceneText1.textContent = `INITIALIZING ARCADE INTERFACE...`;
+        cutsceneText2.textContent = `WELCOME, ${settings.userName.toUpperCase() || 'COMMANDER'}!`;
 
-        // Reset animations by removing and re-adding classes if needed, or rely on animation-fill-mode
         const logo = document.getElementById('cutscene-logo');
-        if (logo) {
-            logo.style.animation = 'none';
-            void logo.offsetWidth; // Trigger reflow
-            logo.style.animation = '';
-        }
+        if (logo) { logo.style.animation = 'none'; void logo.offsetWidth; logo.style.animation = ''; }
         cutsceneText1.style.animation = 'none'; void cutsceneText1.offsetWidth; cutsceneText1.style.animation = '';
         cutsceneText2.style.animation = 'none'; void cutsceneText2.offsetWidth; cutsceneText2.style.animation = '';
 
+        // Typing effect for text1
+        await typeOutText(cutsceneText1, `SYSTEM ONLINE. WELCOME, ${settings.userName || 'PLAYER'}...`, 80, ['C3', 'D#3', 'F3']);
 
-        // Simulate typing for text1 with sound
-        let i = 0;
-        const text1Content = cutsceneText1.textContent;
-        cutsceneText1.textContent = '';
-        const typingInterval1 = setInterval(() => {
-            if (i < text1Content.length) {
-                cutsceneText1.textContent += text1Content.charAt(i);
-                playSound('cutsceneType', i % 2 === 0 ? 'C4' : 'E4');
-                i++;
-            } else {
-                clearInterval(typingInterval1);
+        // Game tile highlight animation
+        const cards = Array.from(gameGrid.querySelectorAll('.game-card'));
+        if (cards.length > 0) {
+            for (let i = 0; i < Math.min(cards.length, 8); i++) { // Highlight up to 8 cards
+                await new Promise(resolve => setTimeout(resolve, 150 + Math.random() * 100));
+                const cardToHighlight = cards[i % cards.length]; // Cycle through cards if fewer than 8
+                cardToHighlight.classList.add(i % 2 === 0 ? 'cutscene-highlight-strong' : 'cutscene-highlight-medium');
+                playSound('tileHighlight', i % 2 === 0 ? 'E5' : 'G#5');
+                setTimeout(() => {
+                    cardToHighlight.classList.remove('cutscene-highlight-strong', 'cutscene-highlight-medium');
+                }, 1000); // Duration of highlight
             }
-        }, 100); // Adjust typing speed
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 500)); // Pause before final text
 
-        // Simulate typing for text2 after a delay
+        // Typing effect for text2
+        await typeOutText(cutsceneText2, `ARCADE SYSTEMS NOMINAL. ENGAGE!`, 100, ['A4', 'C5', 'E5']);
+        
+        playSound('cutsceneEnd');
+
+        // Start scanline animation (CSS handles infinite, JS just ensures it's visible)
+        if (cutsceneScanline) {
+            let scanlinePos = 0;
+            clearInterval(scanlineInterval); // Clear any existing interval
+            scanlineInterval = setInterval(() => {
+                scanlinePos = (scanlinePos + 3 + Math.random() * 4) % window.innerHeight; // Randomize movement a bit
+                cutsceneScanline.style.setProperty('--scanline-pos', scanlinePos);
+            }, 50); // Update position frequently for smoother random jitter
+        }
+
+
         setTimeout(() => {
-            let j = 0;
-            const text2Content = cutsceneText2.textContent;
-            cutsceneText2.textContent = '';
-            const typingInterval2 = setInterval(() => {
-                if (j < text2Content.length) {
-                    cutsceneText2.textContent += text2Content.charAt(j);
-                    playSound('cutsceneType', j % 2 === 0 ? 'G4' : 'B4');
-                    j++;
-                } else {
-                    clearInterval(typingInterval2);
-                }
-            }, 120); // Adjust typing speed
-        }, 2000); // Delay for text2 appearance
+            onboardingCutsceneOverlay.style.transition = 'opacity 1s cubic-bezier(0.7,0,0.3,1), transform 1s cubic-bezier(0.7,0,0.3,1)'; // Dramatic exit
+            onboardingCutsceneOverlay.style.opacity = '0';
+            onboardingCutsceneOverlay.style.transform = 'scale(1.5) rotate(5deg)'; // Zoom and rotate out
+            
+            homeView.classList.remove('cutscene-underlay'); // Restore home view brightness/clarity
+            homeView.style.filter = ''; // Explicitly clear filter
 
+            setTimeout(() => {
+                onboardingCutsceneOverlay.classList.add('hidden');
+                onboardingCutsceneOverlay.classList.remove('visible');
+                onboardingCutsceneOverlay.style.transform = ''; // Reset transform for next time
+                document.body.style.overflow = '';
+                clearInterval(scanlineInterval);
+            }, 1000); // Match transition duration
+        }, CUTSCENE_DURATION - 1000); // Start hiding animation 1s before total duration
+    }
 
-        setTimeout(() => {
-            onboardingCutsceneOverlay.classList.remove('visible');
-            onboardingCutsceneOverlay.classList.add('hidden');
-            document.body.style.overflow = ''; // Restore body scroll
-        }, CUTSCENE_DURATION);
+    async function typeOutText(element, text, speed, notes) {
+        element.textContent = '';
+        let noteIndex = 0;
+        for (let i = 0; i < text.length; i++) {
+            element.textContent += text.charAt(i);
+            if (text.charAt(i) !== ' ') { // Play sound only for non-space characters
+                 playSound('cutsceneType', notes[noteIndex % notes.length]);
+                 noteIndex++;
+            }
+            await new Promise(resolve => setTimeout(resolve, speed + (Math.random() * (speed / 2) - (speed / 4)))); // Add some randomness to typing
+        }
     }
 
 
@@ -728,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hidePageLoader() {
         if (pageLoadMinTimePassed && pageContentLoaded && pageLoader && !pageLoader.classList.contains('hidden')) {
-            pageLoader.classList.add('hidden');
+            pageLoader.classList.add('hidden'); // CSS transition handles the animation
             playSound('load');
         }
     }
@@ -756,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key === '/') { event.preventDefault(); playSound('click'); searchOverlay && searchOverlay.classList.contains('visible') ? closeSearchOverlay() : openSearchOverlay(); }
             else if (event.key === 'Escape') {
-                if (onboardingModal && onboardingModal.classList.contains('visible') && !onboardingCutsceneOverlay.classList.contains('visible')) { /* Skip onboarding if Esc pressed during modal */ playSound('click'); finishOnboarding(true); }
+                if (onboardingModal && onboardingModal.classList.contains('visible') && !onboardingCutsceneOverlay.classList.contains('visible')) { playSound('click'); finishOnboarding(true); }
                 else if (searchOverlay && searchOverlay.classList.contains('visible')) { playSound('click'); closeSearchOverlay(); }
                 else if (warningModal && warningModal.classList.contains('visible')) { playSound('click'); hideWarningModal(); }
                 else if (settingsModal && settingsModal.classList.contains('visible')) { playSound('click'); closeSettingsModal(); }
@@ -776,7 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (aspectRatioDropdown && !aspectRatioDropdown.contains(event.target) && aspectRatioDropdown.classList.contains('open')) toggleDropdown();
             if (warningModalBackdrop && event.target === warningModalBackdrop) { playSound('click'); hideWarningModal(); }
             if (settingsModalBackdrop && event.target === settingsModalBackdrop) { playSound('click'); closeSettingsModal(); }
-            // Do not close onboarding on backdrop click to ensure user goes through it or explicitly skips.
         });
         if (modalStayButton) modalStayButton.addEventListener('click', () => { playSound('click'); hideWarningModal(); });
         if (modalLeaveButton) modalLeaveButton.addEventListener('click', () => { playSound('click'); hideWarningModal(); navigateHome(); });
@@ -811,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 
     pageContentLoaded = true;
-    hidePageLoader(); // Attempt to hide again after setup
+    hidePageLoader();
 
     window.addEventListener('resize', () => {
         if (homeView && !homeView.classList.contains('hidden')) adjustMainHeight(homeView);
@@ -820,9 +845,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!settings.onboardingCompleted) {
-        setTimeout(showOnboardingModal, 500); // Show onboarding if not completed
+        setTimeout(showOnboardingModal, 500);
     } else {
-        // If onboarding is already completed, ensure body scroll is not hidden
-        document.body.style.overflow = '';
+        document.body.style.overflow = ''; // Ensure scroll is enabled if onboarding was completed
     }
 });
