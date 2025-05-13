@@ -748,11 +748,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function openSearchOverlay() {
         if (!searchOverlay || !searchOverlayInput || !searchOverlayInputContainer) return;
         playSound('searchOpen');
-        searchOverlay.classList.remove('results-active'); // Ensure it starts in centered mode
+        searchOverlay.classList.remove('results-active');
         searchOverlay.classList.add('visible');
         document.body.classList.add('search-overlay-active');
         searchOverlayInput.value = '';
-        if(searchResultsGrid) searchResultsGrid.innerHTML = '<p class="text-center col-span-full text-gray-400">Press Enter to search.</p>';
+        if (searchResultsGrid) {
+            searchResultsGrid.innerHTML = '<p class="text-center col-span-full text-gray-400">Press Enter to search.</p>';
+        }
         if(overlaySearchTagsWrapper) overlaySearchTagsWrapper.classList.remove('visible');
         if(searchOverlayResults) searchOverlayResults.style.opacity = '0'; // Hide results initially
         isOverlayResultsActive = false;
@@ -899,7 +901,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dropdownMenu) dropdownMenu.addEventListener('click', (e) => { playSound('click'); handleAspectRatioChange(e); });
         if (logoLink) logoLink.addEventListener('click', (e) => { e.preventDefault(); playSound('click'); navigateHome(); });
         
-        if (navbarSearchButton) navbarSearchButton.addEventListener('click', () => { playSound('click'); openSearchOverlay(); });
+        if (navbarSearchButton) {
+        navbarSearchButton.addEventListener('click', () => {
+            playSound('click');
+            openSearchOverlay();
+        });
         if (searchOverlayCloseButton) searchOverlayCloseButton.addEventListener('click', () => { playSound('click'); closeSearchOverlay(); });
 
         if (navbarSettingsButton) navbarSettingsButton.addEventListener('click', () => { playSound('click'); openSettingsModal(); });
