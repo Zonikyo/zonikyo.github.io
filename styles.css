@@ -15,7 +15,7 @@
     --primary-glow-rgb: 34, 211, 238;
     --secondary-glow-rgb: 163, 230, 53;
     --white-glow-rgb: 255, 255, 255;
-    --medium-bg-rgb: 30, 41, 59; /* For #1e293b */
+    --medium-bg-rgb: 30, 41, 59;
 }
 
 body {
@@ -86,6 +86,7 @@ main {
     100% { transform: scale(1) translateY(0px) rotate(0deg); opacity: 1; filter: blur(0); }
 }
 
+/* Page Loader: Ensure smooth exit */
 #page-loader {
     position: fixed; inset: 0;
     background: radial-gradient(circle at 50% 50%, var(--medium-bg) 0%, var(--dark-bg) 100%);
@@ -94,15 +95,16 @@ main {
     opacity: 1;
     transform: scale(1) translateY(0);
     visibility: visible;
-    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                visibility 0s linear 0.8s;
+    /* Corrected transition for visibility */
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                visibility 0s linear 0.7s; /* Delay visibility change until opacity/transform are done */
 }
 #page-loader.hidden {
     opacity: 0;
-    transform: scale(1.15) translateY(-30px);
+    transform: scale(0.9) translateY(-20px); /* Smoother, less aggressive exit */
     pointer-events: none;
-    visibility: hidden;
+    visibility: hidden; /* This will apply after the transition-delay for visibility */
 }
 #page-loader img {
     height: 64px;
@@ -138,6 +140,7 @@ main {
     30% { transform: translateY(-22px) scale(1.2) rotate(-10deg); filter: brightness(1.3); box-shadow: 0 20px 35px 0 rgba(236, 72, 153, 0.25), 0 0 20px 5px var(--accent-glow); }
 }
 
+/* Game Tile: Rounded corners fix */
 .game-card {
     transition:
         transform 0.4s var(--pop-curve),
@@ -147,12 +150,14 @@ main {
     background: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
     border: 2px solid transparent;
     position: relative;
-    overflow: visible;
-    border-radius: 1.25rem;
+    overflow: hidden; /* CRITICAL FIX: Ensures content is clipped to rounded corners */
+    border-radius: 1.25rem; /* This applies to all corners */
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     will-change: transform, box-shadow, border-color;
     z-index: 1;
+    display: flex; /* Added for better internal layout if needed */
+    flex-direction: column; /* Stack thumbnail and any potential future content */
 }
 .game-card:hover, .game-card:focus-visible {
     transform: translateY(-12px) scale(1.06) rotate(-1.5deg);
@@ -163,9 +168,9 @@ main {
 .thumbnail-container {
     position: relative;
     width: 100%; aspect-ratio: 16/9;
-    overflow: hidden;
+    overflow: hidden; /* Keep this for image scaling effects */
     background: var(--dark-bg);
-    border-radius: calc(1.25rem - 2px) calc(1.25rem - 2px) 0 0;
+    /* Removed individual border-radius here, parent .game-card handles it */
     transition: opacity 0.4s ease-out;
 }
 .thumbnail-container img {
@@ -216,6 +221,7 @@ main {
     }
 }
 
+/* Tag Icons: Visibility fix */
 .tags-icon-container {
     position: absolute; top: 0.8rem; left: 0.8rem; z-index: 5;
     display: flex; flex-wrap: wrap; gap: 0.6rem;
@@ -240,14 +246,15 @@ main {
     left: 50%; top: 50%;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
     opacity: 1;
-    transition: transform 0.25s var(--bounce-curve), opacity 0.2s ease-out;
+    transition: transform 0.25s var(--bounce-curve) 0.05s, opacity 0.2s ease-out 0.05s; /* Delay hiding icon slightly */
 }
 .tag-icon-wrapper .tag-text {
     opacity: 0;
     max-width: 0;
     white-space: nowrap;
     font-size: 0.85rem; font-weight: 700;
-    transition: opacity 0.25s ease-out 0.05s, max-width 0.3s var(--bounce-curve) 0.05s;
+    /* Delay text appearance slightly */
+    transition: opacity 0.25s ease-out 0.1s, max-width 0.3s var(--bounce-curve) 0.1s;
     color: var(--dark-bg);
     position: absolute;
     left: 50%; top: 50%;
@@ -264,14 +271,14 @@ main {
 }
 .tag-icon-wrapper:hover .tag-icon, .tag-icon-wrapper:focus-visible .tag-icon {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5) rotate(45deg);
+    transform: translate(-50%, -50%) scale(0.3) rotate(60deg); /* More distinct hide animation */
 }
 .tag-icon-wrapper:hover .tag-text, .tag-icon-wrapper:focus-visible .tag-text {
     opacity: 1;
     max-width: 150px;
-    position: relative;
-    transform: none;
-    left: auto; top: auto;
+    position: relative; /* Allows it to take space */
+    transform: none; /* Reset transform */
+    left: auto; top: auto; /* Reset positioning for flow */
     letter-spacing: 0.03em;
     pointer-events: auto;
 }
@@ -279,11 +286,12 @@ main {
 .title-overlay {
     position: absolute; bottom: 0; left: 0; width: 100%;
     background: linear-gradient(to top, rgba(15,23,42,1) 20%, rgba(15,23,42,0.01) 100%);
-    padding: 2rem 1.25rem 1rem 1.25rem;
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.45s var(--pop-curve), transform 0.45s var(--pop-curve);
-    z-index: 5; pointer-events: none;
-    border-radius: 0 0 calc(1.25rem - 2px) calc(1.25rem - 2px);
+    padding: 1rem 1.25rem; /* Reduced padding slightly */
+    opacity: 0; transform: translateY(20px); /* Slightly less Y travel */
+    transition: opacity 0.4s var(--pop-curve), transform 0.4s var(--pop-curve);
+    z-index: 2; /* Above thumbnail, below hover effects if any */
+    pointer-events: none;
+    /* border-radius is handled by parent .game-card with overflow:hidden */
 }
 .game-card:hover .title-overlay {
     opacity: 1; transform: translateY(0);
@@ -291,7 +299,7 @@ main {
 .title-overlay h3 {
     font-family: var(--font-display);
     color: #fff; text-shadow: 0 2px 10px rgba(var(--accent-glow), 0.6);
-    font-size: 1.35rem;
+    font-size: 1.25rem; /* Slightly smaller title in overlay */
 }
 
 @keyframes bounceIn {
@@ -428,64 +436,57 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     opacity: 1; max-width: 100px; position: relative; transform: translateX(0) scale(1); left: auto;
 }
 
-@keyframes mainHeaderPopIn {
-    0% { opacity: 0; transform: translateY(-25px) scale(0.98); }
-    70% { opacity: 1; transform: translateY(5px) scale(1.02); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-}
+/* Navbar Height Fix */
+@keyframes mainHeaderPopIn { /* Existing */ }
 #main-header {
     background-image: linear-gradient(95deg, var(--accent-glow) 0%, #a21caf 50%, #7e22ce 100%);
     color: #f3f4f6;
-    padding: 1.25rem 0;
+    padding: 0.75rem 0; /* REDUCED PADDING for navbar height */
     flex-shrink: 0;
     box-shadow: 0 6px 30px rgba(126, 34, 206, 0.25), 0 0 15px var(--accent-glow) inset;
     animation: mainHeaderPopIn 0.8s var(--pop-curve) forwards;
     position: sticky; top: 0; z-index: 500;
 }
-@keyframes fadeInGeneric {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeInGeneric { /* Existing */ }
 .header-container {
     display: flex; align-items: center; justify-content: space-between;
     max-width: 1380px;
     margin-left: auto; margin-right: auto;
-    padding-left: 1.5rem; padding-right: 1.5rem;
+    padding-left: 1.5rem; padding-right: 1.5rem; /* Horizontal padding remains */
 }
 #logo-container {
-    display: flex; align-items: center; gap: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; gap: 0.8rem; /* Reduced gap */
+    cursor: pointer;
     transition: transform 0.3s var(--bounce-curve);
 }
 #logo-container:hover {
     transform: scale(1.05) rotate(-3deg);
 }
-#logo-image { height: 42px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
+#logo-image { height: 36px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); } /* Slightly smaller logo */
 #beta-tag {
     background-color: var(--secondary-glow);
     color: var(--dark-bg);
-    font-size: 0.8rem; font-weight: 800;
-    padding: 0.25rem 0.75rem; border-radius: 0.5rem;
+    font-size: 0.7rem; font-weight: 800; /* Slightly smaller beta tag */
+    padding: 0.2rem 0.6rem; border-radius: 0.4rem;
     text-transform: uppercase; letter-spacing: 0.08em; line-height: 1;
-    box-shadow: 0 0 12px 3px rgba(var(--secondary-glow-rgb),0.45);
+    box-shadow: 0 0 10px 2px rgba(var(--secondary-glow-rgb),0.45);
     animation: pulse-beta 1.8s cubic-bezier(.77,0,.18,1) infinite;
 }
-@keyframes pulse-beta {
-    0%,100% { opacity: 1; transform: scale(1) rotate(0deg); box-shadow: 0 0 12px 3px rgba(var(--secondary-glow-rgb),0.45);}
-    50% { opacity: .85; transform: scale(1.12) rotate(3deg); box-shadow: 0 0 18px 5px rgba(var(--secondary-glow-rgb),0.6);}
-}
-#navbar-right-section { display: flex; align-items: center; gap: 0.75rem; }
-#navbar-clock { font-size: 1.1rem; font-weight: 700; color: #f3f4f6; text-shadow: 0 1px 3px rgba(0,0,0,0.45); font-family: var(--font-display); }
+@keyframes pulse-beta { /* Existing */ }
+#navbar-right-section { display: flex; align-items: center; gap: 0.5rem; } /* Reduced gap */
+#navbar-clock { font-size: 1rem; font-weight: 700; color: #f3f4f6; text-shadow: 0 1px 3px rgba(0,0,0,0.45); font-family: var(--font-display); }
 
 .navbar-icon-button {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #e0e7ff;
-    padding: 0.6rem; border-radius: 50%;
+    padding: 0.5rem; /* Reduced padding for icon buttons */
+    border-radius: 50%;
     transition: background-color 0.25s var(--bounce-curve), transform 0.25s var(--bounce-curve), box-shadow 0.25s var(--bounce-curve);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
 }
-.navbar-icon-button svg { width: 1.5rem; height: 1.5rem; }
+.navbar-icon-button svg { width: 1.3rem; height: 1.3rem; } /* Slightly smaller icons */
 .navbar-icon-button:hover {
     background-color: rgba(255,255,255,0.2);
     transform: scale(1.15) rotate(5deg);
@@ -759,6 +760,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     box-shadow: 0 0 10px var(--secondary-glow);
 }
 
+/* Search Input & Tags: Animation and Layout Fixes */
 .search-input, .search-overlay-input {
     background-color: var(--medium-bg);
     border: 2px solid var(--light-bg);
@@ -767,7 +769,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     border-radius: 9999px;
     width: 100%;
     font-size: 1.1rem;
-    transition: all 0.3s var(--pop-curve), box-shadow 0.3s ease-out;
+    transition: all 0.25s var(--pop-curve), box-shadow 0.25s ease-out, transform 0.2s ease-out; /* Smoother transitions */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1) inset;
     font-family: var(--font-body);
 }
@@ -776,7 +778,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     box-shadow: 0 0 0 3.5px var(--secondary-glow), 0 3px 10px rgba(0,0,0,0.1) inset, 0 0 15px var(--secondary-glow);
     border-color: var(--secondary-glow);
     background: linear-gradient(95deg, var(--medium-bg) 85%, rgba(var(--secondary-glow-rgb), 0.2) 100%);
-    transform: scale(1.015);
+    transform: scale(1.01); /* Slightly less scale */
 }
 .search-input-container { margin-bottom: 1.5rem; display: flex; justify-content: center;}
 #homepage-search-input { max-width: 550px; }
@@ -785,34 +787,34 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
 .search-tags-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Center the scroll buttons and container */
     margin-bottom: 2rem;
-    gap: 0.5rem;
+    gap: 0.5rem; /* Gap between scroll buttons and container */
     opacity: 0;
     max-height: 0px;
     overflow: hidden;
-    transition: opacity 0.4s ease-out, max-height 0.5s ease-out, margin-bottom 0.4s ease-out;
+    transition: opacity 0.35s ease-out, max-height 0.45s ease-out, margin-bottom 0.35s ease-out; /* Adjusted timings */
     width: 100%;
-    max-width: 700px;
+    max-width: 700px; /* Consistent with search input */
     margin-left: auto;
     margin-right: auto;
 }
 .search-tags-wrapper.visible {
     opacity: 1;
-    max-height: 100px;
+    max-height: 60px; /* Enough for one row of tags + padding */
 }
 .game-grid.shifted-down, .search-results-grid.shifted-down {
     margin-top: 1rem;
 }
-.search-tags-container {
+.search-tags-container { /* This is the scrollable part */
     display: flex;
+    flex-grow: 1; /* Allow it to take available space between buttons */
     overflow-x: auto;
     gap: 0.6rem;
-    padding: 0.5rem 0.25rem;
+    padding: 0.5rem 0; /* Vertical padding only */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    width: calc(100% - 6rem);
-    margin: 0 auto;
+    /* No fixed width, let flexbox handle it */
 }
 .search-tags-container::-webkit-scrollbar { display: none; }
 
@@ -823,7 +825,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     padding: 0.5rem;
     border-radius: 50%;
     transition: all 0.2s var(--bounce-curve);
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent scroll buttons from shrinking */
 }
 .tag-scroll-button:hover {
     background: var(--primary-glow);
@@ -1235,6 +1237,10 @@ input:checked + .toggle-slider:before {
 .hidden { display: none !important; }
 
 @media (max-width: 768px) {
+    #main-header { padding: 0.6rem 0; } /* Further reduce navbar padding on smaller screens */
+    #logo-image { height: 32px; }
+    .navbar-icon-button { padding: 0.4rem; }
+    .navbar-icon-button svg { width: 1.2rem; height: 1.2rem; }
     #homepage-greeting { font-size: 2.2rem; }
     #game-title { font-size: 1.8rem; }
     .modal { padding: 1.5rem; max-width: 90%; }
@@ -1253,14 +1259,18 @@ input:checked + .toggle-slider:before {
     .cutscene-text { font-size: 1.4rem; }
     #cutscene-text-2 { font-size: 2rem; }
     #cutscene-logo { width: 80px; height: 80px; }
+    .search-tags-wrapper { max-width: calc(100% - 2rem); } /* Allow more space for tags on mobile */
+    .search-tags-container { width: calc(100% - 5rem); /* Adjust for scroll buttons */ }
 }
 
 @media (max-width: 600px) {
+    #main-header { padding: 0.5rem 0; }
+    #logo-image { height: 28px; }
     .game-card { border-radius: 1rem; }
     .title-overlay h3 { font-size: 1.15rem; }
     .tag-icon-wrapper { width: 2rem; height: 2rem; }
     .tag-icon-wrapper .tag-icon { width: 1rem; height: 1rem; }
-    .search-tags-container { max-width: calc(100vw - 80px); width: auto; }
+    .search-tags-container { max-width: calc(100vw - 70px); width: auto; } /* Ensure it doesn't overflow */
     .setting-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .setting-item label:not(.toggle-switch) { margin-bottom: 0.25rem; }
     .cutscene-text { font-size: 1.2rem; }
