@@ -16,6 +16,8 @@
     --secondary-glow-rgb: 163, 230, 53;
     --white-glow-rgb: 255, 255, 255;
     --medium-bg-rgb: 30, 41, 59;
+    --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 body {
@@ -86,7 +88,6 @@ main {
     100% { transform: scale(1) translateY(0px) rotate(0deg); opacity: 1; filter: blur(0); }
 }
 
-/* Page Loader: Ensure smooth exit */
 #page-loader {
     position: fixed; inset: 0;
     background: radial-gradient(circle at 50% 50%, var(--medium-bg) 0%, var(--dark-bg) 100%);
@@ -95,16 +96,15 @@ main {
     opacity: 1;
     transform: scale(1) translateY(0);
     visibility: visible;
-    /* Corrected transition for visibility */
     transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
                 transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
-                visibility 0s linear 0.7s; /* Delay visibility change until opacity/transform are done */
+                visibility 0s linear 0.7s;
 }
 #page-loader.hidden {
     opacity: 0;
-    transform: scale(0.9) translateY(-20px); /* Smoother, less aggressive exit */
+    transform: scale(0.9) translateY(-20px);
     pointer-events: none;
-    visibility: hidden; /* This will apply after the transition-delay for visibility */
+    visibility: hidden;
 }
 #page-loader img {
     height: 64px;
@@ -140,7 +140,6 @@ main {
     30% { transform: translateY(-22px) scale(1.2) rotate(-10deg); filter: brightness(1.3); box-shadow: 0 20px 35px 0 rgba(236, 72, 153, 0.25), 0 0 20px 5px var(--accent-glow); }
 }
 
-/* Game Tile: Rounded corners fix */
 .game-card {
     transition:
         transform 0.4s var(--pop-curve),
@@ -150,14 +149,14 @@ main {
     background: linear-gradient(135deg, var(--light-bg) 0%, var(--medium-bg) 100%);
     border: 2px solid transparent;
     position: relative;
-    overflow: hidden; /* CRITICAL FIX: Ensures content is clipped to rounded corners */
-    border-radius: 1.25rem; /* This applies to all corners */
+    overflow: hidden;
+    border-radius: 1.25rem;
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     will-change: transform, box-shadow, border-color;
     z-index: 1;
-    display: flex; /* Added for better internal layout if needed */
-    flex-direction: column; /* Stack thumbnail and any potential future content */
+    display: flex;
+    flex-direction: column;
 }
 .game-card:hover, .game-card:focus-visible {
     transform: translateY(-12px) scale(1.06) rotate(-1.5deg);
@@ -168,9 +167,8 @@ main {
 .thumbnail-container {
     position: relative;
     width: 100%; aspect-ratio: 16/9;
-    overflow: hidden; /* Keep this for image scaling effects */
+    overflow: hidden;
     background: var(--dark-bg);
-    /* Removed individual border-radius here, parent .game-card handles it */
     transition: opacity 0.4s ease-out;
 }
 .thumbnail-container img {
@@ -221,7 +219,6 @@ main {
     }
 }
 
-/* Tag Icons: Visibility fix */
 .tags-icon-container {
     position: absolute; top: 0.8rem; left: 0.8rem; z-index: 5;
     display: flex; flex-wrap: wrap; gap: 0.6rem;
@@ -246,14 +243,13 @@ main {
     left: 50%; top: 50%;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
     opacity: 1;
-    transition: transform 0.25s var(--bounce-curve) 0.05s, opacity 0.2s ease-out 0.05s; /* Delay hiding icon slightly */
+    transition: transform 0.25s var(--bounce-curve) 0.05s, opacity 0.2s ease-out 0.05s;
 }
 .tag-icon-wrapper .tag-text {
     opacity: 0;
     max-width: 0;
     white-space: nowrap;
     font-size: 0.85rem; font-weight: 700;
-    /* Delay text appearance slightly */
     transition: opacity 0.25s ease-out 0.1s, max-width 0.3s var(--bounce-curve) 0.1s;
     color: var(--dark-bg);
     position: absolute;
@@ -271,14 +267,14 @@ main {
 }
 .tag-icon-wrapper:hover .tag-icon, .tag-icon-wrapper:focus-visible .tag-icon {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.3) rotate(60deg); /* More distinct hide animation */
+    transform: translate(-50%, -50%) scale(0.3) rotate(60deg);
 }
 .tag-icon-wrapper:hover .tag-text, .tag-icon-wrapper:focus-visible .tag-text {
     opacity: 1;
     max-width: 150px;
-    position: relative; /* Allows it to take space */
-    transform: none; /* Reset transform */
-    left: auto; top: auto; /* Reset positioning for flow */
+    position: relative;
+    transform: none;
+    left: auto; top: auto;
     letter-spacing: 0.03em;
     pointer-events: auto;
 }
@@ -286,12 +282,11 @@ main {
 .title-overlay {
     position: absolute; bottom: 0; left: 0; width: 100%;
     background: linear-gradient(to top, rgba(15,23,42,1) 20%, rgba(15,23,42,0.01) 100%);
-    padding: 1rem 1.25rem; /* Reduced padding slightly */
-    opacity: 0; transform: translateY(20px); /* Slightly less Y travel */
+    padding: 1rem 1.25rem;
+    opacity: 0; transform: translateY(20px);
     transition: opacity 0.4s var(--pop-curve), transform 0.4s var(--pop-curve);
-    z-index: 2; /* Above thumbnail, below hover effects if any */
+    z-index: 2;
     pointer-events: none;
-    /* border-radius is handled by parent .game-card with overflow:hidden */
 }
 .game-card:hover .title-overlay {
     opacity: 1; transform: translateY(0);
@@ -299,7 +294,7 @@ main {
 .title-overlay h3 {
     font-family: var(--font-display);
     color: #fff; text-shadow: 0 2px 10px rgba(var(--accent-glow), 0.6);
-    font-size: 1.25rem; /* Slightly smaller title in overlay */
+    font-size: 1.25rem;
 }
 
 @keyframes bounceIn {
@@ -436,57 +431,66 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     opacity: 1; max-width: 100px; position: relative; transform: translateX(0) scale(1); left: auto;
 }
 
-/* Navbar Height Fix */
-@keyframes mainHeaderPopIn { /* Existing */ }
+@keyframes mainHeaderPopIn {
+    0% { opacity: 0; transform: translateY(-25px) scale(0.98); }
+    70% { opacity: 1; transform: translateY(5px) scale(1.02); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 #main-header {
     background-image: linear-gradient(95deg, var(--accent-glow) 0%, #a21caf 50%, #7e22ce 100%);
     color: #f3f4f6;
-    padding: 0.75rem 0; /* REDUCED PADDING for navbar height */
+    padding: 0.75rem 0;
     flex-shrink: 0;
     box-shadow: 0 6px 30px rgba(126, 34, 206, 0.25), 0 0 15px var(--accent-glow) inset;
     animation: mainHeaderPopIn 0.8s var(--pop-curve) forwards;
     position: sticky; top: 0; z-index: 500;
 }
-@keyframes fadeInGeneric { /* Existing */ }
+@keyframes fadeInGeneric {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 .header-container {
     display: flex; align-items: center; justify-content: space-between;
     max-width: 1380px;
     margin-left: auto; margin-right: auto;
-    padding-left: 1.5rem; padding-right: 1.5rem; /* Horizontal padding remains */
+    padding-left: 1.5rem; padding-right: 1.5rem;
 }
 #logo-container {
-    display: flex; align-items: center; gap: 0.8rem; /* Reduced gap */
+    display: flex; align-items: center; gap: 0.8rem;
     cursor: pointer;
     transition: transform 0.3s var(--bounce-curve);
 }
 #logo-container:hover {
     transform: scale(1.05) rotate(-3deg);
 }
-#logo-image { height: 36px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); } /* Slightly smaller logo */
+#logo-image { height: 36px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
 #beta-tag {
     background-color: var(--secondary-glow);
     color: var(--dark-bg);
-    font-size: 0.7rem; font-weight: 800; /* Slightly smaller beta tag */
+    font-size: 0.7rem; font-weight: 800;
     padding: 0.2rem 0.6rem; border-radius: 0.4rem;
     text-transform: uppercase; letter-spacing: 0.08em; line-height: 1;
     box-shadow: 0 0 10px 2px rgba(var(--secondary-glow-rgb),0.45);
     animation: pulse-beta 1.8s cubic-bezier(.77,0,.18,1) infinite;
 }
-@keyframes pulse-beta { /* Existing */ }
-#navbar-right-section { display: flex; align-items: center; gap: 0.5rem; } /* Reduced gap */
+@keyframes pulse-beta {
+    0%,100% { opacity: 1; transform: scale(1) rotate(0deg); box-shadow: 0 0 10px 2px rgba(var(--secondary-glow-rgb),0.45);}
+    50% { opacity: .85; transform: scale(1.12) rotate(3deg); box-shadow: 0 0 15px 4px rgba(var(--secondary-glow-rgb),0.6);}
+}
+#navbar-right-section { display: flex; align-items: center; gap: 0.5rem; }
 #navbar-clock { font-size: 1rem; font-weight: 700; color: #f3f4f6; text-shadow: 0 1px 3px rgba(0,0,0,0.45); font-family: var(--font-display); }
 
 .navbar-icon-button {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #e0e7ff;
-    padding: 0.5rem; /* Reduced padding for icon buttons */
+    padding: 0.5rem;
     border-radius: 50%;
     transition: background-color 0.25s var(--bounce-curve), transform 0.25s var(--bounce-curve), box-shadow 0.25s var(--bounce-curve);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
 }
-.navbar-icon-button svg { width: 1.3rem; height: 1.3rem; } /* Slightly smaller icons */
+.navbar-icon-button svg { width: 1.3rem; height: 1.3rem; }
 .navbar-icon-button:hover {
     background-color: rgba(255,255,255,0.2);
     transform: scale(1.15) rotate(5deg);
@@ -760,7 +764,6 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     box-shadow: 0 0 10px var(--secondary-glow);
 }
 
-/* Search Input & Tags: Animation and Layout Fixes */
 .search-input, .search-overlay-input {
     background-color: var(--medium-bg);
     border: 2px solid var(--light-bg);
@@ -769,7 +772,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     border-radius: 9999px;
     width: 100%;
     font-size: 1.1rem;
-    transition: all 0.25s var(--pop-curve), box-shadow 0.25s ease-out, transform 0.2s ease-out; /* Smoother transitions */
+    transition: all 0.25s var(--pop-curve), box-shadow 0.25s ease-out, transform 0.2s ease-out;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1) inset;
     font-family: var(--font-body);
 }
@@ -778,43 +781,42 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     box-shadow: 0 0 0 3.5px var(--secondary-glow), 0 3px 10px rgba(0,0,0,0.1) inset, 0 0 15px var(--secondary-glow);
     border-color: var(--secondary-glow);
     background: linear-gradient(95deg, var(--medium-bg) 85%, rgba(var(--secondary-glow-rgb), 0.2) 100%);
-    transform: scale(1.01); /* Slightly less scale */
+    transform: scale(1.01);
 }
 .search-input-container { margin-bottom: 1.5rem; display: flex; justify-content: center;}
 #homepage-search-input { max-width: 550px; }
-.search-overlay-input { margin-bottom: 1.5rem; max-width: 700px; }
+/* .search-overlay-input is styled within .search-overlay-input-container now */
 
 .search-tags-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the scroll buttons and container */
+    justify-content: center;
     margin-bottom: 2rem;
-    gap: 0.5rem; /* Gap between scroll buttons and container */
+    gap: 0.5rem;
     opacity: 0;
     max-height: 0px;
     overflow: hidden;
-    transition: opacity 0.35s ease-out, max-height 0.45s ease-out, margin-bottom 0.35s ease-out; /* Adjusted timings */
+    transition: opacity 0.35s ease-out, max-height 0.45s ease-out, margin-bottom 0.35s ease-out;
     width: 100%;
-    max-width: 700px; /* Consistent with search input */
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
 }
 .search-tags-wrapper.visible {
     opacity: 1;
-    max-height: 60px; /* Enough for one row of tags + padding */
+    max-height: 60px;
 }
 .game-grid.shifted-down, .search-results-grid.shifted-down {
     margin-top: 1rem;
 }
-.search-tags-container { /* This is the scrollable part */
+.search-tags-container {
     display: flex;
-    flex-grow: 1; /* Allow it to take available space between buttons */
+    flex-grow: 1;
     overflow-x: auto;
     gap: 0.6rem;
-    padding: 0.5rem 0; /* Vertical padding only */
+    padding: 0.5rem 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* No fixed width, let flexbox handle it */
 }
 .search-tags-container::-webkit-scrollbar { display: none; }
 
@@ -825,7 +827,7 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     padding: 0.5rem;
     border-radius: 50%;
     transition: all 0.2s var(--bounce-curve);
-    flex-shrink: 0; /* Prevent scroll buttons from shrinking */
+    flex-shrink: 0;
 }
 .tag-scroll-button:hover {
     background: var(--primary-glow);
@@ -868,25 +870,94 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
     transform: translateX(-4px) scale(1.1) rotate(-5deg);
 }
 
+/* Search Overlay Redesign */
 .search-overlay {
-    position: fixed; inset: 0;
-    background: radial-gradient(circle at 70% 30%, var(--medium-bg) 0%, var(--dark-bg) 90%);
-    z-index: 800; padding: 2rem;
-    display: flex; flex-direction: column; align-items: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.4s var(--bounce-curve), visibility 0s linear 0.4s;
-    backdrop-filter: blur(5px);
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-in-out-cubic), backdrop-filter 0.4s var(--ease-in-out-cubic), visibility 0s linear 0.4s;
     visibility: hidden;
+    overflow: hidden;
 }
 .search-overlay.visible {
-    opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s;
+    opacity: 1;
+    pointer-events: auto;
+    backdrop-filter: blur(8px) brightness(0.7);
+    visibility: visible;
+    transition-delay: 0s;
+}
+.search-overlay-input-container {
+    position: absolute; /* Use absolute for precise positioning */
+    width: 100%;
+    max-width: 600px;
+    left: 50%; /* Center horizontally */
+    top: 40vh; /* Initial vertical centering, adjust as needed */
+    transform: translate(-50%, -50%); /* Precise centering */
+    transition: top 0.5s var(--ease-in-out-cubic), transform 0.5s var(--ease-in-out-cubic);
+    z-index: 810;
+}
+.search-overlay.results-active .search-overlay-input-container {
+    top: 3rem; /* Move to top when results are active */
+    transform: translate(-50%, 0); /* Adjust transform for top alignment */
+}
+.search-overlay-input {
+    margin-bottom: 0;
+    /* Ensure it has a distinct style if needed, or inherit from .search-input */
+}
+#overlay-search-tags-wrapper {
+    position: absolute;
+    top: calc(3rem + 60px); /* Position below the moved search bar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 700px;
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 0.3s ease-out 0.3s, max-height 0.4s ease-out 0.3s;
+    z-index: 805;
+    /* Ensure it's a flex container to center its children (scroll buttons and tag container) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.search-overlay.results-active #overlay-search-tags-wrapper.visible {
+    opacity: 1;
+    max-height: 60px;
+}
+#search-overlay-results {
+    position: absolute; /* Position below the search input container */
+    top: calc(3rem + 60px + 70px); /* Position below tags wrapper */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    height: calc(100vh - (3rem + 60px + 70px + 4rem)); /* Calculate remaining height, adjust 4rem for bottom padding */
+    overflow-y: auto;
+    padding: 1rem;
+    opacity: 0;
+    transform: translate(-50%, 50px); /* Start off-screen from bottom */
+    transition: opacity 0.5s var(--ease-out-quint) 0.2s, transform 0.5s var(--ease-out-quint) 0.2s;
+    z-index: 800;
+}
+.search-overlay.results-active #search-overlay-results {
+    opacity: 1;
+    transform: translate(-50%, 0); /* Slide in from bottom */
+}
+#search-results-grid {
+    padding-bottom: 2rem;
 }
 .search-overlay-close-button {
-    position: absolute; top: 2rem; right: 2rem;
-    background: none; border: none; color: var(--text-secondary);
-    padding: 0.8rem; border-radius: 50%;
-    transition: color 0.25s ease-out, transform 0.25s var(--bounce-curve), background-color 0.25s ease-out;
-    cursor: pointer;
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 820;
 }
 .search-overlay-close-button:hover {
     color: #fff;
@@ -895,19 +966,13 @@ body::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
 }
 .search-overlay-close-button svg { width: 1.75rem; height: 1.75rem; }
 
-.search-overlay-results {
-    width: 100%; max-width: 1200px;
-    overflow-y: auto;
-    flex-grow: 1;
-    padding-top: 1rem;
+body.search-overlay-active > header,
+body.search-overlay-active > main,
+body.search-overlay-active > footer {
+    filter: blur(5px) brightness(0.6);
+    pointer-events: none;
+    transition: filter 0.4s var(--ease-in-out-cubic);
 }
-.search-overlay-results::-webkit-scrollbar { width: 10px; }
-.search-overlay-results::-webkit-scrollbar-track { background: var(--dark-bg); border-radius: 10px; }
-.search-overlay-results::-webkit-scrollbar-thumb {
-    background: var(--light-bg); border-radius: 10px; border: 2px solid var(--dark-bg);
-    transition: background-color 0.3s ease-out;
-}
-.search-overlay-results::-webkit-scrollbar-thumb:hover { background: var(--primary-glow); }
 
 :focus-visible:not(:active) {
     outline: 3px solid var(--secondary-glow) !important;
@@ -1237,7 +1302,7 @@ input:checked + .toggle-slider:before {
 .hidden { display: none !important; }
 
 @media (max-width: 768px) {
-    #main-header { padding: 0.6rem 0; } /* Further reduce navbar padding on smaller screens */
+    #main-header { padding: 0.6rem 0; }
     #logo-image { height: 32px; }
     .navbar-icon-button { padding: 0.4rem; }
     .navbar-icon-button svg { width: 1.2rem; height: 1.2rem; }
@@ -1259,8 +1324,12 @@ input:checked + .toggle-slider:before {
     .cutscene-text { font-size: 1.4rem; }
     #cutscene-text-2 { font-size: 2rem; }
     #cutscene-logo { width: 80px; height: 80px; }
-    .search-tags-wrapper { max-width: calc(100% - 2rem); } /* Allow more space for tags on mobile */
-    .search-tags-container { width: calc(100% - 5rem); /* Adjust for scroll buttons */ }
+    .search-tags-wrapper { max-width: calc(100% - 2rem); }
+    .search-tags-container { width: calc(100% - 5rem); }
+    .search-overlay-input-container { top: 20vh; max-width: 90%; }
+    .search-overlay.results-active .search-overlay-input-container { top: 1.5rem; }
+    #overlay-search-tags-wrapper { top: calc(1.5rem + 60px); }
+    #search-overlay-results { top: calc(1.5rem + 60px + 70px); height: calc(100vh - (1.5rem + 60px + 70px + 3rem));}
 }
 
 @media (max-width: 600px) {
@@ -1270,7 +1339,7 @@ input:checked + .toggle-slider:before {
     .title-overlay h3 { font-size: 1.15rem; }
     .tag-icon-wrapper { width: 2rem; height: 2rem; }
     .tag-icon-wrapper .tag-icon { width: 1rem; height: 1rem; }
-    .search-tags-container { max-width: calc(100vw - 70px); width: auto; } /* Ensure it doesn't overflow */
+    .search-tags-container { max-width: calc(100vw - 70px); width: auto; }
     .setting-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .setting-item label:not(.toggle-switch) { margin-bottom: 0.25rem; }
     .cutscene-text { font-size: 1.2rem; }
