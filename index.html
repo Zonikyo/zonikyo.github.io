@@ -1,270 +1,285 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Companion</title>
+    <title>NeonWave Arcade</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    
-                }
-            }
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ical.js/1.4.0/ical.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen transition-colors duration-300">
+<body>
 
-    <nav id="mainNav" class="bg-slate-800/70 backdrop-blur-md shadow-md sticky top-0 z-30 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-indigo-400">Class Companion</span>
+    <div id="page-loader">
+        <img src="https://placehold.co/128x128/111827/22d3ee?text=NW" alt="NeonWave Loading..." onerror="this.onerror=null;this.src='https://placehold.co/128x128/111827/22d3ee?text=NW';">
+        <div class="loader-animation">
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+        </div>
+    </div>
+
+    <header id="main-header">
+        <div class="header-container">
+            <a href="#" id="logo-link" title="Go to Homepage">
+                <div id="logo-container">
+                    <img id="logo-image" src="https://placehold.co/100x42/transparent/a3e635?text=NeonWave" alt="NeonWave Logo" onerror="this.onerror=null;this.src='https://placehold.co/100x42/transparent/a3e635?text=NeonWave';">
+                    <span id="beta-tag">Beta</span>
                 </div>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <button data-section="calendar" class="nav-link text-gray-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out active">Calendar</button>
-                    <button data-section="canvas" class="nav-link text-gray-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Canvas</button>
-                    <button data-section="settings" class="nav-link text-gray-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Settings</button>
-                </div>
+            </a>
+            <div id="navbar-right-section">
+                <span id="navbar-clock"></span>
+                <button id="navbar-settings-button" class="navbar-icon-button" title="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.43.992a6.759 6.759 0 0 1 0 1.255c-.008.378.137.75.43.99l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-1.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.87l.214-1.281Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                </button>
+                <button id="navbar-search-button" class="navbar-icon-button" title="Search (Ctrl+/)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </button>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8">
-
-        <section id="settingsSection" class="content-bg rounded-lg p-6 md:p-8 mb-8 hidden fade-in">
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mb-8 border-b border-slate-700 pb-4">Settings</h2>
-
-           
-            <div class="settings-group mb-10 p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Proxy & Compass Feed</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label for="workerUrl" class="block text-sm font-medium text-slate-300 mb-1">Cloudflare Worker URL:</label>
-                        <input type="url" id="workerUrl" placeholder="https://your-worker.your-name.workers.dev" class="input-field block w-full">
-                    </div>
-                    <div>
-                        <label for="calendarUrl" class="block text-sm font-medium text-slate-300 mb-1">Compass Calendar Feed URL (.ics):</label>
-                        <div class="flex flex-col sm:flex-row gap-2">
-                            <input type="url" id="calendarUrl" placeholder="https://your-school.compass.education/..." class="input-field flex-grow block w-full">
-                            <button id="loadCalendarBtn" class="btn btn-primary whitespace-nowrap mt-2 sm:mt-0">
-                                Save & Load Compass
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                 <p class="mt-3 text-xs text-slate-400">Your Worker URL and Compass URL are saved locally. Auto-refresh every 10 seconds is enabled.</p>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8">
+        <section id="home-view" class="w-full p-4 md:p-6 lg:p-8">
+            <h2 id="homepage-greeting" class="text-3xl font-semibold mb-6 text-center">Choose Your Adventure!</h2>
+            <div class="search-input-container">
+                <input type="search" id="homepage-search-input" placeholder="Search games by title or tag..." class="search-input">
             </div>
-
-      
-            <div class="settings-group mb-10 p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Class Naming & Coloring (Compass)</h3>
-                <p class="text-sm text-slate-400 mb-1">Define short codes found in your Compass class names.</p>
-                <p class="text-sm text-slate-400 mb-4">If a code is found anywhere within a class name (e.g., 'ENG' in '09ENG1B01'), the <strong class="font-medium text-slate-300">entire original class name</strong> will be replaced with the "Full Name" you provide (e.g., 'English'). Assign colors for identification.</p>
-                <div id="mappingsList" class="mb-4 space-y-3"></div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
-                     <input type="text" id="newMappingCode" placeholder="Code (e.g., ENG)" class="input-field">
-                     <input type="text" id="newMappingName" placeholder="Full Name (e.g., English)" class="input-field">
-                     <div class="flex items-center gap-2">
-                        <select id="newMappingPastelColor" class="input-field flex-grow">
-                            <option value="">-- Pastel --</option>
-                        </select>
-                        <span class="text-sm text-slate-400">or</span>
-                        <input type="color" id="newMappingColor" value="#374151" class="h-10 w-12 p-1 border border-slate-600 rounded-md shadow-sm cursor-pointer bg-slate-700">
-                     </div>
-                     <button id="addMappingBtn" class="btn btn-success w-full sm:w-auto">Add</button>
+            <div id="homepage-search-tags-wrapper" class="search-tags-wrapper">
+                <button class="tag-scroll-button" id="scroll-tags-left-home" aria-label="Scroll tags left">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+                </button>
+                <div id="search-tags-container" class="search-tags-container">
                 </div>
             </div>
-
-          
-            <div class="settings-group mb-10 p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Canvas Integration</h3>
-                 <p class="text-sm text-slate-400 mb-2">Ensure your Cloudflare Worker URL is set above.</p>
-                 <div>
-                    <label for="canvasDomain" class="block text-sm font-medium text-slate-300 mb-1">Canvas Domain:</label>
-                    <input type="url" id="canvasDomain" placeholder="https://yourinstitution.instructure.com" class="input-field block w-full mb-3">
-                 </div>
-                 <div>
-                    <label for="canvasToken" class="block text-sm font-medium text-slate-300 mb-1">Canvas API Access Token:</label>
-                    <input type="password" id="canvasToken" placeholder="Paste your token here" class="input-field block w-full mb-3">
-                 </div>
-                <button id="saveCanvasSettingsBtn" class="btn btn-primary text-sm">Save Canvas Settings & Fetch</button>
-                <p class="mt-3 text-xs text-slate-400">Your Canvas domain and token are saved locally.</p>
-            </div>
-
-         
-            <div class="settings-group mb-10 p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Compass Class to Canvas Course Mapping</h3>
-                <p class="text-sm text-slate-400 mb-4">Link your Compass class names (after your custom naming above is applied) to your Canvas Course IDs. Get Course IDs from the URL of a Canvas course page (e.g., .../courses/COURSE_ID).</p>
-                <div id="canvasCourseMappingsList" class="mb-4 space-y-3"></div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                     <input type="text" id="compassClassNameForCanvas" placeholder="Compass Class Name" class="input-field">
-                     <input type="text" id="canvasCourseIdForMapping" placeholder="Canvas Course ID" class="input-field">
-                     <button id="addCanvasCourseMappingBtn" class="btn btn-success text-sm w-full sm:w-auto">Add Mapping</button>
-                </div>
-            </div>
-
-}
-            <div class="settings-group mb-10 p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Notifications</h3>
-                <div id="notificationPermissionStatus" class="text-sm text-slate-400 mb-3"></div>
-                <div class="space-y-4">
-                    <div class="notification-preference">
-                        <input type="checkbox" id="notifyClassesEnabled" class="form-checkbox">
-                        <label for="notifyClassesEnabled" class="font-medium text-slate-300">Class Reminders:</label>
-                        <input type="number" id="notifyClassesLeadTime" min="1" class="input-field">
-                        <span class="ml-2 text-sm text-slate-400">minutes before</span>
-                    </div>
-                    <div class="notification-preference">
-                        <input type="checkbox" id="notifyAssignmentsEnabled1" class="form-checkbox">
-                        <label for="notifyAssignmentsEnabled1" class="font-medium text-slate-300">Assignment Reminder 1:</label>
-                        <input type="number" id="notifyAssignmentsLeadTime1" min="1" class="input-field">
-                        <span class="ml-2 text-sm text-slate-400">minutes before due</span>
-                    </div>
-                     <div class="notification-preference">
-                        <input type="checkbox" id="notifyAssignmentsEnabled2" class="form-checkbox">
-                        <label for="notifyAssignmentsEnabled2" class="font-medium text-slate-300">Assignment Reminder 2:</label>
-                        <input type="number" id="notifyAssignmentsLeadTime2" min="1" class="input-field">
-                        <span class="ml-2 text-sm text-slate-400">minutes before due</span>
-                    </div>
-                     <div class="notification-preference">
-                        <input type="checkbox" id="notifyTimetableChangesEnabled" class="form-checkbox">
-                        <label for="notifyTimetableChangesEnabled" class="font-medium text-slate-300">Timetable Changes:</label>
-                        <span class="ml-2 text-sm text-slate-400">(Room, Time, Cancellation)</span>
-                    </div>
-                </div>
-                <button id="saveNotificationSettingsBtn" class="btn btn-primary mt-6 text-sm">Save Notification Preferences</button>
-            </div>
-
-           
-             <div class="settings-group p-6 rounded-lg">
-                <h3 class="text-xl font-semibold text-slate-200 mb-4">Appearance</h3>
-                <label for="backgroundUrl" class="block text-sm font-medium text-slate-300 mb-1">Custom Background Image URL:</label>
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="url" id="backgroundUrl" placeholder="Enter image URL..." class="input-field flex-grow">
-                    <button id="saveBackgroundBtn" class="btn btn-secondary whitespace-nowrap mt-2 sm:mt-0">Save BG</button>
-                     <button id="resetBackgroundBtn" class="btn btn-neutral whitespace-nowrap mt-2 sm:mt-0">Reset BG</button>
-                </div>
-                 <p class="mt-3 text-xs text-slate-400">Leave blank to use the default background.</p>
-            </div>
-
-             <div id="settingsMessageArea" class="text-center my-4"></div>
-        </section>
-
-        <section id="calendarSection" class="hidden fade-in">
-             <div class="flex flex-col lg:flex-row gap-6">
-                 <div class="flex-grow content-bg rounded-lg p-6 md:p-8 overflow-hidden">
-                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
-                         <h2 class="text-xl md:text-2xl font-bold text-slate-100 whitespace-nowrap">Your Schedule</h2>
-                         <div class="flex items-center gap-2 border border-slate-600 rounded-md p-0.5 bg-slate-700">
-                             <button id="listViewBtn" data-view="list" class="view-toggle-btn px-3 py-1 rounded-md text-sm font-medium transition duration-150 ease-in-out active">List</button>
-                             <button id="weekViewBtn" data-view="week" class="view-toggle-btn px-3 py-1 rounded-md text-sm font-medium transition duration-150 ease-in-out">Week</button>
-                         </div>
-                     </div>
-                     <div id="statusIndicator" class="status-indicator mb-6">
-                         <span id="statusIcon" class="status-icon"></span>
-                         <span id="statusText" class="status-text"></span>
-                     </div>
-                     <div id="listControls" class="flex flex-col md:flex-row gap-4 mb-6">
-                         <div class="flex-grow">
-                             <label for="searchBox" class="sr-only">Search Events</label>
-                             <input type="search" id="searchBox" placeholder="Search events (class, room, teacher)..." class="input-field block w-full">
-                         </div>
-                         <div>
-                             <label for="sortOrder" class="sr-only">Sort Events By</label>
-                             <select id="sortOrder" class="input-field block w-full md:w-auto">
-                                 <option value="time">Sort by Time</option>
-                                 <option value="name">Sort by Class Name</option>
-                                 <option value="location">Sort by Location</option>
-                             </select>
-                         </div>
-                     </div>
-                     <div id="calendarMessageArea" class="text-center my-4"></div>
-                     <div id="calendarDisplayList" class="space-y-4"></div>
-                      <div id="calendarDisplayWeek" class="hidden">
-                         <div class="weekly-grid-container">
-                             <div class="grid grid-cols-[60px_repeat(5,minmax(100px,1fr))] gap-1 sticky top-0 z-20">
-                                <div class="grid-header">Time</div> <div class="grid-header">Mon</div> <div class="grid-header">Tue</div> <div class="grid-header">Wed</div> <div class="grid-header">Thu</div> <div class="grid-header">Fri</div>
-                             </div>
-                             <div id="weeklyViewGrid" class="weekly-grid"></div>
-                         </div>
-                     </div>
-                 </div>
-                 <aside id="sidebar" class="content-bg rounded-lg p-4 lg:sticky lg:top-24 lg:self-start">
-                    <div id="liveClock" class="text-center text-2xl font-semibold text-slate-200 mb-4 p-3 rounded-lg"></div>
-                    <div id="canvasClassListSidebar" class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-200 mb-3 border-b border-slate-700 pb-2">Canvas Classes</h3>
-                        <div id="canvasClassListContainer" class="space-y-2 max-h-48 overflow-y-auto">
-                        </div>
-                    </div>
-                     <h3 class="text-lg font-semibold text-slate-200 mb-4 border-b border-slate-700 pb-2">Other Events & Due Dates</h3>
-                     <div id="sidebarEvents" class="space-y-3 max-h-[calc(70vh-150px)] overflow-y-auto"></div>
-                 </aside>
-             </div>
-        </section>
-
-        <section id="canvasSection" class="hidden fade-in">
-            <div class="content-bg rounded-lg p-6 md:p-8">
-                <h2 class="text-xl md:text-2xl font-bold text-slate-100 mb-6">Canvas Details</h2>
-                <div id="canvasDataMessageArea" class="text-center my-4"></div>
-                <div id="canvasCoursesDisplay" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    
-                </div>
+            <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
             </div>
         </section>
 
-        <div id="canvasDetailModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-40 hidden transition-opacity duration-300 opacity-0">
-            <div id="canvasDetailModalContent" class="content-bg rounded-xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
-            
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="canvasDetailCourseName" class="text-xl font-bold text-indigo-400">Course Details</h2>
-                    <button id="closeCanvasDetailModal" class="p-2 rounded-full hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+        <section id="game-view" class="w-full p-2 md:p-4 lg:p-6 hidden">
+             <div class="game-view-controls-container iframe-top-controls">
+                <h2 id="game-title" class="truncate">Game Title Here</h2>
+                <button id="back-button" class="back-button flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                    Back
+                </button>
+            </div>
+
+            <div class="iframe-wrapper">
+                <div id="iframe-loader" class="iframe-loader">
+                    <div class="loader-spinner"></div>
+                    <div class="loader-text">Loading Game... Please Wait</div>
+                </div>
+                <div id="iframe-container" class="iframe-container aspect-16-9">
+                    <iframe id="game-iframe" src="about:blank" frameborder="0" allowfullscreen class="w-full h-full block rounded-lg"></iframe>
+                </div>
+            </div>
+
+            <div class="game-view-controls-container iframe-bottom-controls">
+                <div class="dropdown relative inline-block text-left" id="aspect-ratio-dropdown">
+                    <button type="button" class="dropdown-button" id="dropdown-button" aria-expanded="false" aria-haspopup="true">
+                        <span id="dropdown-label">16:9</span>
+                        <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
-                </div>
-
-             
-                <div class="mb-6">
-                    <p class="text-sm text-slate-400">Course Code: <span id="canvasDetailCourseCode" class="font-medium text-slate-300"></span></p>
-                    <p class="text-sm text-slate-400">Term: <span id="canvasDetailCourseTerm" class="font-medium text-slate-300"></span></p>
-                    <a id="canvasDetailCourseLink" href="#" target="_blank" class="text-sm text-indigo-400 hover:text-indigo-300 hover:underline inline-flex items-center mt-1">
-                        View Course in Canvas
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    </a>
-                </div>
-
-               
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-slate-200 mb-3 border-b border-slate-700 pb-1">Assignments</h3>
-                    <div id="canvasDetailAssignmentsList" class="space-y-3 max-h-60 overflow-y-auto pr-2">
-                       
+                    <div class="dropdown-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hidden" id="dropdown-menu" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
+                        <div class="py-1" role="none">
+                            <button class="aspect-ratio-option active w-full text-left px-4 py-2 text-sm" data-aspect="aspect-16-9" data-label="16:9" role="menuitem">16:9 (Default)</button>
+                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-4-3" data-label="4:3" role="menuitem">4:3 (Retro)</button>
+                            <button class="aspect-ratio-option w-full text-left px-4 py-2 text-sm" data-aspect="aspect-1-1" data-label="1:1" role="menuitem">1:1 (Square)</button>
+                        </div>
                     </div>
                 </div>
 
-                
-                 <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-slate-200 mb-3 border-b border-slate-700 pb-1">Recent Announcements</h3>
-                    <div id="canvasDetailAnnouncementsList" class="space-y-2 text-sm text-slate-400">
-                        <p class="italic">Announcements loading or not available...</p>
-                    </div>
-                </div>
-
-                
-
+                <button id="fullscreen-button" title="Toggle Fullscreen" class="fullscreen-icon-button">
+                    <svg class="icon" id="fullscreen-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                     <svg class="icon hidden" id="fullscreen-icon-exit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
+                    </svg>
+                    <span class="text">Fullscreen</span>
+                </button>
             </div>
-        </div>
 
-
+            <div class="about-game-section">
+                <h3>About This Game</h3>
+                <p id="game-description" class="game-description-scroll max-h-40 overflow-y-auto pr-2">Game description will appear here.</p>
+            </div>
+        </section>
     </main>
 
-    <script src="script.js" defer></script>
+    <div id="search-overlay" class="search-overlay">
+        <button id="search-overlay-close-button" class="search-overlay-close-button" title="Close Search (Esc)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <div class="search-input-container w-full max-w-2xl">
+             <input type="search" id="search-overlay-input" placeholder="Search all games..." class="search-overlay-input">
+        </div>
+         <div id="overlay-search-tags-wrapper" class="search-tags-wrapper">
+            <button class="tag-scroll-button" id="scroll-tags-left-overlay" aria-label="Scroll tags left">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+            </button>
+            <div id="search-overlay-tags-container" class="search-tags-container">
+            </div>
+            <button class="tag-scroll-button" id="scroll-tags-right-overlay" aria-label="Scroll tags right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+            </button>
+        </div>
+        <div id="search-overlay-results" class="search-overlay-results">
+            <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+                <p class="text-center col-span-full text-gray-400">Start typing to see game results...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="warning-modal-backdrop" class="modal-backdrop"></div>
+    <div id="warning-modal" class="modal">
+        <h3>Exit Game?</h3>
+        <p>Heads up! Your current game progress might vanish into the digital void unless it's been saved externally. Are you sure you want to return to the arcade?</p>
+        <div class="modal-buttons justify-around">
+            <button id="modal-stay-button" class="modal-button">Stay & Play</button>
+            <button id="modal-leave-button" class="modal-button">Leave Game</button>
+        </div>
+    </div>
+
+    <div id="settings-modal-backdrop" class="modal-backdrop"></div>
+    <div id="settings-modal" class="modal">
+        <h3>Arcade Settings</h3>
+        <div class="modal-content">
+            <div class="setting-item">
+                <label for="setting-user-name">Your Name:</label>
+                <input type="text" id="setting-user-name" placeholder="Arcade Master">
+            </div>
+            <div class="setting-item">
+                <label for="setting-back-warning">Show 'Leave Game' Warning:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="setting-back-warning" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="setting-sound-effects">Enable Sound Effects:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="setting-sound-effects" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="setting-proxy-mode">
+                    Proxy Mode <span class="beta-note">(Beta)</span>:
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="setting-proxy-mode">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <button id="replay-onboarding-button" class="modal-button replay-onboarding-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    Replay Tutorial
+                </button>
+            </div>
+        </div>
+        <div class="modal-buttons">
+             <button id="settings-close-button" class="modal-button">Close</button>
+             <button id="settings-save-button" class="modal-button">Save Settings</button>
+        </div>
+    </div>
+
+    <div id="onboarding-backdrop" class="modal-backdrop"></div>
+    <div id="onboarding-modal" class="modal onboarding-modal">
+        <div id="onboarding-step-1" class="onboarding-step">
+            <h3>Welcome to NeonWave!</h3>
+            <p>To personalize your experience, what should we call you?</p>
+            <input type="text" id="onboarding-name-input" class="search-input mt-2 mb-4" placeholder="Arcade Hero">
+            <div class="onboarding-nav">
+                <button id="onboarding-next-1" class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-2" class="onboarding-step hidden">
+            <h3>Navigating the Arcade</h3>
+            <p>Great to meet you, <span class="onboarding-username-placeholder"></span>!</p>
+            <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click the <strong class="text-accent-glow">NeonWave Logo</strong> (top-left) anytime to return to this game library.</li>
+                <li>Use the <strong class="text-accent-glow">Search Icon</strong> (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="inline h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>) in the top-right or press <strong class="text-accent-glow">Ctrl+/</strong> to quickly find games.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-3" class="onboarding-step hidden">
+            <h3>Finding & Launching Games</h3>
+            <p>Browse the grid or use the search bar at the top of the homepage.</p>
+             <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click on any <strong class="text-accent-glow">Game Card</strong> to see its details and launch it.</li>
+                <li>Use the <strong class="text-accent-glow">Search Bar</strong> on the homepage or in the search overlay to find games by title or tag.</li>
+                <li>Click on <strong class="text-accent-glow">Tags</strong> below the search bar to filter games.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-4" class="onboarding-step hidden">
+            <h3>In-Game Controls</h3>
+            <p>Once a game is launched:</p>
+            <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>The <strong class="text-accent-glow">"Back" Button</strong> returns you to the arcade.</li>
+                <li>Adjust the <strong class="text-accent-glow">Aspect Ratio</strong> (e.g., 16:9, 4:3) using the dropdown below the game.</li>
+                <li>Toggle <strong class="text-accent-glow">Fullscreen Mode</strong> with the dedicated button for a more immersive experience.</li>
+            </ul>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button class="modal-button onboarding-next">Next</button>
+            </div>
+        </div>
+        <div id="onboarding-step-5" class="onboarding-step hidden">
+            <h3>Settings & Enjoy!</h3>
+            <p>Customize your arcade experience:</p>
+             <ul class="list-disc list-inside my-4 space-y-2 text-left">
+                <li>Click the <strong class="text-accent-glow">Settings Icon</strong> (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.43.992a6.759 6.759 0 0 1 0 1.255c-.008.378.137.75.43.99l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-1.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.87l.214-1.281Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>) to change your name, toggle warnings, sounds, and more.</li>
+                <li>You can replay this tutorial from the Settings menu.</li>
+            </ul>
+            <p class="mt-6">That's it! Time to dive in and play some games. Have fun, <span class="onboarding-username-placeholder"></span>!</p>
+            <div class="onboarding-nav">
+                <button class="modal-button onboarding-prev">Previous</button>
+                <button id="onboarding-finish" class="modal-button onboarding-finish">Let's Go!</button>
+            </div>
+        </div>
+         <button id="onboarding-skip" class="modal-button onboarding-skip-button">Skip Tutorial</button>
+    </div>
+
+    <div id="onboarding-cutscene-overlay" class="hidden">
+        <div id="cutscene-content">
+            <img id="cutscene-logo" src="https://placehold.co/150x150/transparent/a3e635?text=NW" alt="NeonWave Booting..." onerror="this.onerror=null;this.src='https://placehold.co/150x150/transparent/a3e635?text=NW';">
+            <p id="cutscene-text-1" class="cutscene-text"></p>
+            <p id="cutscene-text-2" class="cutscene-text"></p>
+            <div id="cutscene-scanline"></div>
+        </div>
+    </div>
+
+
+    <footer id="main-footer">
+        © 2025 NeonWave Arcade. Game on! All games are embedded from external sources. <br>This is a fictional, fan-made project.
+    </footer>
+
+    <script src="games.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
