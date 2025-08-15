@@ -1,516 +1,322 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pterodactyl Multi-Panel Client</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pterodactyl multi-panel client (Worker proxy)</title>
 <style>
-  :root {
-    --bg:#0f1115; --card:#161920; --muted:#8b95a7; --text:#dbe1ee; --accent:#4da3ff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; --border:#232838;
-  }
-  * { box-sizing: border-box }
-  html, body { height:100% }
-  body {
-    margin:0; background:var(--bg); color:var(--text); font:14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  }
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px; border-bottom:1px solid var(--border); background:#0d1016; position:sticky; top:0; z-index:2;
-  }
-  header h1 { margin:0; font-size:16px; letter-spacing:.3px }
-  header .actions { display:flex; gap:8px }
-  button, select, input[type="text"], input[type="password"], input[type="url"] {
-    background:#1b2030; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; outline:none;
-  }
-  button { cursor:pointer }
-  button.primary { background:var(--accent); border-color:transparent; color:#0b1220 }
-  button.ghost { background:transparent }
-  button.ok { background:var(--ok); border-color:transparent; color:#0b1220 }
-  button.warn { background:var(--warn); border-color:transparent; color:#0b1220 }
-  button.err { background:var(--err); border-color:transparent; color:#0b1220 }
-  button:disabled { opacity:.5; cursor:not-allowed }
-  .layout { display:grid; grid-template-columns: 320px 1fr; gap:12px; padding:12px; height:calc(100% - 57px) }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:14px }
-  .sidebar { overflow:auto }
-  .server-item {
-    display:flex; flex-direction:column; gap:6px; padding:12px; border-bottom:1px solid var(--border);
-  }
-  .server-item:last-child { border-bottom:none }
-  .server-top { display:flex; align-items:center; justify-content:space-between; gap:8px }
-  .name { font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-  .meta { color:var(--muted); font-size:12px }
-  .badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:#151a25 }
-  .grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:8px }
-  .main { display:grid; grid-template-rows: auto 1fr; gap:12px; overflow:hidden }
-  .controls { padding:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center }
-  .controls .title { font-weight:600; margin-right:auto }
-  .console { display:grid; grid-template-rows: 1fr auto; height:100%; overflow:hidden }
-  .log {
-    padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    background:#0c0f15; border-bottom:1px solid var(--border); overflow:auto; white-space:pre-wrap; word-break:break-word;
-  }
-  .inputbar { display:flex; gap:8px; padding:12px }
-  .row { display:flex; gap:8px; align-items:center }
-  .kvs { display:grid; grid-template-columns: 1fr auto; gap:8px }
-  .hidden { display:none !important }
-  /* Settings drawer */
-  .drawer {
-    position:fixed; inset:0; background:rgba(10,12,18,.7); display:none; place-items:center; z-index:10;
-  }
-  .drawer.open { display:grid }
-  .sheet { width:min(920px, 95vw); max-height:90vh; overflow:auto; padding:16px; }
-  .sheet h2 { margin:0 0 8px 0; font-size:16px }
-  .sheet .desc { color:var(--muted); margin-bottom:12px }
-  .list { display:flex; flex-direction:column; gap:8px }
-  .row-between { display:flex; align-items:center; justify-content:space-between; gap:8px }
-  .sep { height:1px; background:var(--border); margin:8px 0 }
-  .muted { color:var(--muted) }
-  .tiny { font-size:11px }
-  .pill { padding:2px 6px; border-radius:999px; background:#101421; border:1px solid var(--border); font-size:11px; color:var(--muted) }
+/* minimal styles kept from previous file for layout */
+body{font-family:system-ui;background:#0f1115;color:#dbe1ee;margin:0;height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid #232838}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:12px;padding:12px;height:calc(100% - 57px)}
+.card{background:#161920;border-radius:10px;padding:8px;border:1px solid #232838}
+.server-item{padding:10px;border-bottom:1px solid #232838;cursor:pointer}
+.small{font-size:12px;color:#8b95a7}
+button{padding:8px;border-radius:8px;background:#1b2030;color:#dbe1ee;border:1px solid #232838}
+button.primary{background:#4da3ff;color:#081126;border:0}
+.log{background:#0c0f15;padding:12px;height:60vh;overflow:auto;font-family:monospace}
+.inputbar{display:flex;gap:8px;padding:8px}
+.pill{background:#101421;padding:4px 8px;border-radius:999px;border:1px solid #232838;font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <h1>Pterodactyl Multi-Panel Client</h1>
-  <div class="actions">
-    <button id="refreshBtn">Refresh</button>
-    <button id="openSettings" class="primary">API keys</button>
+  <div>Pterodactyl multi-panel client</div>
+  <div>
+    <button id="refresh">Refresh</button>
+    <button id="openKeys" class="primary">API keys</button>
   </div>
 </header>
 
 <div class="layout">
-  <aside class="sidebar card" id="serversPane">
-    <!-- Server list -->
-  </aside>
+  <aside class="card" id="left"></aside>
 
-  <section class="main">
-    <div class="controls card">
-      <div class="title" id="selectedTitle">Select a server</div>
-      <div class="row">
-        <span class="pill" id="selectedPanel"></span>
-        <span class="pill" id="selectedId"></span>
-        <span class="pill" id="selectedStatus"></span>
+  <main>
+    <div class="card" id="controls">
+      <div id="selName">Select a server</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <div class="pill" id="selPanel"></div>
+        <div class="pill" id="selId"></div>
+        <div class="pill" id="selStatus"></div>
       </div>
-      <div class="row" style="margin-left:auto">
-        <button id="startBtn" class="ok" disabled>Start</button>
-        <button id="restartBtn" class="warn" disabled>Restart</button>
-        <button id="stopBtn" class="err" disabled>Stop</button>
-        <button id="connectWsBtn" class="ghost" disabled>Connect console</button>
-        <button id="disconnectWsBtn" class="ghost hidden">Disconnect</button>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button id="start" disabled>Start</button>
+        <button id="restart" disabled>Restart</button>
+        <button id="stop" disabled>Stop</button>
+        <button id="openConsole" disabled>Console</button>
+        <button id="closeConsole" class="hidden">Disconnect</button>
       </div>
     </div>
 
-    <div class="console card">
+    <div class="card" style="margin-top:12px">
       <div class="log" id="log"></div>
       <div class="inputbar">
-        <input id="cmdInput" type="text" placeholder="Type command then Enter" disabled />
-        <button id="sendBtn" disabled>Send</button>
-        <span class="muted tiny" id="hint">Console uses WebSocket</span>
+        <input id="cmd" style="flex:1" placeholder="type command then Enter" disabled/>
+        <button id="send" disabled>Send</button>
       </div>
     </div>
-  </section>
+  </main>
 </div>
 
-<!-- Settings drawer -->
-<div class="drawer" id="drawer">
-  <div class="sheet card">
-    <div class="row-between">
-      <h2>API keys</h2>
-      <button id="closeSettings">Close</button>
+<!-- keys drawer -->
+<div id="drawer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);place-items:center">
+  <div class="card" style="width:720px;max-height:80vh;overflow:auto;padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>API keys (one per panel)</div>
+      <div><button id="closeDrawer">Close</button></div>
     </div>
-    <div class="desc">
-      Add one entry per panel. Use a Client API key from the user account in each panel.
-    </div>
-
-    <div class="list" id="keysList"></div>
-    <div class="sep"></div>
-
-    <h3 style="margin:6px 0 8px 0; font-size:14px">Add key</h3>
-    <div class="kvs">
-      <input id="newName" type="text" placeholder="Label" />
-      <span class="muted tiny">e.g. Host A</span>
-      <input id="newBase" type="url" placeholder="Panel base URL, e.g. https://panel.example.com" />
-      <span class="muted tiny">No trailing slash</span>
-      <input id="newKey" type="password" placeholder="Client API key (ptlc_...)" />
-      <span></span>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <button id="addKey" class="primary">Add</button>
-      <span class="muted tiny">Stored in this browser via localStorage</span>
+    <div id="keys" style="margin-top:8px"></div>
+    <hr/>
+    <div style="display:grid;gap:8px">
+      <input id="k_name" placeholder="Label"/>
+      <input id="k_base" placeholder="Panel base URL e.g. https://panel.example.com"/>
+      <input id="k_token" placeholder="Client API key"/>
+      <div style="display:flex;gap:8px">
+        <button id="addKey" class="primary">Add</button>
+        <div class="small">Stored in localStorage</div>
+      </div>
+      <div style="margin-top:12px">
+        <label class="small">Worker URL</label>
+        <input id="workerUrl" placeholder="https://your-worker.workers.dev" />
+        <div class="small">Set this then close drawer</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-/* Storage */
+/* CONFIG: set by user in drawer */
+let WORKER_BASE = localStorage.getItem("workerBase") || "";
+
+/* storage helpers */
 const store = {
-  getAll() {
-    try { return JSON.parse(localStorage.getItem("pteroKeys") || "[]"); }
-    catch { return []; }
-  },
-  setAll(list) { localStorage.setItem("pteroKeys", JSON.stringify(list)); },
-  add(entry) {
-    const list = store.getAll();
-    list.push(entry);
-    store.setAll(list);
-  },
-  remove(index) {
-    const list = store.getAll();
-    list.splice(index, 1);
-    store.setAll(list);
-  },
-  upsert(index, entry) {
-    const list = store.getAll();
-    list[index] = entry;
-    store.setAll(list);
-  }
+  get() { try { return JSON.parse(localStorage.getItem("pteroKeys")||"[]"); } catch { return []; } },
+  set(v){ localStorage.setItem("pteroKeys", JSON.stringify(v)); },
+  add(e){ const a=this.get(); a.push(e); this.set(a); },
+  update(i,e){ const a=this.get(); a[i]=e; this.set(a); },
+  remove(i){ const a=this.get(); a.splice(i,1); this.set(a); }
 };
 
 /* UI refs */
-const serversPane = document.getElementById("serversPane");
-const selectedTitle = document.getElementById("selectedTitle");
-const selectedPanel = document.getElementById("selectedPanel");
-const selectedId = document.getElementById("selectedId");
-const selectedStatus = document.getElementById("selectedStatus");
-
-const startBtn = document.getElementById("startBtn");
-const restartBtn = document.getElementById("restartBtn");
-const stopBtn = document.getElementById("stopBtn");
-const connectWsBtn = document.getElementById("connectWsBtn");
-const disconnectWsBtn = document.getElementById("disconnectWsBtn");
-
-const logEl = document.getElementById("log");
-const cmdInput = document.getElementById("cmdInput");
-const sendBtn = document.getElementById("sendBtn");
-
-const refreshBtn = document.getElementById("refreshBtn");
+const left = document.getElementById("left");
+const log = document.getElementById("log");
+const selName = document.getElementById("selName");
+const selPanel = document.getElementById("selPanel");
+const selId = document.getElementById("selId");
+const selStatus = document.getElementById("selStatus");
+const startBtn = document.getElementById("start");
+const restartBtn = document.getElementById("restart");
+const stopBtn = document.getElementById("stop");
+const openConsoleBtn = document.getElementById("openConsole");
+const closeConsoleBtn = document.getElementById("closeConsole");
+const cmdInput = document.getElementById("cmd");
+const sendBtn = document.getElementById("send");
+const refreshBtn = document.getElementById("refresh");
+const openKeys = document.getElementById("openKeys");
 const drawer = document.getElementById("drawer");
-const openSettings = document.getElementById("openSettings");
-const closeSettings = document.getElementById("closeSettings");
-const keysList = document.getElementById("keysList");
-const newName = document.getElementById("newName");
-const newBase = document.getElementById("newBase");
-const newKey = document.getElementById("newKey");
-const addKey = document.getElementById("addKey");
+const closeDrawer = document.getElementById("closeDrawer");
+const keysDiv = document.getElementById("keys");
+const addKeyBtn = document.getElementById("addKey");
+const k_name = document.getElementById("k_name");
+const k_base = document.getElementById("k_base");
+const k_token = document.getElementById("k_token");
+const workerUrlInput = document.getElementById("workerUrl");
 
-/* State */
-let state = {
-  servers: [],           // [{panelIndex, panelName, base, token, id, name, identifier, description}]
-  selected: null,        // server object
-  ws: null,              // WebSocket
-  wsOpen: false,
-  wsHeartbeat: null
-};
+let state = { servers:[], selected:null, ws:null };
 
-/* Helpers */
-function el(tag, props={}, ...children) {
-  const e = document.createElement(tag);
-  Object.assign(e, props);
-  for (const c of children) e.append(c);
-  return e;
-}
+/* small helpers */
+function now(){ return new Date().toLocaleTimeString(); }
+function write(s,c){ const d=document.createElement("div"); if(c) d.style.color=c; d.textContent=s; log.appendChild(d); log.scrollTop=log.scrollHeight; }
+function clearLog(){ log.textContent=""; }
 
-function print(line, cls) {
-  const span = el("div");
-  if (cls) span.style.color = cls;
-  span.textContent = line;
-  logEl.append(span);
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-function clearConsole() { logEl.textContent = ""; }
-
-/* API */
-function apiFor(panel) {
-  const workerBase = "https://apirelayforzonikyonet.zonikyo.workers.dev"; // change
-  async function req(method, path, body) {
-    const payload = {
-      base: panel.base,
-      token: panel.token,
-      method,
-      path,
-      body
+function renderKeys(){
+  keysDiv.innerHTML="";
+  const list = store.get();
+  if(list.length===0) keysDiv.appendChild(document.createTextNode("No keys"));
+  list.forEach((k,i)=>{
+    const row = document.createElement("div"); row.className="card";
+    row.style.display="flex"; row.style.gap="8px"; row.style.alignItems="center"; row.style.marginBottom="8px";
+    const info = document.createElement("div"); info.style.flex="1";
+    info.innerHTML = `<div style="font-weight:600">${k.name||("Panel "+(i+1))}</div><div class="small">${k.base}</div>`;
+    const btns = document.createElement("div");
+    const edit = document.createElement("button"); edit.textContent="Edit";
+    edit.onclick = ()=> {
+      const name = prompt("Label", k.name||"");
+      if(name===null) return;
+      const base = prompt("Base URL", k.base||"");
+      if(base===null) return;
+      const token = prompt("Client API key", k.token||"");
+      if(token===null) return;
+      store.update(i,{name,base,token});
+      renderKeys();
     };
-    const r = await fetch(workerBase, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    if (!r.ok) throw new Error(method + " " + path + " -> " + r.status);
-    return r.json();
-  }
-  return {
-    listServers() { return req("GET", "/api/client"); },
-    serverDetails(identifier) { return req("GET", "/api/client/servers/" + identifier); },
-    power(identifier, signal) { return req("POST", "/api/client/servers/" + identifier + "/power", { signal }); },
-    websocket(identifier) { return req("GET", "/api/client/servers/" + identifier + "/websocket"); }
-  };
-}
-
-
-/* Load and render keys */
-function renderKeys() {
-  keysList.textContent = "";
-  const keys = store.getAll();
-  if (keys.length === 0) {
-    keysList.append(el("div", {className:"muted"}, "No keys yet"));
-    return;
-  }
-  keys.forEach((k, idx) => {
-    const row = el("div", {className:"card", style:"padding:10px; display:grid; grid-template-columns: 1.2fr 1.8fr 1.6fr auto; gap:8px; align-items:center"},
-      el("div", {}, el("div",{style:"font-weight:600"}, k.name || "Unnamed"), el("div",{className:"tiny muted"}, "Label")),
-      el("div", {}, el("div",{}, k.base), el("div",{className:"tiny muted"},"Base URL")),
-      el("div", {}, el("div",{}, k.token ? "ptlc_********" + k.token.slice(-6) : ""), el("div",{className:"tiny muted"},"Client API key")),
-      el("div", {className:"row", style:"justify-content:end; gap:6px"},
-        el("button", {onclick: () => { // edit inline
-          const name = prompt("Label", k.name || "");
-          if (name === null) return;
-          const base = prompt("Base URL", k.base || "");
-          if (base === null) return;
-          const token = prompt("Client API key", k.token || "");
-          if (token === null) return;
-          store.upsert(idx, {name, base, token});
-          renderKeys();
-        }}, "Edit"),
-        el("button", {className:"err", onclick: () => { if (confirm("Remove key?")) { store.remove(idx); renderKeys(); } }}, "Remove")
-      )
-    );
-    keysList.append(row);
+    const rem = document.createElement("button"); rem.textContent="Remove";
+    rem.onclick = ()=> { if(confirm("Remove key?")){ store.remove(i); renderKeys(); } };
+    btns.appendChild(edit); btns.appendChild(rem);
+    row.appendChild(info); row.appendChild(btns);
+    keysDiv.appendChild(row);
   });
+  workerUrlInput.value = WORKER_BASE;
 }
 
-/* Server list */
-async function loadServers() {
-  serversPane.textContent = "";
+/* API proxy through Worker */
+async function workerReq(payload) {
+  if(!WORKER_BASE) throw new Error("Worker URL not set. Open API keys and set Worker URL.");
+  const r = await fetch(WORKER_BASE, {
+    method: "POST",
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
+  });
+  const json = await r.json().catch(()=>({ raw:null }));
+  return json;
+}
+
+/* load servers from all keys */
+async function loadServers(){
+  left.innerHTML = "";
   state.servers = [];
-  const keys = store.getAll();
-  if (keys.length === 0) {
-    serversPane.append(el("div", {style:"padding:12px"}, "Open API keys and add at least one entry."));
-    return;
-  }
-
-  const wrap = el("div");
-  serversPane.append(wrap);
-
-  for (let i = 0; i < keys.length; i++) {
-    const panel = { panelIndex:i, panelName: keys[i].name || ("Panel " + (i+1)), base: keys[i].base, token: keys[i].token };
+  const keys = store.get();
+  if(keys.length===0){ left.appendChild(document.createTextNode("Add a key via API keys")); return; }
+  write(`[${now()}] fetching servers from ${keys.length} panels`);
+  for (let i=0;i<keys.length;i++){
+    const k = keys[i];
     try {
-      const api = apiFor(panel);
-      const data = await api.listServers(); // GET /api/client
-      const arr = (data && data.data) ? data.data : [];
-      for (const s of arr) {
-        const atts = s.attributes || {};
+      const res = await workerReq({ base:k.base, token:k.token, method:"GET", path:"/api/client" });
+      if(!res) throw new Error("no response");
+      if(!res.ok) throw new Error(`status ${res.status} ${JSON.stringify(res.data)}`);
+      const items = (res.data && res.data.data) ? res.data.data : [];
+      if(!items.length) write(`[${now()}] panel ${k.name||k.base} returned 0 servers`, "#f59e0b");
+      items.forEach(s=>{
+        const at = s.attributes||{};
         const svr = {
           panelIndex: i,
-          panelName: panel.panelName,
-          base: panel.base,
-          token: panel.token,
-          id: atts.uuid || atts.identifier,
-          identifier: atts.identifier,
-          name: atts.name || atts.hostname || "(no name)",
-          description: atts.description || "",
-          limits: atts.limits || {},
-          status: (atts.relationships && atts.relationships.current_state) || "unknown"
+          panelName: k.name||k.base,
+          base: k.base,
+          token: k.token,
+          identifier: at.identifier || at.uuid,
+          name: at.name || "(no name)",
+          description: at.description||""
         };
         state.servers.push(svr);
-      }
-    } catch (e) {
-      const box = el("div", {className:"server-item"},
-        el("div",{className:"server-top"},
-          el("div",{className:"name"},"Failed to load from " + panel.panelName),
-          el("span",{className:"badge", style:"color:var(--err)"},"Error")
-        ),
-        el("div",{className:"meta"}, e.message)
-      );
-      wrap.append(box);
+      });
+    } catch (err) {
+      write(`[${now()}] error loading ${k.name||k.base}: ${err.message}`, "#ef4444");
     }
   }
 
-  if (state.servers.length === 0) {
-    wrap.append(el("div", {style:"padding:12px"}, "No servers visible for these keys."));
+  if(state.servers.length===0){
+    left.appendChild(document.createTextNode("No servers visible for these keys."));
     return;
   }
 
-  // Render
-  state.servers.forEach(svr => {
-    const box = el("div", {className:"server-item", onclick:() => selectServer(svr)},
-      el("div",{className:"server-top"},
-        el("div",{className:"name"}, svr.name),
-        el("span",{className:"badge"}, svr.panelName)
-      ),
-      el("div",{className:"meta"}, svr.identifier + " • " + (svr.description || ""))
-    );
-    wrap.append(box);
+  state.servers.forEach(s=>{
+    const div = document.createElement("div"); div.className="server-item";
+    div.innerHTML = `<div style="font-weight:600">${s.name}</div><div class="small">${s.identifier} • ${s.panelName}</div>`;
+    div.onclick = ()=> selectServer(s);
+    left.appendChild(div);
   });
 }
 
-/* Selection */
-function updateButtons(disabled) {
-  startBtn.disabled = disabled;
-  restartBtn.disabled = disabled;
-  stopBtn.disabled = disabled;
-  connectWsBtn.disabled = disabled;
+/* selection */
+function selectServer(s){
+  state.selected = s;
+  selName.textContent = s.name;
+  selPanel.textContent = s.panelName;
+  selId.textContent = s.identifier;
+  selStatus.textContent = "status: unknown";
+  startBtn.disabled = false; restartBtn.disabled = false; stopBtn.disabled = false; openConsoleBtn.disabled = false;
+  clearLog();
+  write(`[${now()}] selected ${s.name}`);
 }
 
-function selectServer(svr) {
-  state.selected = svr;
-  selectedTitle.textContent = svr.name;
-  selectedPanel.textContent = svr.panelName;
-  selectedId.textContent = svr.identifier;
-  selectedStatus.textContent = "status: unknown";
-  updateButtons(false);
-  cmdInput.disabled = true;
-  sendBtn.disabled = true;
-  connectWsBtn.classList.remove("hidden");
-  disconnectWsBtn.classList.add("hidden");
-  clearConsole();
-  print(`[${new Date().toLocaleTimeString()}] Selected ${svr.name}`);
-}
-
-/* Power controls */
-async function sendPower(signal) {
-  if (!state.selected) return;
-  const p = { base: state.selected.base, token: state.selected.token };
-  const api = apiFor(p);
+/* power */
+async function power(signal){
+  if(!state.selected) return;
   try {
-    await api.power(state.selected.identifier, signal); // POST /power
-    print(`Power -> ${signal}`);
-  } catch (e) {
-    print("Power error: " + e.message, "#fca5a5");
-  }
+    const p = state.selected;
+    const res = await workerReq({ base:p.base, token:p.token, method:"POST", path:`/api/client/servers/${encodeURIComponent(p.identifier)}/power`, body:{ signal } });
+    if(!res.ok) write(`[${now()}] power ${signal} returned ${res.status} ${JSON.stringify(res.data)}`, "#ef4444");
+    else write(`[${now()}] power ${signal} accepted`);
+  } catch(err) { write(`[${now()}] power error ${err.message}`, "#ef4444"); }
 }
 
-/* WebSocket console */
-async function openConsole() {
-  if (!state.selected) return;
-  const p = { base: state.selected.base, token: state.selected.token };
-  const api = apiFor(p);
-  clearConsole();
-  print("Connecting console...");
-
-  try {
-    const wsInfo = await api.websocket(state.selected.identifier); // GET /websocket
-    const { data } = wsInfo || {};
-    const socketUrl = data && data.socket ? data.socket : null;
-    const token = data && data.token ? data.token : null;
-    if (!socketUrl || !token) throw new Error("No websocket info");
-
-    const ws = new WebSocket(socketUrl);
-    state.ws = ws;
-
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ event: "auth", args: [token] }));
-    };
-
-    ws.onmessage = (ev) => {
-      try {
-        const msg = JSON.parse(ev.data);
-        const event = msg.event;
-        const args = msg.args || [];
-        if (event === "auth success") {
-          state.wsOpen = true;
-          connectWsBtn.classList.add("hidden");
-          disconnectWsBtn.classList.remove("hidden");
-          cmdInput.disabled = false;
-          sendBtn.disabled = false;
-          print("Console connected");
-          // heartbeat
-          if (state.wsHeartbeat) clearInterval(state.wsHeartbeat);
-          state.wsHeartbeat = setInterval(() => {
-            if (state.ws && state.ws.readyState === 1) {
-              state.ws.send(JSON.stringify({ event: "heartbeat", args: [] }));
-            }
-          }, 25000);
-        } else if (event === "auth failure") {
-          print("Auth failed", "#fca5a5");
-          closeConsole();
-        } else if (event === "console output") {
-          const line = args.join(" ");
-          print(line);
-        } else if (event === "status") {
-          selectedStatus.textContent = "status: " + (args[0] || "unknown");
-        } else if (event === "token expiring") {
-          // renew
-          api.websocket(state.selected.identifier).then(n => {
-            const t = n?.data?.token;
-            if (t && state.ws) state.ws.send(JSON.stringify({ event:"auth", args:[t] }));
-          }).catch(()=>{});
-        }
-      } catch {
-        // raw line
-        print(ev.data);
+/* console via Worker websocket proxy */
+function openConsole(){
+  if(!state.selected) return;
+  if(!WORKER_BASE){ alert("Set Worker URL in API keys drawer"); return; }
+  const wsUrl = WORKER_BASE.replace(/^http/, "ws") + "/ws";
+  write(`[${now()}] connecting console via Worker`);
+  const ws = new WebSocket(wsUrl);
+  state.ws = ws;
+  ws.onopen = ()=> {
+    // init with panel info
+    ws.send(JSON.stringify({ base: state.selected.base, token: state.selected.token, identifier: state.selected.identifier }));
+  };
+  ws.onmessage = (ev)=> {
+    // upstream messages mostly JSON strings from pterodactyl. Show raw if not JSON.
+    try {
+      const obj = JSON.parse(ev.data);
+      if(obj && obj.event){
+        // common events
+        if(obj.event === "console output" || obj.event === "install output") write(String((obj.args||[]).join(" ")));
+        else if(obj.event === "status") selStatus.textContent = "status: " + (obj.args && obj.args[0]);
+        else write(JSON.stringify(obj));
+      } else if(obj && obj.error){
+        write("worker error: " + JSON.stringify(obj), "#ef4444");
+      } else {
+        write(JSON.stringify(obj));
       }
-    };
-
-    ws.onerror = () => { print("WebSocket error", "#fca5a5"); };
-    ws.onclose = () => {
-      print("Console closed");
-      connectWsBtn.classList.remove("hidden");
-      disconnectWsBtn.classList.add("hidden");
-      cmdInput.disabled = true;
-      sendBtn.disabled = true;
-      state.wsOpen = false;
-      if (state.wsHeartbeat) { clearInterval(state.wsHeartbeat); state.wsHeartbeat = null; }
-    };
-
-  } catch (e) {
-    print("Connect failed: " + e.message, "#fca5a5");
-  }
+    } catch {
+      write(ev.data);
+    }
+  };
+  ws.onerror = (e)=> write(`[${now()}] console websocket error`, "#ef4444");
+  ws.onclose = ()=> { write(`[${now()}] console closed`); cmdInput.disabled = true; sendBtn.disabled = true; openConsoleBtn.disabled = false; closeConsoleBtn.classList.add("hidden"); };
+  openConsoleBtn.disabled = true;
+  closeConsoleBtn.classList.remove("hidden");
+  cmdInput.disabled = false; sendBtn.disabled = false;
 }
 
-function closeConsole() {
-  if (state.ws) {
-    try { state.ws.close(); } catch {}
-  }
+function closeConsole(){
+  if(state.ws) try { state.ws.close(); } catch(e){}
   state.ws = null;
-  state.wsOpen = false;
-  if (state.wsHeartbeat) { clearInterval(state.wsHeartbeat); state.wsHeartbeat = null; }
-  connectWsBtn.classList.remove("hidden");
-  disconnectWsBtn.classList.add("hidden");
-  cmdInput.disabled = true;
-  sendBtn.disabled = true;
+  cmdInput.disabled = true; sendBtn.disabled = true;
+  openConsoleBtn.disabled = false; closeConsoleBtn.classList.add("hidden");
+  write(`[${now()}] disconnected`);
 }
 
-function sendCommand(cmd) {
-  if (!state.ws || state.ws.readyState !== 1) return;
-  if (!cmd?.trim()) return;
-  state.ws.send(JSON.stringify({ event: "send command", args: [cmd] }));
-  print("> " + cmd, "#93c5fd");
+function sendCommand(){
+  const cmd = cmdInput.value.trim();
+  if(!cmd) return;
+  if(!state.ws || state.ws.readyState !== 1) { write("console not connected", "#ef4444"); return; }
+  // send JSON action that worker will translate into pterodactyl event
+  state.ws.send(JSON.stringify({ action:"command", command: cmd }));
+  write("> " + cmd, "#93c5fd");
+  cmdInput.value = "";
 }
 
-/* Wire up */
-openSettings.onclick = () => { renderKeys(); drawer.classList.add("open"); };
-closeSettings.onclick = () => drawer.classList.remove("open");
-addKey.onclick = () => {
-  const entry = { name: newName.value.trim(), base: newBase.value.trim(), token: newKey.value.trim() };
-  if (!entry.base || !entry.token) return alert("Base URL and key required");
+/* UI wiring */
+refreshBtn.onclick = loadServers;
+openKeys.onclick = ()=>{ renderKeys(); drawer.style.display="grid"; };
+closeDrawer.onclick = ()=>{ drawer.style.display="none"; WORKER_BASE = workerUrlInput.value.trim(); localStorage.setItem("workerBase", WORKER_BASE); };
+addKeyBtn.onclick = ()=> {
+  const entry = { name: k_name.value.trim(), base: k_base.value.trim(), token: k_token.value.trim() };
+  if(!entry.base || !entry.token) { alert("base and key required"); return; }
   store.add(entry);
-  newName.value = ""; newBase.value = ""; newKey.value = "";
+  k_name.value=""; k_base.value=""; k_token.value="";
   renderKeys();
 };
+startBtn.onclick = ()=> power("start");
+restartBtn.onclick = ()=> power("restart");
+stopBtn.onclick = ()=> power("stop");
+openConsoleBtn.onclick = openConsole;
+closeConsoleBtn.onclick = closeConsole;
+sendBtn.onclick = sendCommand;
+cmdInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); sendCommand(); } });
 
-refreshBtn.onclick = loadServers;
-
-startBtn.onclick = () => sendPower("start");
-restartBtn.onclick = () => sendPower("restart");
-stopBtn.onclick = () => sendPower("stop");
-
-connectWsBtn.onclick = openConsole;
-disconnectWsBtn.onclick = closeConsole;
-
-sendBtn.onclick = () => { sendCommand(cmdInput.value); cmdInput.value=""; };
-cmdInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") { e.preventDefault(); sendBtn.click(); }
-});
-
-/* Boot */
+/* boot */
+renderKeys();
 loadServers();
-
-/* Notes:
-   - Requires Client API keys. Power: POST /api/client/servers/{id}/power with {signal}.
-   - Console: GET /api/client/servers/{id}/websocket then WebSocket auth and "send command".
-   - Some hosts block cross-origin requests or WebSocket origins. Adjust server config if needed.
-*/
 </script>
 </body>
 </html>
