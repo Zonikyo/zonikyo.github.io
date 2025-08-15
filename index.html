@@ -1,372 +1,98 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Pterodactyl multi-panel client (Worker proxy)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pterodactyl Multi-Panel Manager</title>
 <style>
-  :root {
-    --bg:#0f1115; --card:#161920; --muted:#8b95a7; --text:#dbe1ee; --accent:#4da3ff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; --border:#232838;
-  }
-  * { box-sizing: border-box }
-  html, body { height:100% }
-  body {
-    margin:0; background:var(--bg); color:var(--text); font:14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  }
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px; border-bottom:1px solid var(--border); background:#0d1016; position:sticky; top:0; z-index:2;
-  }
-  header h1 { margin:0; font-size:16px; letter-spacing:.3px }
-  header .actions { display:flex; gap:8px }
-  button, select, input[type="text"], input[type="password"], input[type="url"] {
-    background:#1b2030; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; outline:none;
-  }
-  button { cursor:pointer }
-  button.primary { background:var(--accent); border-color:transparent; color:#0b1220 }
-  button.ghost { background:transparent }
-  button.ok { background:var(--ok); border-color:transparent; color:#0b1220 }
-  button.warn { background:var(--warn); border-color:transparent; color:#0b1220 }
-  button.err { background:var(--err); border-color:transparent; color:#0b1220 }
-  button:disabled { opacity:.5; cursor:not-allowed }
-  .layout { display:grid; grid-template-columns: 320px 1fr; gap:12px; padding:12px; height:calc(100% - 57px) }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:14px }
-  .sidebar { overflow:auto }
-  .server-item {
-    display:flex; flex-direction:column; gap:6px; padding:12px; border-bottom:1px solid var(--border);
-  }
-  .server-item:last-child { border-bottom:none }
-  .server-top { display:flex; align-items:center; justify-content:space-between; gap:8px }
-  .name { font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-  .meta { color:var(--muted); font-size:12px }
-  .badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:#151a25 }
-  .grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:8px }
-  .main { display:grid; grid-template-rows: auto 1fr; gap:12px; overflow:hidden }
-  .controls { padding:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center }
-  .controls .title { font-weight:600; margin-right:auto }
-  .console { display:grid; grid-template-rows: 1fr auto; height:100%; overflow:hidden }
-  .log {
-    padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    background:#0c0f15; border-bottom:1px solid var(--border); overflow:auto; white-space:pre-wrap; word-break:break-word;
-  }
-  .inputbar { display:flex; gap:8px; padding:12px }
-  .row { display:flex; gap:8px; align-items:center }
-  .kvs { display:grid; grid-template-columns: 1fr auto; gap:8px }
-  .hidden { display:none !important }
-  /* Settings drawer */
-  .drawer {
-    position:fixed; inset:0; background:rgba(10,12,18,.7); display:none; place-items:center; z-index:10;
-  }
-  .drawer.open { display:grid }
-  .sheet { width:min(920px, 95vw); max-height:90vh; overflow:auto; padding:16px; }
-  .sheet h2 { margin:0 0 8px 0; font-size:16px }
-  .sheet .desc { color:var(--muted); margin-bottom:12px }
-  .list { display:flex; flex-direction:column; gap:8px }
-  .row-between { display:flex; align-items:center; justify-content:space-between; gap:8px }
-  .sep { height:1px; background:var(--border); margin:8px 0 }
-  .muted { color:var(--muted) }
-  .tiny { font-size:11px }
-  .pill { padding:2px 6px; border-radius:999px; background:#101421; border:1px solid var(--border); font-size:11px; color:var(--muted) }
+body { font-family: sans-serif; margin: 20px; background: #f5f5f5; }
+input, button, select, textarea { padding: 8px; margin: 4px 0; width: 100%; }
+#servers { margin-top: 20px; }
+.server { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #fff; }
+button { cursor: pointer; }
+textarea { height: 100px; }
 </style>
 </head>
 <body>
-<header>
-  <div>Pterodactyl multi-panel client</div>
-  <div>
-    <button id="refresh">Refresh</button>
-    <button id="openKeys" class="primary">API keys</button>
-  </div>
-</header>
+<h2>Pterodactyl Multi-Panel Manager</h2>
 
-<div class="layout">
-  <aside class="card" id="left"></aside>
+<h3>Add API Panel</h3>
+<input type="text" id="panelName" placeholder="Panel Name">
+<input type="text" id="panelUrl" placeholder="Panel API URL (e.g. https://panel.com/api)">
+<input type="text" id="panelKey" placeholder="API Key">
+<button onclick="addPanel()">Add Panel</button>
 
-  <main>
-    <div class="card" id="controls">
-      <div id="selName">Select a server</div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <div class="pill" id="selPanel"></div>
-        <div class="pill" id="selId"></div>
-        <div class="pill" id="selStatus"></div>
-      </div>
-      <div style="margin-top:8px;display:flex;gap:8px">
-        <button id="start" disabled>Start</button>
-        <button id="restart" disabled>Restart</button>
-        <button id="stop" disabled>Stop</button>
-        <button id="openConsole" disabled>Console</button>
-        <button id="closeConsole" class="hidden">Disconnect</button>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <div class="log" id="log"></div>
-      <div class="inputbar">
-        <input id="cmd" style="flex:1" placeholder="type command then Enter" disabled/>
-        <button id="send" disabled>Send</button>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- keys drawer -->
-<div id="drawer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);place-items:center">
-  <div class="card" style="width:720px;max-height:80vh;overflow:auto;padding:16px">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div>API keys (one per panel)</div>
-      <div><button id="closeDrawer">Close</button></div>
-    </div>
-    <div id="keys" style="margin-top:8px"></div>
-    <hr/>
-    <div style="display:grid;gap:8px">
-      <input id="k_name" placeholder="Label"/>
-      <input id="k_base" placeholder="Panel base URL e.g. https://panel.example.com"/>
-      <input id="k_token" placeholder="Client API key"/>
-      <div style="display:flex;gap:8px">
-        <button id="addKey" class="primary">Add</button>
-        <div class="small">Stored in localStorage</div>
-      </div>
-      <div style="margin-top:12px">
-        <label class="small">Worker URL</label>
-        <input id="workerUrl" placeholder="https://your-worker.workers.dev" />
-        <div class="small">Set this then close drawer</div>
-      </div>
-    </div>
-  </div>
-</div>
+<h3>Servers</h3>
+<div id="servers"></div>
 
 <script>
-/* CONFIG: set by user in drawer */
-let WORKER_BASE = localStorage.getItem("workerBase") || "";
+const workerUrl = "https://YOUR_CLOUDFLARE_WORKER.workers.dev/?=";
+let panels = [];
 
-/* storage helpers */
-const store = {
-  get() { try { return JSON.parse(localStorage.getItem("pteroKeys")||"[]"); } catch { return []; } },
-  set(v){ localStorage.setItem("pteroKeys", JSON.stringify(v)); },
-  add(e){ const a=this.get(); a.push(e); this.set(a); },
-  update(i,e){ const a=this.get(); a[i]=e; this.set(a); },
-  remove(i){ const a=this.get(); a.splice(i,1); this.set(a); }
-};
+function addPanel() {
+  const name = document.getElementById('panelName').value;
+  const url = document.getElementById('panelUrl').value;
+  const key = document.getElementById('panelKey').value;
+  if (!name || !url || !key) return alert("Fill all fields");
 
-/* UI refs */
-const left = document.getElementById("left");
-const log = document.getElementById("log");
-const selName = document.getElementById("selName");
-const selPanel = document.getElementById("selPanel");
-const selId = document.getElementById("selId");
-const selStatus = document.getElementById("selStatus");
-const startBtn = document.getElementById("start");
-const restartBtn = document.getElementById("restart");
-const stopBtn = document.getElementById("stop");
-const openConsoleBtn = document.getElementById("openConsole");
-const closeConsoleBtn = document.getElementById("closeConsole");
-const cmdInput = document.getElementById("cmd");
-const sendBtn = document.getElementById("send");
-const refreshBtn = document.getElementById("refresh");
-const openKeys = document.getElementById("openKeys");
-const drawer = document.getElementById("drawer");
-const closeDrawer = document.getElementById("closeDrawer");
-const keysDiv = document.getElementById("keys");
-const addKeyBtn = document.getElementById("addKey");
-const k_name = document.getElementById("k_name");
-const k_base = document.getElementById("k_base");
-const k_token = document.getElementById("k_token");
-const workerUrlInput = document.getElementById("workerUrl");
-
-let state = { servers:[], selected:null, ws:null };
-
-/* small helpers */
-function now(){ return new Date().toLocaleTimeString(); }
-function write(s,c){ const d=document.createElement("div"); if(c) d.style.color=c; d.textContent=s; log.appendChild(d); log.scrollTop=log.scrollHeight; }
-function clearLog(){ log.textContent=""; }
-
-function renderKeys(){
-  keysDiv.innerHTML="";
-  const list = store.get();
-  if(list.length===0) keysDiv.appendChild(document.createTextNode("No keys"));
-  list.forEach((k,i)=>{
-    const row = document.createElement("div"); row.className="card";
-    row.style.display="flex"; row.style.gap="8px"; row.style.alignItems="center"; row.style.marginBottom="8px";
-    const info = document.createElement("div"); info.style.flex="1";
-    info.innerHTML = `<div style="font-weight:600">${k.name||("Panel "+(i+1))}</div><div class="small">${k.base}</div>`;
-    const btns = document.createElement("div");
-    const edit = document.createElement("button"); edit.textContent="Edit";
-    edit.onclick = ()=> {
-      const name = prompt("Label", k.name||"");
-      if(name===null) return;
-      const base = prompt("Base URL", k.base||"");
-      if(base===null) return;
-      const token = prompt("Client API key", k.token||"");
-      if(token===null) return;
-      store.update(i,{name,base,token});
-      renderKeys();
-    };
-    const rem = document.createElement("button"); rem.textContent="Remove";
-    rem.onclick = ()=> { if(confirm("Remove key?")){ store.remove(i); renderKeys(); } };
-    btns.appendChild(edit); btns.appendChild(rem);
-    row.appendChild(info); row.appendChild(btns);
-    keysDiv.appendChild(row);
-  });
-  workerUrlInput.value = WORKER_BASE;
+  panels.push({name, url, key});
+  document.getElementById('panelName').value = '';
+  document.getElementById('panelUrl').value = '';
+  document.getElementById('panelKey').value = '';
+  loadServers();
 }
 
-/* API proxy through Worker */
-async function workerReq(payload) {
-  if(!WORKER_BASE) throw new Error("Worker URL not set. Open API keys and set Worker URL.");
-  const r = await fetch(WORKER_BASE, {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(payload)
-  });
-  const json = await r.json().catch(()=>({ raw:null }));
-  return json;
+async function fetchWorker(apiKey, apiEndpoint, method="GET", body=null) {
+  const encodedUrl = encodeURIComponent(`${apiKey}-${apiEndpoint}`);
+  const options = { method };
+  if (body) options.body = JSON.stringify(body);
+  const res = await fetch(workerUrl + encodedUrl, options);
+  return res.json();
 }
 
-/* load servers from all keys */
-async function loadServers(){
-  left.innerHTML = "";
-  state.servers = [];
-  const keys = store.get();
-  if(keys.length===0){ left.appendChild(document.createTextNode("Add a key via API keys")); return; }
-  write(`[${now()}] fetching servers from ${keys.length} panels`);
-  for (let i=0;i<keys.length;i++){
-    const k = keys[i];
+async function loadServers() {
+  const container = document.getElementById('servers');
+  container.innerHTML = '';
+  for (const panel of panels) {
     try {
-      const res = await workerReq({ base:k.base, token:k.token, method:"GET", path:"/api/client" });
-      if(!res) throw new Error("no response");
-      if(!res.ok) throw new Error(`status ${res.status} ${JSON.stringify(res.data)}`);
-      const items = (res.data && res.data.data) ? res.data.data : [];
-      if(!items.length) write(`[${now()}] panel ${k.name||k.base} returned 0 servers`, "#f59e0b");
-      items.forEach(s=>{
-        const at = s.attributes||{};
-        const svr = {
-          panelIndex: i,
-          panelName: k.name||k.base,
-          base: k.base,
-          token: k.token,
-          identifier: at.identifier || at.uuid,
-          name: at.name || "(no name)",
-          description: at.description||""
-        };
-        state.servers.push(svr);
+      const data = await fetchWorker(panel.key, `${panel.url}/application/servers`);
+      if (!data || !data.data) continue;
+      data.data.forEach(server => {
+        const div = document.createElement('div');
+        div.className = "server";
+        div.innerHTML = `<strong>${server.attributes.name}</strong> - ${panel.name}
+        <br>Status: ${server.attributes.suspended ? "Suspended" : "Active"}
+        <br>
+        <button onclick="controlServer('${panel.key}','${panel.url}','${server.attributes.identifier}','start')">Start</button>
+        <button onclick="controlServer('${panel.key}','${panel.url}','${server.attributes.identifier}','stop')">Stop</button>
+        <button onclick="controlServer('${panel.key}','${panel.url}','${server.attributes.identifier}','restart')">Restart</button>
+        <br>Console:
+        <textarea id="console-${server.attributes.identifier}" placeholder="Console output"></textarea>
+        <button onclick="sendConsole('${panel.key}','${panel.url}','${server.attributes.identifier}')">Send Command</button>
+        `;
+        container.appendChild(div);
       });
-    } catch (err) {
-      write(`[${now()}] error loading ${k.name||k.base}: ${err.message}`, "#ef4444");
-    }
+    } catch(e) { console.error(e); }
   }
-
-  if(state.servers.length===0){
-    left.appendChild(document.createTextNode("No servers visible for these keys."));
-    return;
-  }
-
-  state.servers.forEach(s=>{
-    const div = document.createElement("div"); div.className="server-item";
-    div.innerHTML = `<div style="font-weight:600">${s.name}</div><div class="small">${s.identifier} • ${s.panelName}</div>`;
-    div.onclick = ()=> selectServer(s);
-    left.appendChild(div);
-  });
 }
 
-/* selection */
-function selectServer(s){
-  state.selected = s;
-  selName.textContent = s.name;
-  selPanel.textContent = s.panelName;
-  selId.textContent = s.identifier;
-  selStatus.textContent = "status: unknown";
-  startBtn.disabled = false; restartBtn.disabled = false; stopBtn.disabled = false; openConsoleBtn.disabled = false;
-  clearLog();
-  write(`[${now()}] selected ${s.name}`);
-}
-
-/* power */
-async function power(signal){
-  if(!state.selected) return;
+async function controlServer(key, url, identifier, action) {
   try {
-    const p = state.selected;
-    const res = await workerReq({ base:p.base, token:p.token, method:"POST", path:`/api/client/servers/${encodeURIComponent(p.identifier)}/power`, body:{ signal } });
-    if(!res.ok) write(`[${now()}] power ${signal} returned ${res.status} ${JSON.stringify(res.data)}`, "#ef4444");
-    else write(`[${now()}] power ${signal} accepted`);
-  } catch(err) { write(`[${now()}] power error ${err.message}`, "#ef4444"); }
+    await fetchWorker(key, `${url}/servers/${identifier}/power`, "POST", {signal: action});
+    alert(`Server ${action} command sent`);
+  } catch(e) { console.error(e); }
 }
 
-/* console via Worker websocket proxy */
-function openConsole(){
-  if(!state.selected) return;
-  if(!WORKER_BASE){ alert("Set Worker URL in API keys drawer"); return; }
-  const wsUrl = WORKER_BASE.replace(/^http/, "ws") + "/ws";
-  write(`[${now()}] connecting console via Worker`);
-  const ws = new WebSocket(wsUrl);
-  state.ws = ws;
-  ws.onopen = ()=> {
-    // init with panel info
-    ws.send(JSON.stringify({ base: state.selected.base, token: state.selected.token, identifier: state.selected.identifier }));
-  };
-  ws.onmessage = (ev)=> {
-    // upstream messages mostly JSON strings from pterodactyl. Show raw if not JSON.
-    try {
-      const obj = JSON.parse(ev.data);
-      if(obj && obj.event){
-        // common events
-        if(obj.event === "console output" || obj.event === "install output") write(String((obj.args||[]).join(" ")));
-        else if(obj.event === "status") selStatus.textContent = "status: " + (obj.args && obj.args[0]);
-        else write(JSON.stringify(obj));
-      } else if(obj && obj.error){
-        write("worker error: " + JSON.stringify(obj), "#ef4444");
-      } else {
-        write(JSON.stringify(obj));
-      }
-    } catch {
-      write(ev.data);
-    }
-  };
-  ws.onerror = (e)=> write(`[${now()}] console websocket error`, "#ef4444");
-  ws.onclose = ()=> { write(`[${now()}] console closed`); cmdInput.disabled = true; sendBtn.disabled = true; openConsoleBtn.disabled = false; closeConsoleBtn.classList.add("hidden"); };
-  openConsoleBtn.disabled = true;
-  closeConsoleBtn.classList.remove("hidden");
-  cmdInput.disabled = false; sendBtn.disabled = false;
+async function sendConsole(key, url, identifier) {
+  const textarea = document.getElementById(`console-${identifier}`);
+  const command = textarea.value.trim();
+  if (!command) return alert("Enter a command");
+  try {
+    await fetchWorker(key, `${url}/servers/${identifier}/command`, "POST", {command});
+    textarea.value = '';
+    alert("Command sent");
+  } catch(e) { console.error(e); }
 }
-
-function closeConsole(){
-  if(state.ws) try { state.ws.close(); } catch(e){}
-  state.ws = null;
-  cmdInput.disabled = true; sendBtn.disabled = true;
-  openConsoleBtn.disabled = false; closeConsoleBtn.classList.add("hidden");
-  write(`[${now()}] disconnected`);
-}
-
-function sendCommand(){
-  const cmd = cmdInput.value.trim();
-  if(!cmd) return;
-  if(!state.ws || state.ws.readyState !== 1) { write("console not connected", "#ef4444"); return; }
-  // send JSON action that worker will translate into pterodactyl event
-  state.ws.send(JSON.stringify({ action:"command", command: cmd }));
-  write("> " + cmd, "#93c5fd");
-  cmdInput.value = "";
-}
-
-/* UI wiring */
-refreshBtn.onclick = loadServers;
-openKeys.onclick = ()=>{ renderKeys(); drawer.style.display="grid"; };
-closeDrawer.onclick = ()=>{ drawer.style.display="none"; WORKER_BASE = workerUrlInput.value.trim(); localStorage.setItem("workerBase", WORKER_BASE); };
-addKeyBtn.onclick = ()=> {
-  const entry = { name: k_name.value.trim(), base: k_base.value.trim(), token: k_token.value.trim() };
-  if(!entry.base || !entry.token) { alert("base and key required"); return; }
-  store.add(entry);
-  k_name.value=""; k_base.value=""; k_token.value="";
-  renderKeys();
-};
-startBtn.onclick = ()=> power("start");
-restartBtn.onclick = ()=> power("restart");
-stopBtn.onclick = ()=> power("stop");
-openConsoleBtn.onclick = openConsole;
-closeConsoleBtn.onclick = closeConsole;
-sendBtn.onclick = sendCommand;
-cmdInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); sendCommand(); } });
-
-/* boot */
-renderKeys();
-loadServers();
 </script>
 </body>
 </html>
